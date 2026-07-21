@@ -13,7 +13,7 @@ misread this format.
 
 1. EXPORTED v7 ENVELOPE (what doExport writes)
 ----------------------------------------------
-Exactly these 16 top-level keys, always all present:
+The object literal in doExport constructs exactly these 16 properties:
 
 {
   "schemaVersion": 7,                // literal; written, never read back
@@ -38,18 +38,23 @@ Exactly these 16 top-level keys, always all present:
 Informative Repo / Edge shapes (as produced by discovery/enrichment; see
 SAMPLE in the app source):
 
-One exception to "always all present": doExport serializes with
-JSON.stringify, which drops undefined-valued keys. githubUser is the one
-key that can be undefined (after importing a file that lacked it — see
-§3), in which case the export carries 15 keys.
+The SERIALIZED file contains 15 or 16 keys: JSON.stringify elides an
+undefined-valued key, and githubUser is the one property that can be
+undefined (after importing a file that lacked it — see §3). Every other
+key always serializes.
 
 Repo: { id, name, description, topics[], language, stars, updatedAt,
         defaultBranch, dependencies[], readme, fileTree[], signalFiles{},
         mentionsRepos[], enriched }
 Edge: { source, target,
         type: "readme-reference"|"shared-topic"|"shared-dependency"
-             |"naming-family"|"shared-language"|"provenance"|"manual",
+             |"naming-family"|"shared-language",
         weight, evidence }
+
+The app also renders "provenance" and "manual" links, but those are
+DERIVED at draw time — from synthesisNodes[].parents and manualLinks
+respectively — and are never emitted by computeEdges nor written into
+edges[]. An imported file may of course carry any type string (§2).
 
 
 2. ACCEPTED IMPORT ENVELOPE (what onFile requires)
@@ -65,6 +70,9 @@ Everything else is optional. In particular:
   - edges missing or non-array → recomputed from repos (computeEdges).
   - Nested Repo/Edge shapes are NOT enforced; malformed entries are
     accepted and their failures (if any) surface downstream, not at load.
+  - githubUser is NOT constrained to a string — any JSON value (number,
+    object, null, array, …) is accepted and round-trips verbatim to the
+    next export (§4).
   - Unknown top-level properties are accepted without error.
 
 
@@ -109,6 +117,9 @@ Load → Export is not the identity:
     are lost in the array→map→array trip.
   - mechCalibration: entries without sourceKind/targetKind never reach
     state, so they are absent from the next export.
-  - Anything living only in persisted state (overlaid, per §3) can appear
-    in the next export despite being absent from the loaded file — the
-    export snapshots merged state, not the last-loaded file.
+  - Collections absent from the loaded file keep their prior IN-MEMORY
+    values (§3) and so appear in the immediate next export. Records
+    living only in PERSISTED storage (e.g. written by an earlier
+    session) do NOT — export snapshots in-memory state, so persisted-only
+    records surface in an export only after a reload, when hydration
+    merges them back into memory.
