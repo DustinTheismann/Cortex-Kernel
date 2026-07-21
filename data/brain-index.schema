@@ -1,0 +1,66 @@
+brain-index.json — export format, schemaVersion 7
+===================================================
+
+Produced by the Export button in OpenSource Cortex v0.5.1 (index.html);
+consumed by Load. Derived directly from the standalone's doExport/onFile
+code — this file documents, it does not validate.
+
+Loader contract
+---------------
+Load requires only `repos` (an array); every other key is optional.
+If `edges` is absent, the loader recomputes them from `repos`.
+All other top-level arrays are restored verbatim when present.
+
+Top-level object
+----------------
+{
+  "schemaVersion": 7,                // integer; this format
+  "product": string,                 // "OpenSource Cortex v0.5.1 (instantiated contract gate)"
+  "generatedAt": string,             // ISO-8601 timestamp of export
+  "githubUser": string,              // corpus owner/query context
+  "repoCount": integer,              // repos.length at export time
+
+  "repos": [ Repo, ... ],            // REQUIRED on load
+  "edges": [ Edge, ... ],            // recomputed if missing
+  "synthesisNodes": [ ... ],         // model-proposed synthesis nodes
+  "notes": [ { "id": string, "text": string }, ... ],
+  "manualLinks": [ ... ],            // user-added see-also edges
+  "negatives": [ ... ],              // killed bridges, retained as data
+                                     //   (impossibility codes, killedBy, mechClass)
+  "preregs": [ ... ],                // preregistered literature queries + thresholds
+  "prizeCandidates": [ ... ],        // candidate bridges; carry bridge plan incl.
+                                     //   per-edge ruleInstantiations (v0.5.1)
+  "ledger": [ ... ],                 // probe log: predictions awaiting resolution
+  "calibration": { ... },            // per-class outcome counts (Ω5)
+  "mechCalibration": [ ... ]         // per mechanism-kind-pair outcome records
+}
+
+Repo (as produced by discovery/enrichment; see SAMPLE in the app source)
+------------------------------------------------------------------------
+{
+  "id": string, "name": string, "description": string,
+  "topics": [string], "language": string, "stars": integer,
+  "updatedAt": string, "defaultBranch": string,
+  "dependencies": [string], "readme": string,
+  "fileTree": [string], "signalFiles": { path: string },
+  "mentionsRepos": [string], "enriched": boolean
+}
+
+Edge
+----
+{
+  "source": string, "target": string,      // repo ids
+  "type": "readme-reference" | "shared-topic" | "shared-dependency"
+        | "naming-family" | "shared-language" | "provenance" | "manual",
+  "weight": number,
+  "evidence": string
+}
+
+Notes
+-----
+- The export is a complete, durable snapshot: the standalone has no
+  cross-reload persistence, so brain-index.json IS the saved state.
+- Nested shapes of synthesisNodes / negatives / preregs / prizeCandidates /
+  ledger / calibration are defined by the app source
+  (reference/src/cortex-v0.5.1.jsx) and round-trip through Load unchanged;
+  they are intentionally not frozen here beyond what the loader requires.
