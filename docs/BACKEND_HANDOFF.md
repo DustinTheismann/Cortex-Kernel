@@ -2,6 +2,16 @@
 
 *v0.5.1 → vΩ · confidential draft*
 
+> **Declassification notice.** The "confidential draft" label above is
+> historical, carried over from the document's original circulation. The
+> repository owner has intentionally published this specification — and
+> the frozen HTML bundles that embed the same label
+> (`docs/backend-handoff.html`,
+> `reference/standalones/Cortex_Backend_Handoff_standalone.html`) —
+> under the repository's MIT license. The frozen artifacts are preserved
+> byte-for-byte and therefore retain the outdated label; this notice, in
+> the canonical non-frozen copy, supersedes it.
+
 *Treating the v0.5.1 standalone as the executable contract for a distributed, verification-grounded implementation.*
 
 The standalone artifact is now a coherent **semantic-planning kernel**: it extracts typed mechanism interfaces, plans proof-obligation-carrying bridges over a governed conversion registry, separates structural possibility from epistemic support, and refuses to claim verification it has not performed. This document freezes that behavior as the reference contract and specifies the backend that turns *planned* bridges into *verified* ones.
