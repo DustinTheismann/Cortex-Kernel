@@ -1,0 +1,47 @@
+[
+ {
+  "po": {
+   "kind": "tensor",
+   "semantics": "certified radius"
+  },
+  "ci": {
+   "kind": "tensor",
+   "semantics": "input field"
+  },
+  "path": "tensor>tensor",
+  "adapters": [],
+  "out": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('tensor→tensor preserves semantics', () => {\n  const x = sample_tensor();          // certified radius\n  const y = x;\n  assert isValid_tensor(y);            // input field\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});"
+ },
+ {
+  "po": {
+   "kind": "tensor",
+   "name": "T"
+  },
+  "ci": {
+   "kind": "bound",
+   "name": "B"
+  },
+  "path": "tensor>bound",
+  "adapters": [
+   "reduce",
+   "threshold"
+  ],
+  "out": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('tensor→bound preserves semantics', () => {\n  const x = sample_tensor();          // T\n  const y = threshold(reduce(x));\n  assert isValid_bound(y);            // B\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});"
+ },
+ {
+  "po": {
+   "kind": "graph"
+  },
+  "ci": {
+   "kind": "claim"
+  },
+  "path": "graph>claim",
+  "adapters": [
+   "encode-edges",
+   "add-objective",
+   "dual-bound",
+   "assert"
+  ],
+  "out": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('graph→claim preserves semantics', () => {\n  const x = sample_graph();          // graph\n  const y = assert(dual-bound(add-objective(encode-edges(x))));\n  assert isValid_claim(y);            // claim\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});"
+ }
+]

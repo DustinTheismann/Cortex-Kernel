@@ -1,0 +1,30 @@
+[
+ {
+  "in": null,
+  "out": "UNVERIFIED"
+ },
+ {
+  "in": 0,
+  "out": "UNEXPLORED"
+ },
+ {
+  "in": 24,
+  "out": "UNEXPLORED"
+ },
+ {
+  "in": 25,
+  "out": "EMERGING"
+ },
+ {
+  "in": 299,
+  "out": "EMERGING"
+ },
+ {
+  "in": 300,
+  "out": "EMERGING"
+ },
+ {
+  "in": 301,
+  "out": "KNOWN"
+ }
+]
