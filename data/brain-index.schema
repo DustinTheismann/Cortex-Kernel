@@ -1,66 +1,99 @@
-brain-index.json — export format, schemaVersion 7
-===================================================
+brain-index.json — export/import contract of the frozen v0.5.1 standalone
+==========================================================================
 
-Produced by the Export button in OpenSource Cortex v0.5.1 (index.html);
-consumed by Load. Derived directly from the standalone's doExport/onFile
-code — this file documents, it does not validate.
+Derived from the standalone's doExport/onFile code (reference/src/
+cortex-v0.5.1.jsx). This file documents observed legacy semantics; it does
+not validate. The standalone is frozen — these semantics are to be
+addressed in packages/cortex-kernel via explicit normalization and
+migration tests, not by changing the artifact.
 
-Loader contract
----------------
-Load requires only `repos` (an array); every other key is optional.
-If `edges` is absent, the loader recomputes them from `repos`.
-All other top-level arrays are restored verbatim when present.
+The contract has four distinct layers. Conflating them is the main way to
+misread this format.
 
-Top-level object
-----------------
+
+1. EXPORTED v7 ENVELOPE (what doExport writes)
+----------------------------------------------
+Exactly these 16 top-level keys, always all present:
+
 {
-  "schemaVersion": 7,                // integer; this format
+  "schemaVersion": 7,                // literal; written, never read back
   "product": string,                 // "OpenSource Cortex v0.5.1 (instantiated contract gate)"
-  "generatedAt": string,             // ISO-8601 timestamp of export
-  "githubUser": string,              // corpus owner/query context
-  "repoCount": integer,              // repos.length at export time
+  "generatedAt": string,             // ISO-8601, regenerated at every export
+  "githubUser": string,
+  "repoCount": integer,              // recomputed as repos.length at export
 
-  "repos": [ Repo, ... ],            // REQUIRED on load
-  "edges": [ Edge, ... ],            // recomputed if missing
-  "synthesisNodes": [ ... ],         // model-proposed synthesis nodes
-  "notes": [ { "id": string, "text": string }, ... ],
-  "manualLinks": [ ... ],            // user-added see-also edges
-  "negatives": [ ... ],              // killed bridges, retained as data
-                                     //   (impossibility codes, killedBy, mechClass)
-  "preregs": [ ... ],                // preregistered literature queries + thresholds
-  "prizeCandidates": [ ... ],        // candidate bridges; carry bridge plan incl.
-                                     //   per-edge ruleInstantiations (v0.5.1)
-  "ledger": [ ... ],                 // probe log: predictions awaiting resolution
-  "calibration": { ... },            // per-class outcome counts (Ω5)
-  "mechCalibration": [ ... ]         // per mechanism-kind-pair outcome records
+  "repos": [ Repo, ... ],
+  "edges": [ Edge, ... ],
+  "synthesisNodes": [ ... ],
+  "notes": [ { "id": string, "text": string }, ... ],   // serialized from the in-memory map
+  "manualLinks": [ ... ],
+  "negatives": [ ... ],              // killed bridges retained as data (impossibility codes, killedBy, mechClass)
+  "preregs": [ ... ],
+  "prizeCandidates": [ ... ],        // candidate bridges; bridge plans carry per-edge ruleInstantiations (v0.5.1)
+  "ledger": [ ... ],                 // probe log (exported from state)
+  "calibration": [ ... ],            // per-prediction outcome records (Ω5)
+  "mechCalibration": [ ... ]         // Object.values() of the keyed in-memory map
 }
 
-Repo (as produced by discovery/enrichment; see SAMPLE in the app source)
-------------------------------------------------------------------------
-{
-  "id": string, "name": string, "description": string,
-  "topics": [string], "language": string, "stars": integer,
-  "updatedAt": string, "defaultBranch": string,
-  "dependencies": [string], "readme": string,
-  "fileTree": [string], "signalFiles": { path: string },
-  "mentionsRepos": [string], "enriched": boolean
-}
+Informative Repo / Edge shapes (as produced by discovery/enrichment; see
+SAMPLE in the app source):
 
-Edge
-----
-{
-  "source": string, "target": string,      // repo ids
-  "type": "readme-reference" | "shared-topic" | "shared-dependency"
-        | "naming-family" | "shared-language" | "provenance" | "manual",
-  "weight": number,
-  "evidence": string
-}
+Repo: { id, name, description, topics[], language, stars, updatedAt,
+        defaultBranch, dependencies[], readme, fileTree[], signalFiles{},
+        mentionsRepos[], enriched }
+Edge: { source, target,
+        type: "readme-reference"|"shared-topic"|"shared-dependency"
+             |"naming-family"|"shared-language"|"provenance"|"manual",
+        weight, evidence }
 
-Notes
------
-- The export is a complete, durable snapshot: the standalone has no
-  cross-reload persistence, so brain-index.json IS the saved state.
-- Nested shapes of synthesisNodes / negatives / preregs / prizeCandidates /
-  ledger / calibration are defined by the app source
-  (reference/src/cortex-v0.5.1.jsx) and round-trip through Load unchanged;
-  they are intentionally not frozen here beyond what the loader requires.
+
+2. ACCEPTED IMPORT ENVELOPE (what onFile requires)
+--------------------------------------------------
+Far looser than the v7 envelope. The loader accepts any JSON object where:
+
+  - repos is an array.            // the ONLY hard requirement
+
+Everything else is optional. In particular:
+
+  - schemaVersion is NOT validated — v7, earlier-version exports, absent,
+    or arbitrary values all load identically.
+  - edges missing or non-array → recomputed from repos (computeEdges).
+  - Nested Repo/Edge shapes are NOT enforced; malformed entries are
+    accepted and their failures (if any) surface downstream, not at load.
+  - Unknown top-level properties are accepted without error.
+
+
+3. ACTUAL LOADER BEHAVIOR (overlay, not replace)
+------------------------------------------------
+Import is an overlay onto existing persisted/in-memory state, not a reset:
+
+  - Each optional key is gated by Array.isArray(...). A missing or
+    non-array key leaves that slice of existing state UNTOUCHED — loading
+    a partial file merges it over whatever was already there.
+  - Restored items are persisted per-item (sset by id); previously
+    persisted items absent from the file are NOT deleted.
+  - Transformed on import (not restored verbatim):
+      notes            array [{id,text}] → in-memory map {id: text}
+      mechCalibration  array → map keyed sourceKind+">"+targetKind;
+                       entries missing sourceKind or targetKind are
+                       SILENTLY DROPPED
+  - ledger is restored to state only — not persisted per-item, unlike the
+    other collections.
+  - repos are persisted individually (persistRepo) after load.
+
+
+4. KNOWN NON-ROUND-TRIPPING FIELDS
+----------------------------------
+Load → Export is not the identity:
+
+  - Unknown top-level properties: accepted on import (carried in the data
+    object) but DROPPED on re-export — doExport writes only the 16 keys.
+  - product, generatedAt, repoCount: regenerated at export; imported
+    values are ignored. githubUser does round-trip (read from data).
+  - notes: only {id, text} survive; any extra properties on a note object
+    are lost in the array→map→array trip.
+  - mechCalibration: entries without sourceKind/targetKind never reach
+    state, so they are absent from the next export.
+  - Anything living only in persisted state (overlaid, per §3) can appear
+    in the next export despite being absent from the loaded file — the
+    export snapshots merged state, not the last-loaded file.
