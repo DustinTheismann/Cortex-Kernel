@@ -111,6 +111,33 @@ test("layer 4: product/generatedAt/repoCount regenerated; githubUser round-trips
   assert.equal(out.githubUser, "demo");
 });
 
+test("layer 3: githubUser is replaced, not overlaid — absent file key clobbers prior", () => {
+  const prior: BrainIndexState = { ...emptyState(), githubUser: "previous-user" };
+  const { state, report } = loadBrainIndex({ repos: [] }, prior);
+  assert.equal(state.githubUser, undefined);
+  assert.ok(report.applied.includes("githubUser"));
+});
+
+test("layer 2/4: githubUser is not validated — any JSON value round-trips", () => {
+  for (const v of [42, null, { nested: true }, ["arr"], false, "demo"]) {
+    const { state } = loadBrainIndex({ repos: [], edges: [], githubUser: v });
+    const out = exportBrainIndex(state, { generatedAt: "x" }) as Record<string, unknown>;
+    assert.deepEqual(out.githubUser, v);
+  }
+});
+
+test("layer 1: export serializes to 15 keys when githubUser was absent, 16 otherwise", () => {
+  const absent = loadBrainIndex({ repos: [], edges: [] }).state;
+  const outAbsent = JSON.parse(JSON.stringify(exportBrainIndex(absent, { generatedAt: "x" })));
+  assert.equal(Object.keys(outAbsent).length, 15);
+  assert.ok(!("githubUser" in outAbsent));
+
+  const present = loadBrainIndex({ repos: [], edges: [], githubUser: null }).state;
+  const outPresent = JSON.parse(JSON.stringify(exportBrainIndex(present, { generatedAt: "x" })));
+  assert.equal(Object.keys(outPresent).length, 16);
+  assert.equal(outPresent.githubUser, null);
+});
+
 test("full v7 file round-trips exactly (modulo regenerated metadata)", () => {
   const file = fullV7();
   const { state, report } = loadBrainIndex(file);

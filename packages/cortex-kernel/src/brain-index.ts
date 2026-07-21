@@ -23,7 +23,14 @@ export interface MechCalRecord {
 
 /** Normalized in-memory state (the standalone's state slices, made explicit). */
 export interface BrainIndexState {
-  githubUser: string | null;
+  /**
+   * Mirrors the standalone's `data.githubUser`: replaced wholesale on
+   * every load (setData(j)), never validated — any JSON value round-trips,
+   * and it is `undefined` when the loaded file lacked the key. An
+   * `undefined` value is elided by JSON.stringify on export, producing
+   * the 15-key serialized envelope (schema §1).
+   */
+  githubUser: unknown;
   repos: BrainRepo[];
   edges: BrainEdge[];
   synthesisNodes: unknown[];
@@ -140,7 +147,11 @@ export const loadBrainIndex = (
     schemaVersion: (j as Record<string, unknown>).schemaVersion,
   };
   const state: BrainIndexState = { ...base, repos: j.repos as BrainRepo[] };
-  state.githubUser = typeof j.githubUser === "string" ? j.githubUser : base.githubUser;
+  // Core data object is replaced, not overlaid (schema §3): githubUser is
+  // taken from the file unconditionally — undefined when absent, any JSON
+  // value otherwise. Prior state never survives here.
+  state.githubUser = j.githubUser;
+  report.applied.push("githubUser");
 
   if (Array.isArray(j.edges)) { state.edges = j.edges as BrainEdge[]; report.applied.push("edges"); }
   else { state.edges = computeEdges(state.repos); report.recomputedEdges = true; }
@@ -176,6 +187,9 @@ export const loadBrainIndex = (
 /**
  * Produce the v7 envelope from state — the standalone's doExport, minus
  * the browser download. `generatedAt` is injectable for reproducibility.
+ * The object literal always constructs 16 properties, but when
+ * `state.githubUser` is undefined JSON.stringify elides that key, so the
+ * serialized form contains 15 or 16 keys (schema §1).
  */
 export const exportBrainIndex = (
   state: BrainIndexState,
