@@ -19,7 +19,7 @@ The object literal in doExport constructs exactly these 16 properties:
   "schemaVersion": 7,                // literal; written, never read back
   "product": string,                 // "OpenSource Cortex v0.5.1 (instantiated contract gate)"
   "generatedAt": string,             // ISO-8601, regenerated at every export
-  "githubUser": string,
+  "githubUser": any JSON value,      // unvalidated (§2); undefined — and elided when serialized — if absent from the last-loaded file (§3)
   "repoCount": integer,              // recomputed as repos.length at export
 
   "repos": [ Repo, ... ],
@@ -35,13 +35,13 @@ The object literal in doExport constructs exactly these 16 properties:
   "mechCalibration": [ ... ]         // Object.values() of the keyed in-memory map
 }
 
-Informative Repo / Edge shapes (as produced by discovery/enrichment; see
-SAMPLE in the app source):
-
 The SERIALIZED file contains 15 or 16 keys: JSON.stringify elides an
 undefined-valued key, and githubUser is the one property that can be
 undefined (after importing a file that lacked it — see §3). Every other
 key always serializes.
+
+Informative Repo / Edge shapes (as produced by discovery/enrichment; see
+SAMPLE in the app source):
 
 Repo: { id, name, description, topics[], language, stars, updatedAt,
         defaultBranch, dependencies[], readme, fileTree[], signalFiles{},

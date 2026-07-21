@@ -21,6 +21,6 @@ jobs:
         run: |
           npm run golden:regen
           git diff --exit-code -- test/golden/fixtures
-      - run: npm test
       - name: Packed artifact contains the built library and imports cleanly
         run: npm run pack:smoke
+      - run: npm test

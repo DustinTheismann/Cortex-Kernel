@@ -47,7 +47,7 @@ A **Rules** panel treats the conversion registry as governed state (one bad edge
 
 This is a **semantic-planning kernel**, precisely scoped:
 
-- Compatibility, path selection, obligation instantiation, and ladder placement through `TYPE_COMPOSABLE` are **deterministic and reproducible** — given the same schemas and rule set, that output is identical. The upper ladder (`CONTRACT_ADMISSIBLE` and `EPISTEMICALLY_SUPPORTED`) additionally depends on model-supplied soft-obligation evidence and live literature probes, so it is **not** reproducible from schemas and rules alone.
+- Compatibility, kind-path search, obligation instantiation, and ladder placement through `TYPE_COMPOSABLE` are **deterministic and reproducible** — given the same schemas and rule set, that output is identical. Model-supplied soft precondition evidence then feeds path pruning, final path selection, PO-5 statuses, and advancement beyond `TYPE_COMPOSABLE`, so the upper ladder is **not** reproducible from schemas and rules alone. Literature probing runs afterward and affects novelty class, final verdict, and prize candidacy — not the five-stage ladder.
 - The soft obligations (assumption satisfiability, invariant preservation, metric meaningfulness) are **model-assisted** and capped at `CONDITIONALLY-SATISFIED` — a model may never mark them `PROVED`.
 - There is **no formal verification**: no SMT solver, no proof assistant, no executed tests. The generated property-test is a **skeleton**, and `VERIFIED` is deliberately out of reach. Everything past `EPISTEMICALLY_SUPPORTED` belongs to a backend of independent instruments — see [`docs/backend-handoff.html`](docs/backend-handoff.html).
 
