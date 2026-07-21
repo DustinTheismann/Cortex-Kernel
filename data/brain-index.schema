@@ -38,6 +38,11 @@ Exactly these 16 top-level keys, always all present:
 Informative Repo / Edge shapes (as produced by discovery/enrichment; see
 SAMPLE in the app source):
 
+One exception to "always all present": doExport serializes with
+JSON.stringify, which drops undefined-valued keys. githubUser is the one
+key that can be undefined (after importing a file that lacked it — see
+§3), in which case the export carries 15 keys.
+
 Repo: { id, name, description, topics[], language, stars, updatedAt,
         defaultBranch, dependencies[], readme, fileTree[], signalFiles{},
         mentionsRepos[], enriched }
@@ -67,9 +72,17 @@ Everything else is optional. In particular:
 ------------------------------------------------
 Import is an overlay onto existing persisted/in-memory state, not a reset:
 
-  - Each optional key is gated by Array.isArray(...). A missing or
-    non-array key leaves that slice of existing state UNTOUCHED — loading
-    a partial file merges it over whatever was already there.
+  - Each optional COLLECTION key (synthesisNodes, manualLinks, negatives,
+    notes, preregs, prizeCandidates, ledger, calibration, mechCalibration)
+    is gated by Array.isArray(...). A missing or non-array collection key
+    leaves that slice of existing state UNTOUCHED — loading a partial file
+    merges it over whatever was already there.
+  - The core data object is NOT overlaid: setData(j) replaces it
+    wholesale. repos always comes from the file (it is the one required
+    key), edges are taken or recomputed (§2), and scalar keys like
+    githubUser are replaced too — a file without githubUser clobbers the
+    previous value to undefined rather than preserving it (see §1/§4 for
+    the export consequence).
   - Restored items are persisted per-item (sset by id); previously
     persisted items absent from the file are NOT deleted.
   - Transformed on import (not restored verbatim):
@@ -89,7 +102,9 @@ Load → Export is not the identity:
   - Unknown top-level properties: accepted on import (carried in the data
     object) but DROPPED on re-export — doExport writes only the 16 keys.
   - product, generatedAt, repoCount: regenerated at export; imported
-    values are ignored. githubUser does round-trip (read from data).
+    values are ignored. githubUser does round-trip when present; if it
+    was absent from the loaded file, the key is dropped from the next
+    export entirely (undefined is elided by JSON.stringify).
   - notes: only {id, text} survive; any extra properties on a note object
     are lost in the array→map→array trip.
   - mechCalibration: entries without sourceKind/targetKind never reach
