@@ -1,0 +1,125 @@
+brain-index.json — export/import contract of the frozen v0.5.1 standalone
+==========================================================================
+
+Derived from the standalone's doExport/onFile code (reference/src/
+cortex-v0.5.1.jsx). This file documents observed legacy semantics; it does
+not validate. The standalone is frozen — these semantics are to be
+addressed in packages/cortex-kernel via explicit normalization and
+migration tests, not by changing the artifact.
+
+The contract has four distinct layers. Conflating them is the main way to
+misread this format.
+
+
+1. EXPORTED v7 ENVELOPE (what doExport writes)
+----------------------------------------------
+The object literal in doExport constructs exactly these 16 properties:
+
+{
+  "schemaVersion": 7,                // literal; written, never read back
+  "product": string,                 // "OpenSource Cortex v0.5.1 (instantiated contract gate)"
+  "generatedAt": string,             // ISO-8601, regenerated at every export
+  "githubUser": any JSON value,      // unvalidated (§2); undefined — and elided when serialized — if absent from the last-loaded file (§3)
+  "repoCount": integer,              // recomputed as repos.length at export
+
+  "repos": [ Repo, ... ],
+  "edges": [ Edge, ... ],
+  "synthesisNodes": [ ... ],
+  "notes": [ { "id": string, "text": string }, ... ],   // serialized from the in-memory map
+  "manualLinks": [ ... ],
+  "negatives": [ ... ],              // killed bridges retained as data (impossibility codes, killedBy, mechClass)
+  "preregs": [ ... ],
+  "prizeCandidates": [ ... ],        // candidate bridges; bridge plans carry per-edge ruleInstantiations (v0.5.1)
+  "ledger": [ ... ],                 // probe log (exported from state)
+  "calibration": [ ... ],            // per-prediction outcome records (Ω5)
+  "mechCalibration": [ ... ]         // Object.values() of the keyed in-memory map
+}
+
+The SERIALIZED file contains 15 or 16 keys: JSON.stringify elides an
+undefined-valued key, and githubUser is the one property that can be
+undefined (after importing a file that lacked it — see §3). Every other
+key always serializes.
+
+Informative Repo / Edge shapes (as produced by discovery/enrichment; see
+SAMPLE in the app source):
+
+Repo: { id, name, description, topics[], language, stars, updatedAt,
+        defaultBranch, dependencies[], readme, fileTree[], signalFiles{},
+        mentionsRepos[], enriched }
+Edge: { source, target,
+        type: "readme-reference"|"shared-topic"|"shared-dependency"
+             |"naming-family"|"shared-language",
+        weight, evidence }
+
+The app also renders "provenance" and "manual" links, but those are
+DERIVED at draw time — from synthesisNodes[].parents and manualLinks
+respectively — and are never emitted by computeEdges nor written into
+edges[]. An imported file may of course carry any type string (§2).
+
+
+2. ACCEPTED IMPORT ENVELOPE (what onFile requires)
+--------------------------------------------------
+Far looser than the v7 envelope. The loader accepts any JSON object where:
+
+  - repos is an array.            // the ONLY hard requirement
+
+Everything else is optional. In particular:
+
+  - schemaVersion is NOT validated — v7, earlier-version exports, absent,
+    or arbitrary values all load identically.
+  - edges missing or non-array → recomputed from repos (computeEdges).
+  - Nested Repo/Edge shapes are NOT enforced; malformed entries are
+    accepted and their failures (if any) surface downstream, not at load.
+  - githubUser is NOT constrained to a string — any JSON value (number,
+    object, null, array, …) is accepted and round-trips verbatim to the
+    next export (§4).
+  - Unknown top-level properties are accepted without error.
+
+
+3. ACTUAL LOADER BEHAVIOR (overlay, not replace)
+------------------------------------------------
+Import is an overlay onto existing persisted/in-memory state, not a reset:
+
+  - Each optional COLLECTION key (synthesisNodes, manualLinks, negatives,
+    notes, preregs, prizeCandidates, ledger, calibration, mechCalibration)
+    is gated by Array.isArray(...). A missing or non-array collection key
+    leaves that slice of existing state UNTOUCHED — loading a partial file
+    merges it over whatever was already there.
+  - The core data object is NOT overlaid: setData(j) replaces it
+    wholesale. repos always comes from the file (it is the one required
+    key), edges are taken or recomputed (§2), and scalar keys like
+    githubUser are replaced too — a file without githubUser clobbers the
+    previous value to undefined rather than preserving it (see §1/§4 for
+    the export consequence).
+  - Restored items are persisted per-item (sset by id); previously
+    persisted items absent from the file are NOT deleted.
+  - Transformed on import (not restored verbatim):
+      notes            array [{id,text}] → in-memory map {id: text}
+      mechCalibration  array → map keyed sourceKind+">"+targetKind;
+                       entries missing sourceKind or targetKind are
+                       SILENTLY DROPPED
+  - ledger is restored to state only — not persisted per-item, unlike the
+    other collections.
+  - repos are persisted individually (persistRepo) after load.
+
+
+4. KNOWN NON-ROUND-TRIPPING FIELDS
+----------------------------------
+Load → Export is not the identity:
+
+  - Unknown top-level properties: accepted on import (carried in the data
+    object) but DROPPED on re-export — doExport writes only the 16 keys.
+  - product, generatedAt, repoCount: regenerated at export; imported
+    values are ignored. githubUser does round-trip when present; if it
+    was absent from the loaded file, the key is dropped from the next
+    export entirely (undefined is elided by JSON.stringify).
+  - notes: only {id, text} survive; any extra properties on a note object
+    are lost in the array→map→array trip.
+  - mechCalibration: entries without sourceKind/targetKind never reach
+    state, so they are absent from the next export.
+  - Collections absent from the loaded file keep their prior IN-MEMORY
+    values (§3) and so appear in the immediate next export. Records
+    living only in PERSISTED storage (e.g. written by an earlier
+    session) do NOT — export snapshots in-memory state, so persisted-only
+    records surface in an export only after a reload, when hydration
+    merges them back into memory.

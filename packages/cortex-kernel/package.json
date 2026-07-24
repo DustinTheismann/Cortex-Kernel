@@ -1,0 +1,24 @@
+{
+  "name": "@opensource-cortex/kernel",
+  "version": "0.5.1",
+  "description": "The frozen OpenSource Cortex v0.5.1 semantic kernel: deterministic mechanism compatibility, min-risk multipath bridge planning, per-edge contract instantiation, proof-obligation vectors, and the five-stage epistemic ladder. Behavior-identical port of the standalone; golden-tested against it.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist/src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "npm run build",
+    "test": "npm run build && node --test \"dist/test/*.test.js\"",
+    "pack:smoke": "node test/pack-smoke.mjs",
+    "golden:regen": "node test/golden/harness.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^5.5.0"
+  }
+}
