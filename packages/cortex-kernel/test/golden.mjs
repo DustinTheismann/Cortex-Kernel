@@ -17,9 +17,12 @@ import { sha256 } from "../../../test/oracle/canonicalize.mjs";
 
 import { MECH_KINDS } from "../src/types.js";
 import { CONV_RULES, edgeCost } from "../src/registry.js";
+import { shapeCompat, unitCompat, licenseCompat } from "../src/compatibility.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const manifest = JSON.parse(readFileSync(join(root, "test/golden/manifest.json"), "utf8"));
+// Test inputs are shared with the oracle (they define the cases, not the behavior).
+const { SHAPES, UNITS, LICENSES } = await import(join(root, "test/oracle/cases.mjs"));
 
 // caseId → () => fixture object (must match the oracle's { caseId, category, ...data } shape)
 const PRODUCERS = {
@@ -28,6 +31,21 @@ const PRODUCERS = {
     const edgeCosts = {};
     for (const [from, edges] of Object.entries(CONV_RULES)) for (const e of edges) edgeCosts[from + ">" + e.to + ":" + e.op] = edgeCost(e);
     return { caseId: "conv-rules", category: "kernel", data: { registry: CONV_RULES, edgeCosts } };
+  },
+  "shape-compat": () => {
+    const t = {};
+    for (const x of SHAPES) for (const y of SHAPES) t[x + "|" + y] = shapeCompat({ shape: x }, { shape: y });
+    return { caseId: "shape-compat", category: "kernel", data: t };
+  },
+  "unit-compat": () => {
+    const t = {};
+    for (const x of UNITS) for (const y of UNITS) t[x + "|" + y] = unitCompat({ units: x }, { units: y });
+    return { caseId: "unit-compat", category: "kernel", data: t };
+  },
+  "license-compat": () => {
+    const t = [];
+    for (const a of LICENSES) for (const b of LICENSES) t.push({ a, b, out: licenseCompat(a == null ? {} : { license: a }, b == null ? {} : { license: b }) });
+    return { caseId: "license-compat", category: "kernel", data: t };
   },
 };
 
