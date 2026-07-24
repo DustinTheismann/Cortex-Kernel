@@ -18,6 +18,7 @@ import { sha256 } from "../../../test/oracle/canonicalize.mjs";
 import { MECH_KINDS } from "../src/types.js";
 import { CONV_RULES, edgeCost } from "../src/registry.js";
 import { shapeCompat, unitCompat, licenseCompat } from "../src/compatibility.js";
+import { adaptersFor, pairCompat } from "../src/planner.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const manifest = JSON.parse(readFileSync(join(root, "test/golden/manifest.json"), "utf8"));
@@ -46,6 +47,16 @@ const PRODUCERS = {
     const t = [];
     for (const a of LICENSES) for (const b of LICENSES) t.push({ a, b, out: licenseCompat(a == null ? {} : { license: a }, b == null ? {} : { license: b }) });
     return { caseId: "license-compat", category: "kernel", data: t };
+  },
+  "multipath-kind-paths": () => {
+    const t = {};
+    for (const a of MECH_KINDS) for (const b of MECH_KINDS) t[a + ">" + b] = adaptersFor(a, b, 3);
+    return { caseId: "multipath-kind-paths", category: "kernel", data: t };
+  },
+  "pair-compat": () => {
+    const t = {};
+    for (const a of MECH_KINDS) for (const b of MECH_KINDS) t[a + ">" + b] = pairCompat({ kind: a }, { kind: b });
+    return { caseId: "pair-compat", category: "kernel", data: t };
   },
 };
 

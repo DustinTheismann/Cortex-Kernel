@@ -9,8 +9,9 @@
 
 export { SCHEMA_VERSION } from "./types.js";
 export { KernelError, BrainIndexError, RegistryIntegrityError } from "./errors.js";
+export { createRegistry } from "./registry.js";
+export { evaluateCompatibility, planBridge } from "./planner.js";
 
 // Extracted in subsequent commits (parity-gated), matching the target surface:
-//   createRegistry, evaluateCompatibility, planBridge, instantiateContract,
-//   evaluateObligations, evaluateCascade, applyLiteratureAssessment,
-//   deriveVerdict, importBrainIndex, exportBrainIndex
+//   instantiateContract, evaluateObligations, evaluateCascade,
+//   applyLiteratureAssessment, deriveVerdict, importBrainIndex, exportBrainIndex
