@@ -1,66 +1,69 @@
 {
   "caseId": "compute-edges",
-  "empty": [],
-  "naming-family-and-language": [
-    {
-      "evidence": "naming family: core-*",
-      "source": "f1",
-      "target": "f2",
-      "type": "naming-family",
-      "weight": 2
-    },
-    {
-      "evidence": "naming family: core-*",
-      "source": "f1",
-      "target": "f3",
-      "type": "naming-family",
-      "weight": 2
-    },
-    {
-      "evidence": "both Rust",
-      "source": "f1",
-      "target": "f4",
-      "type": "shared-language",
-      "weight": 1
-    },
-    {
-      "evidence": "both Rust",
-      "source": "f1",
-      "target": "f2",
-      "type": "shared-language",
-      "weight": 1
-    }
-  ],
-  "readme-and-topic": [
-    {
-      "evidence": "alpha's README mentions beta",
-      "source": "r1",
-      "target": "r2",
-      "type": "readme-reference",
-      "weight": 3
-    },
-    {
-      "evidence": "topic: opt",
-      "source": "r1",
-      "target": "r2",
-      "type": "shared-topic",
-      "weight": 1
-    },
-    {
-      "evidence": "topic: opt",
-      "source": "r1",
-      "target": "r3",
-      "type": "shared-topic",
-      "weight": 1
-    }
-  ],
-  "shared-dependency": [
-    {
-      "evidence": "deps: ed25519, blake3",
-      "source": "d1",
-      "target": "d2",
-      "type": "shared-dependency",
-      "weight": 2
-    }
-  ]
+  "category": "kernel",
+  "data": {
+    "empty": [],
+    "naming-family-and-language": [
+      {
+        "evidence": "naming family: core-*",
+        "source": "f1",
+        "target": "f2",
+        "type": "naming-family",
+        "weight": 2
+      },
+      {
+        "evidence": "naming family: core-*",
+        "source": "f1",
+        "target": "f3",
+        "type": "naming-family",
+        "weight": 2
+      },
+      {
+        "evidence": "both Rust",
+        "source": "f1",
+        "target": "f4",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Rust",
+        "source": "f1",
+        "target": "f2",
+        "type": "shared-language",
+        "weight": 1
+      }
+    ],
+    "readme-and-topic": [
+      {
+        "evidence": "alpha's README mentions beta",
+        "source": "r1",
+        "target": "r2",
+        "type": "readme-reference",
+        "weight": 3
+      },
+      {
+        "evidence": "topic: opt",
+        "source": "r1",
+        "target": "r2",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: opt",
+        "source": "r1",
+        "target": "r3",
+        "type": "shared-topic",
+        "weight": 1
+      }
+    ],
+    "shared-dependency": [
+      {
+        "evidence": "deps: ed25519, blake3",
+        "source": "d1",
+        "target": "d2",
+        "type": "shared-dependency",
+        "weight": 2
+      }
+    ]
+  }
 }

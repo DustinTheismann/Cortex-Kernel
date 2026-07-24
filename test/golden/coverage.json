@@ -1,0 +1,53 @@
+{
+  "conversionRegistry": {
+    "directRule": true,
+    "multiHop": true,
+    "noPath": true,
+    "tieBreak": true
+  },
+  "compatibility": {
+    "exactSharedObject": true,
+    "unitContradiction": true,
+    "noSharedPorts": true,
+    "noSchema": true
+  },
+  "preconditions": {
+    "satisfied": true,
+    "unresolved": true,
+    "failed": true,
+    "partiallyInstantiated": true
+  },
+  "obligations": {
+    "lossyPO8": true,
+    "orderedVector": true
+  },
+  "advancement": {
+    "proposed": true,
+    "pathFound": true,
+    "typeComposable": true,
+    "contractAdmissible": true,
+    "epistemicallySupported": true
+  },
+  "literature": {
+    "unexplored": true,
+    "emerging": true,
+    "known": true,
+    "unverified": true,
+    "noveltyIndependentOfLadder": true,
+    "prizeIndependentOfLadder": true
+  },
+  "serialization": {
+    "sixteenKeys": true,
+    "fifteenKeys": true,
+    "githubUserUndefined": true,
+    "importWithGithubUser": true,
+    "edgesRecomputed": true,
+    "unknownFieldsDropped": true,
+    "emptyGraph": true,
+    "malformedInput": true,
+    "repoEdgeRoundTrip": true
+  },
+  "determinism": {
+    "replay": true
+  }
+}

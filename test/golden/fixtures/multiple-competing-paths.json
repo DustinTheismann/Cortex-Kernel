@@ -1,9 +1,10 @@
 {
-  "caseId": "compile-epistemically-supported",
+  "caseId": "multiple-competing-paths",
+  "category": "planning",
   "input": {
     "model": {
-      "invariant": "satisfied",
-      "metric": "satisfied",
+      "invariant": "unknown",
+      "metric": "unknown",
       "pre": "satisfied"
     },
     "schemaA": {
@@ -46,7 +47,7 @@
     }
   },
   "output": {
-    "blockReason": null,
+    "blockReason": "EVIDENCE_PENDING",
     "bridge": {
       "adapters": [
         {
@@ -111,14 +112,14 @@
           "id": "PO-6",
           "method": "model-assisted",
           "name": "Invariant preservation",
-          "status": "CONDITIONALLY-SATISFIED"
+          "status": "UNRESOLVED"
         },
         {
           "detail": "",
           "id": "PO-7",
           "method": "model-assisted",
           "name": "Metric measures outcome",
-          "status": "CONDITIONALLY-SATISFIED"
+          "status": "UNRESOLVED"
         }
       ],
       "requiredAssumptions": [
@@ -148,7 +149,11 @@
         "units": ""
       }
     },
+    "finalVerdict": "PLAUSIBLE",
     "impossibility": null,
+    "litClass": "OFF",
+    "litCount": null,
+    "litNote": "␀undefined",
     "mechClass": {
       "sourceKind": "tensor",
       "targetKind": "distribution"
@@ -288,6 +293,8 @@
       "sharedFormalObject": false,
       "verdict": "conversion_required"
     },
+    "mechanismGrounded": true,
+    "modelEstimated": false,
     "obligations": [
       {
         "detail": "tensor → distribution via normalize",
@@ -329,14 +336,14 @@
         "id": "PO-6",
         "method": "model-assisted",
         "name": "Invariant preservation",
-        "status": "CONDITIONALLY-SATISFIED"
+        "status": "UNRESOLVED"
       },
       {
         "detail": "",
         "id": "PO-7",
         "method": "model-assisted",
         "name": "Metric measures outcome",
-        "status": "CONDITIONALLY-SATISFIED"
+        "status": "UNRESOLVED"
       }
     ],
     "options": [
@@ -474,13 +481,42 @@
         "unit": "unresolved"
       }
     ],
-    "stage": "EPISTEMICALLY_SUPPORTED",
+    "preregId": "prereg:<id>",
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 0,
+      "mechClasses": [
+        {
+          "sourceKind": "tensor",
+          "targetKind": "distribution"
+        }
+      ],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
+    "stage": "CONTRACT_ADMISSIBLE",
     "typeCheck": {
       "pass": true,
-      "reason": "composable via adapter — reached EPISTEMICALLY_SUPPORTED · 3 paths considered, 0 pruned",
+      "reason": "composable via adapter — reached CONTRACT_ADMISSIBLE · 3 paths considered, 0 pruned",
       "sharedObject": "tensor → distribution (normalize)",
-      "stage": "EPISTEMICALLY_SUPPORTED",
+      "stage": "CONTRACT_ADMISSIBLE",
       "verdict": "conversion_required"
-    }
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "result": "pass",
+        "sharedObject": "tensor → distribution (normalize)"
+      },
+      {
+        "count": null,
+        "instrument": "openalex",
+        "preregId": "prereg:<id>",
+        "result": "OFF"
+      }
+    ]
   }
 }

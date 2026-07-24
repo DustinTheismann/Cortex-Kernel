@@ -1,21 +1,24 @@
 {
   "caseId": "mech-kinds",
-  "kinds": [
-    "tensor",
-    "scalar",
-    "distribution",
-    "graph",
-    "subgraph",
-    "bound",
-    "certificate",
-    "proof_term",
-    "constraint_set",
-    "optimization_problem",
-    "program",
-    "trace",
-    "dataset",
-    "policy",
-    "claim",
-    "measurement"
-  ]
+  "category": "kernel",
+  "data": {
+    "kinds": [
+      "tensor",
+      "scalar",
+      "distribution",
+      "graph",
+      "subgraph",
+      "bound",
+      "certificate",
+      "proof_term",
+      "constraint_set",
+      "optimization_problem",
+      "program",
+      "trace",
+      "dataset",
+      "policy",
+      "claim",
+      "measurement"
+    ]
+  }
 }

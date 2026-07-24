@@ -1,5 +1,6 @@
 {
-  "caseId": "compile-no-kind-path",
+  "caseId": "missing-conversion-rule",
+  "category": "compatibility",
   "input": {
     "model": {},
     "schemaA": {
@@ -42,18 +43,27 @@
     }
   },
   "output": {
-    "blockReason": null,
-    "bridge": null,
+    "finalVerdict": "INCOHERENT",
     "impossibility": {
       "code": "NO_KIND_PATH",
       "detail": "no admissible conversion between any shared ports",
       "from": null,
       "to": null
     },
-    "mechClass": null,
-    "mechCompat": null,
+    "litClass": "SKIPPED",
+    "mechanismGrounded": true,
     "obligations": [],
     "options": [],
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 1,
+      "mechClasses": [],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
     "stage": "PROPOSED",
     "typeCheck": {
       "pass": false,
@@ -61,6 +71,13 @@
       "sharedObject": null,
       "stage": "PROPOSED",
       "verdict": "type_killed"
-    }
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "reason": "structurally impossible [NO_KIND_PATH] — no admissible conversion between any shared ports",
+        "result": "fail"
+      }
+    ]
   }
 }

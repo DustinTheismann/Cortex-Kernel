@@ -1,10 +1,8 @@
 {
-  "caseId": "compile-unit-contradiction",
+  "caseId": "hard-incompatibility",
+  "category": "compatibility",
   "input": {
-    "model": {
-      "invariant": "unknown",
-      "metric": "unknown"
-    },
+    "model": {},
     "schemaA": {
       "assumptions": [
         "assumption-x"
@@ -45,14 +43,15 @@
     }
   },
   "output": {
-    "blockReason": null,
     "bridge": null,
+    "finalVerdict": "INCOHERENT",
     "impossibility": {
       "code": "UNIT_CONTRADICTION",
       "detail": "units probability ⟶ seconds cannot compose",
       "from": "tensor",
       "to": "tensor"
     },
+    "litClass": "SKIPPED",
     "mechClass": {
       "sourceKind": "tensor",
       "targetKind": "tensor"
@@ -85,6 +84,7 @@
       "sharedFormalObject": true,
       "verdict": "type_killed"
     },
+    "mechanismGrounded": true,
     "obligations": [
       {
         "detail": "tensor ≡ tensor",
@@ -160,6 +160,21 @@
         "unit": "refuted"
       }
     ],
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 1,
+      "mechClasses": [
+        {
+          "sourceKind": "tensor",
+          "targetKind": "tensor"
+        }
+      ],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
     "stage": "PATH_FOUND",
     "typeCheck": {
       "pass": false,
@@ -167,6 +182,13 @@
       "sharedObject": null,
       "stage": "PATH_FOUND",
       "verdict": "type_killed"
-    }
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "reason": "structurally impossible [UNIT_CONTRADICTION] — units probability ⟶ seconds cannot compose",
+        "result": "fail"
+      }
+    ]
   }
 }

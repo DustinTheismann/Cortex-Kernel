@@ -1,9 +1,11 @@
 {
-  "caseId": "compile-exact-shared-object",
+  "caseId": "directly-compatible",
+  "category": "compatibility",
   "input": {
     "model": {
-      "invariant": "unknown",
-      "metric": "unknown"
+      "invariant": "satisfied",
+      "metric": "satisfied",
+      "pre": "satisfied"
     },
     "schemaA": {
       "assumptions": [
@@ -45,7 +47,7 @@
     }
   },
   "output": {
-    "blockReason": "EVIDENCE_PENDING",
+    "blockReason": null,
     "bridge": {
       "adapters": [],
       "destroyedProperties": [],
@@ -95,14 +97,14 @@
           "id": "PO-6",
           "method": "model-assisted",
           "name": "Invariant preservation",
-          "status": "UNRESOLVED"
+          "status": "CONDITIONALLY-SATISFIED"
         },
         {
           "detail": "",
           "id": "PO-7",
           "method": "model-assisted",
           "name": "Metric measures outcome",
-          "status": "UNRESOLVED"
+          "status": "CONDITIONALLY-SATISFIED"
         }
       ],
       "requiredAssumptions": [
@@ -125,7 +127,11 @@
         "units": ""
       }
     },
+    "finalVerdict": "PLAUSIBLE",
     "impossibility": null,
+    "litClass": "OFF",
+    "litCount": null,
+    "litNote": "␀undefined",
     "mechClass": {
       "sourceKind": "tensor",
       "targetKind": "tensor"
@@ -158,6 +164,8 @@
       "sharedFormalObject": true,
       "verdict": "type_valid"
     },
+    "mechanismGrounded": true,
+    "modelEstimated": false,
     "obligations": [
       {
         "detail": "tensor ≡ tensor",
@@ -199,14 +207,14 @@
         "id": "PO-6",
         "method": "model-assisted",
         "name": "Invariant preservation",
-        "status": "UNRESOLVED"
+        "status": "CONDITIONALLY-SATISFIED"
       },
       {
         "detail": "",
         "id": "PO-7",
         "method": "model-assisted",
         "name": "Metric measures outcome",
-        "status": "UNRESOLVED"
+        "status": "CONDITIONALLY-SATISFIED"
       }
     ],
     "options": [
@@ -233,13 +241,42 @@
         "unit": "unresolved"
       }
     ],
-    "stage": "CONTRACT_ADMISSIBLE",
+    "preregId": "prereg:<id>",
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 0,
+      "mechClasses": [
+        {
+          "sourceKind": "tensor",
+          "targetKind": "tensor"
+        }
+      ],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
+    "stage": "EPISTEMICALLY_SUPPORTED",
     "typeCheck": {
       "pass": true,
-      "reason": "shared formal object — reached CONTRACT_ADMISSIBLE",
+      "reason": "shared formal object — reached EPISTEMICALLY_SUPPORTED",
       "sharedObject": "tensor: certified L2 radius",
-      "stage": "CONTRACT_ADMISSIBLE",
+      "stage": "EPISTEMICALLY_SUPPORTED",
       "verdict": "type_valid"
-    }
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "result": "pass",
+        "sharedObject": "tensor: certified L2 radius"
+      },
+      {
+        "count": null,
+        "instrument": "openalex",
+        "preregId": "prereg:<id>",
+        "result": "OFF"
+      }
+    ]
   }
 }

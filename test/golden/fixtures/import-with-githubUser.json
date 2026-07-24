@@ -1,0 +1,272 @@
+{
+  "caseId": "import-with-githubUser",
+  "category": "serialization",
+  "input": {
+    "file": {
+      "calibration": [
+        {
+          "id": "cal1"
+        }
+      ],
+      "edges": [
+        {
+          "evidence": "e",
+          "source": "r1",
+          "target": "r2",
+          "type": "manual",
+          "weight": 1
+        }
+      ],
+      "githubUser": "octocat",
+      "ledger": [
+        {
+          "cellName": "x"
+        }
+      ],
+      "manualLinks": [
+        {
+          "id": "m1"
+        }
+      ],
+      "mechCalibration": [
+        {
+          "confirmed": 1,
+          "sourceKind": "tensor",
+          "targetKind": "bound"
+        },
+        {
+          "sourceKind": "x-only"
+        }
+      ],
+      "negatives": [
+        {
+          "id": "neg1"
+        }
+      ],
+      "notes": [
+        {
+          "id": "n1",
+          "text": "hello"
+        },
+        {
+          "text": "no-id-dropped"
+        }
+      ],
+      "preregs": [
+        {
+          "id": "p1"
+        }
+      ],
+      "prizeCandidates": [
+        {
+          "id": "c1"
+        }
+      ],
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r1",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r1",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        },
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r2",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r2",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7,
+      "synthesisNodes": [
+        {
+          "id": "s1"
+        }
+      ]
+    },
+    "prior": null
+  },
+  "output": {
+    "calibration": [
+      {
+        "id": "cal1"
+      }
+    ],
+    "candidates": [
+      {
+        "id": "c1"
+      }
+    ],
+    "data": {
+      "calibration": [
+        {
+          "id": "cal1"
+        }
+      ],
+      "edges": [
+        {
+          "evidence": "e",
+          "source": "r1",
+          "target": "r2",
+          "type": "manual",
+          "weight": 1
+        }
+      ],
+      "githubUser": "octocat",
+      "ledger": [
+        {
+          "cellName": "x"
+        }
+      ],
+      "manualLinks": [
+        {
+          "id": "m1"
+        }
+      ],
+      "mechCalibration": [
+        {
+          "confirmed": 1,
+          "sourceKind": "tensor",
+          "targetKind": "bound"
+        },
+        {
+          "sourceKind": "x-only"
+        }
+      ],
+      "negatives": [
+        {
+          "id": "neg1"
+        }
+      ],
+      "notes": [
+        {
+          "id": "n1",
+          "text": "hello"
+        },
+        {
+          "text": "no-id-dropped"
+        }
+      ],
+      "preregs": [
+        {
+          "id": "p1"
+        }
+      ],
+      "prizeCandidates": [
+        {
+          "id": "c1"
+        }
+      ],
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r1",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r1",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        },
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r2",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r2",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7,
+      "synthesisNodes": [
+        {
+          "id": "s1"
+        }
+      ]
+    },
+    "error": "",
+    "inputCleared": "",
+    "ledger": [
+      {
+        "cellName": "x"
+      }
+    ],
+    "manualLinks": [
+      {
+        "id": "m1"
+      }
+    ],
+    "mechCal": {
+      "tensor>bound": {
+        "confirmed": 1,
+        "sourceKind": "tensor",
+        "targetKind": "bound"
+      }
+    },
+    "negatives": [
+      {
+        "id": "neg1"
+      }
+    ],
+    "notes": {
+      "n1": "hello"
+    },
+    "persistedRepos": [
+      "r1",
+      "r2"
+    ],
+    "preregs": [
+      {
+        "id": "p1"
+      }
+    ],
+    "ssetKeys": [
+      "s1",
+      "m1",
+      "neg1",
+      "note:n1",
+      "p1",
+      "c1",
+      "cal1",
+      "mech:tensor>bound"
+    ],
+    "synthNodes": [
+      {
+        "id": "s1"
+      }
+    ]
+  }
+}

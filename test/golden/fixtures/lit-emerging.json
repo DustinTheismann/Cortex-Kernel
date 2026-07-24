@@ -1,9 +1,12 @@
 {
-  "caseId": "compile-contract-admissible",
+  "caseId": "lit-emerging",
+  "category": "literature",
   "input": {
+    "litCount": 100,
+    "litGround": true,
     "model": {
-      "invariant": "unknown",
-      "metric": "unknown",
+      "invariant": "satisfied",
+      "metric": "satisfied",
       "pre": "satisfied"
     },
     "schemaA": {
@@ -46,7 +49,7 @@
     }
   },
   "output": {
-    "blockReason": "EVIDENCE_PENDING",
+    "blockReason": null,
     "bridge": {
       "adapters": [
         {
@@ -111,14 +114,14 @@
           "id": "PO-6",
           "method": "model-assisted",
           "name": "Invariant preservation",
-          "status": "UNRESOLVED"
+          "status": "CONDITIONALLY-SATISFIED"
         },
         {
           "detail": "",
           "id": "PO-7",
           "method": "model-assisted",
           "name": "Metric measures outcome",
-          "status": "UNRESOLVED"
+          "status": "CONDITIONALLY-SATISFIED"
         }
       ],
       "requiredAssumptions": [
@@ -148,7 +151,11 @@
         "units": ""
       }
     },
+    "finalVerdict": "EMERGING",
     "impossibility": null,
+    "litClass": "EMERGING",
+    "litCount": 100,
+    "litNote": "␀undefined",
     "mechClass": {
       "sourceKind": "tensor",
       "targetKind": "distribution"
@@ -288,6 +295,8 @@
       "sharedFormalObject": false,
       "verdict": "conversion_required"
     },
+    "mechanismGrounded": true,
+    "modelEstimated": false,
     "obligations": [
       {
         "detail": "tensor → distribution via normalize",
@@ -329,14 +338,14 @@
         "id": "PO-6",
         "method": "model-assisted",
         "name": "Invariant preservation",
-        "status": "UNRESOLVED"
+        "status": "CONDITIONALLY-SATISFIED"
       },
       {
         "detail": "",
         "id": "PO-7",
         "method": "model-assisted",
         "name": "Metric measures outcome",
-        "status": "UNRESOLVED"
+        "status": "CONDITIONALLY-SATISFIED"
       }
     ],
     "options": [
@@ -474,13 +483,42 @@
         "unit": "unresolved"
       }
     ],
-    "stage": "CONTRACT_ADMISSIBLE",
+    "preregId": "prereg:<id>",
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 0,
+      "mechClasses": [
+        {
+          "sourceKind": "tensor",
+          "targetKind": "distribution"
+        }
+      ],
+      "paperCount": 100,
+      "prize": false,
+      "verdict": "EMERGING"
+    },
+    "stage": "EPISTEMICALLY_SUPPORTED",
     "typeCheck": {
       "pass": true,
-      "reason": "composable via adapter — reached CONTRACT_ADMISSIBLE · 3 paths considered, 0 pruned",
+      "reason": "composable via adapter — reached EPISTEMICALLY_SUPPORTED · 3 paths considered, 0 pruned",
       "sharedObject": "tensor → distribution (normalize)",
-      "stage": "CONTRACT_ADMISSIBLE",
+      "stage": "EPISTEMICALLY_SUPPORTED",
       "verdict": "conversion_required"
-    }
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "result": "pass",
+        "sharedObject": "tensor → distribution (normalize)"
+      },
+      {
+        "count": 100,
+        "instrument": "openalex",
+        "preregId": "prereg:<id>",
+        "result": "EMERGING"
+      }
+    ]
   }
 }

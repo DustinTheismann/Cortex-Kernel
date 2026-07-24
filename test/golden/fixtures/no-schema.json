@@ -1,5 +1,6 @@
 {
-  "caseId": "compile-no-schema",
+  "caseId": "no-schema",
+  "category": "compatibility",
   "input": {
     "model": {},
     "schemaA": {
@@ -24,18 +25,27 @@
     "schemaB": null
   },
   "output": {
-    "blockReason": null,
-    "bridge": null,
+    "finalVerdict": "INCOHERENT",
     "impossibility": {
       "code": "NO_SCHEMA",
       "detail": "mechanism schema unavailable — fail-closed",
       "from": null,
       "to": null
     },
-    "mechClass": null,
-    "mechCompat": null,
+    "litClass": "SKIPPED",
+    "mechanismGrounded": true,
     "obligations": [],
     "options": [],
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 1,
+      "mechClasses": [],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
     "stage": "PROPOSED",
     "typeCheck": {
       "pass": false,
@@ -43,6 +53,13 @@
       "sharedObject": null,
       "stage": "PROPOSED",
       "verdict": "type_killed"
-    }
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "reason": "structurally impossible [NO_SCHEMA] — mechanism schema unavailable — fail-closed",
+        "result": "fail"
+      }
+    ]
   }
 }

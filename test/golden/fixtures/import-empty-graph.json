@@ -1,0 +1,31 @@
+{
+  "caseId": "import-empty-graph",
+  "category": "serialization",
+  "input": {
+    "file": {
+      "repos": [],
+      "schemaVersion": 7
+    },
+    "prior": null
+  },
+  "output": {
+    "calibration": "␀undefined",
+    "candidates": "␀undefined",
+    "data": {
+      "edges": [],
+      "repos": [],
+      "schemaVersion": 7
+    },
+    "error": "",
+    "inputCleared": "",
+    "ledger": "␀undefined",
+    "manualLinks": "␀undefined",
+    "mechCal": "␀undefined",
+    "negatives": "␀undefined",
+    "notes": "␀undefined",
+    "persistedRepos": [],
+    "preregs": "␀undefined",
+    "ssetKeys": [],
+    "synthNodes": "␀undefined"
+  }
+}

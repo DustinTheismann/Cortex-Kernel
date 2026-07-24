@@ -1,0 +1,137 @@
+{
+  "caseId": "export-sixteen-keys",
+  "category": "serialization",
+  "input": {
+    "state": {
+      "candidates": [
+        {
+          "id": "c1"
+        }
+      ],
+      "data": {
+        "edges": [
+          {
+            "evidence": "e",
+            "source": "r1",
+            "target": "r1",
+            "type": "manual",
+            "weight": 1
+          }
+        ],
+        "githubUser": "octocat",
+        "repos": [
+          {
+            "defaultBranch": "main",
+            "dependencies": [],
+            "description": "",
+            "enriched": false,
+            "fileTree": [],
+            "id": "r1",
+            "language": null,
+            "mentionsRepos": [],
+            "name": "r1",
+            "readme": "",
+            "signalFiles": {},
+            "stars": 0,
+            "topics": [],
+            "updatedAt": "2026-01-01T00:00:00Z"
+          }
+        ]
+      },
+      "mechCal": {
+        "tensor>bound": {
+          "sourceKind": "tensor",
+          "targetKind": "bound"
+        }
+      },
+      "negatives": [
+        {
+          "id": "neg1"
+        }
+      ],
+      "notes": {
+        "n1": "hello"
+      }
+    }
+  },
+  "output": {
+    "keys": [
+      "schemaVersion",
+      "product",
+      "generatedAt",
+      "githubUser",
+      "repoCount",
+      "repos",
+      "edges",
+      "synthesisNodes",
+      "notes",
+      "manualLinks",
+      "negatives",
+      "preregs",
+      "prizeCandidates",
+      "ledger",
+      "calibration",
+      "mechCalibration"
+    ],
+    "parsed": {
+      "calibration": [],
+      "edges": [
+        {
+          "evidence": "e",
+          "source": "r1",
+          "target": "r1",
+          "type": "manual",
+          "weight": 1
+        }
+      ],
+      "githubUser": "octocat",
+      "ledger": [],
+      "manualLinks": [],
+      "mechCalibration": [
+        {
+          "sourceKind": "tensor",
+          "targetKind": "bound"
+        }
+      ],
+      "negatives": [
+        {
+          "id": "neg1"
+        }
+      ],
+      "notes": [
+        {
+          "id": "n1",
+          "text": "hello"
+        }
+      ],
+      "preregs": [],
+      "prizeCandidates": [
+        {
+          "id": "c1"
+        }
+      ],
+      "product": "OpenSource Cortex v0.5.1 (instantiated contract gate)",
+      "repoCount": 1,
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r1",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r1",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7,
+      "synthesisNodes": []
+    }
+  }
+}

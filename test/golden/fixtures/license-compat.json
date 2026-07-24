@@ -1,923 +1,926 @@
 {
-  "0": {
-    "a": null,
-    "b": null,
-    "out": {
-      "detail": "? / ? — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "1": {
-    "a": null,
-    "b": "MIT",
-    "out": {
-      "detail": "? / mit — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "2": {
-    "a": null,
-    "b": "mit",
-    "out": {
-      "detail": "? / mit — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "3": {
-    "a": null,
-    "b": "GPL-3.0",
-    "out": {
-      "detail": "? / gpl-3.0 — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "4": {
-    "a": null,
-    "b": "AGPL-3.0",
-    "out": {
-      "detail": "? / agpl-3.0 — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "5": {
-    "a": null,
-    "b": "LGPL-2.1",
-    "out": {
-      "detail": "? / lgpl-2.1 — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "6": {
-    "a": null,
-    "b": "Apache-2.0",
-    "out": {
-      "detail": "? / apache-2.0 — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "7": {
-    "a": null,
-    "b": {
-      "spdx_id": "GPL-3.0"
+  "caseId": "license-compat",
+  "category": "kernel",
+  "data": [
+    {
+      "a": null,
+      "b": null,
+      "out": {
+        "detail": "? / ? — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "? / gpl-3.0 — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "8": {
-    "a": null,
-    "b": {
-      "key": "agpl-3.0"
+    {
+      "a": null,
+      "b": "MIT",
+      "out": {
+        "detail": "? / mit — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "? / agpl-3.0 — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "9": {
-    "a": null,
-    "b": {
-      "name": "MIT License"
+    {
+      "a": null,
+      "b": "mit",
+      "out": {
+        "detail": "? / mit — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "? / mit license — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "10": {
-    "a": "MIT",
-    "b": null,
-    "out": {
-      "detail": "mit / ? — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "11": {
-    "a": "MIT",
-    "b": "MIT",
-    "out": {
-      "detail": "mit + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "12": {
-    "a": "MIT",
-    "b": "mit",
-    "out": {
-      "detail": "mit + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "13": {
-    "a": "MIT",
-    "b": "GPL-3.0",
-    "out": {
-      "detail": "mit + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "14": {
-    "a": "MIT",
-    "b": "AGPL-3.0",
-    "out": {
-      "detail": "mit + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "15": {
-    "a": "MIT",
-    "b": "LGPL-2.1",
-    "out": {
-      "detail": "mit + lgpl-2.1 combinable",
-      "status": "PROVED"
-    }
-  },
-  "16": {
-    "a": "MIT",
-    "b": "Apache-2.0",
-    "out": {
-      "detail": "mit + apache-2.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "17": {
-    "a": "MIT",
-    "b": {
-      "spdx_id": "GPL-3.0"
+    {
+      "a": null,
+      "b": "GPL-3.0",
+      "out": {
+        "detail": "? / gpl-3.0 — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "mit + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "18": {
-    "a": "MIT",
-    "b": {
-      "key": "agpl-3.0"
+    {
+      "a": null,
+      "b": "AGPL-3.0",
+      "out": {
+        "detail": "? / agpl-3.0 — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "mit + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "19": {
-    "a": "MIT",
-    "b": {
-      "name": "MIT License"
+    {
+      "a": null,
+      "b": "LGPL-2.1",
+      "out": {
+        "detail": "? / lgpl-2.1 — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "mit + mit license combinable",
-      "status": "PROVED"
-    }
-  },
-  "20": {
-    "a": "mit",
-    "b": null,
-    "out": {
-      "detail": "mit / ? — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "21": {
-    "a": "mit",
-    "b": "MIT",
-    "out": {
-      "detail": "mit + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "22": {
-    "a": "mit",
-    "b": "mit",
-    "out": {
-      "detail": "mit + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "23": {
-    "a": "mit",
-    "b": "GPL-3.0",
-    "out": {
-      "detail": "mit + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "24": {
-    "a": "mit",
-    "b": "AGPL-3.0",
-    "out": {
-      "detail": "mit + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "25": {
-    "a": "mit",
-    "b": "LGPL-2.1",
-    "out": {
-      "detail": "mit + lgpl-2.1 combinable",
-      "status": "PROVED"
-    }
-  },
-  "26": {
-    "a": "mit",
-    "b": "Apache-2.0",
-    "out": {
-      "detail": "mit + apache-2.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "27": {
-    "a": "mit",
-    "b": {
-      "spdx_id": "GPL-3.0"
+    {
+      "a": null,
+      "b": "Apache-2.0",
+      "out": {
+        "detail": "? / apache-2.0 — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "mit + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "28": {
-    "a": "mit",
-    "b": {
-      "key": "agpl-3.0"
+    {
+      "a": null,
+      "b": {
+        "spdx_id": "GPL-3.0"
+      },
+      "out": {
+        "detail": "? / gpl-3.0 — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "mit + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "29": {
-    "a": "mit",
-    "b": {
-      "name": "MIT License"
+    {
+      "a": null,
+      "b": {
+        "key": "agpl-3.0"
+      },
+      "out": {
+        "detail": "? / agpl-3.0 — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "mit + mit license combinable",
-      "status": "PROVED"
-    }
-  },
-  "30": {
-    "a": "GPL-3.0",
-    "b": null,
-    "out": {
-      "detail": "gpl-3.0 / ? — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "31": {
-    "a": "GPL-3.0",
-    "b": "MIT",
-    "out": {
-      "detail": "gpl-3.0 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "32": {
-    "a": "GPL-3.0",
-    "b": "mit",
-    "out": {
-      "detail": "gpl-3.0 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "33": {
-    "a": "GPL-3.0",
-    "b": "GPL-3.0",
-    "out": {
-      "detail": "gpl-3.0 + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "34": {
-    "a": "GPL-3.0",
-    "b": "AGPL-3.0",
-    "out": {
-      "detail": "distinct copyleft (gpl-3.0/agpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "35": {
-    "a": "GPL-3.0",
-    "b": "LGPL-2.1",
-    "out": {
-      "detail": "distinct copyleft (gpl-3.0/lgpl-2.1) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "36": {
-    "a": "GPL-3.0",
-    "b": "Apache-2.0",
-    "out": {
-      "detail": "gpl-3.0 + apache-2.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "37": {
-    "a": "GPL-3.0",
-    "b": {
-      "spdx_id": "GPL-3.0"
+    {
+      "a": null,
+      "b": {
+        "name": "MIT License"
+      },
+      "out": {
+        "detail": "? / mit license — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "gpl-3.0 + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "38": {
-    "a": "GPL-3.0",
-    "b": {
-      "key": "agpl-3.0"
+    {
+      "a": "MIT",
+      "b": null,
+      "out": {
+        "detail": "mit / ? — license metadata absent",
+        "status": "UNRESOLVED"
+      }
     },
-    "out": {
-      "detail": "distinct copyleft (gpl-3.0/agpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "39": {
-    "a": "GPL-3.0",
-    "b": {
-      "name": "MIT License"
+    {
+      "a": "MIT",
+      "b": "MIT",
+      "out": {
+        "detail": "mit + mit combinable",
+        "status": "PROVED"
+      }
     },
-    "out": {
-      "detail": "gpl-3.0 + mit license combinable",
-      "status": "PROVED"
-    }
-  },
-  "40": {
-    "a": "AGPL-3.0",
-    "b": null,
-    "out": {
-      "detail": "agpl-3.0 / ? — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "41": {
-    "a": "AGPL-3.0",
-    "b": "MIT",
-    "out": {
-      "detail": "agpl-3.0 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "42": {
-    "a": "AGPL-3.0",
-    "b": "mit",
-    "out": {
-      "detail": "agpl-3.0 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "43": {
-    "a": "AGPL-3.0",
-    "b": "GPL-3.0",
-    "out": {
-      "detail": "distinct copyleft (agpl-3.0/gpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "44": {
-    "a": "AGPL-3.0",
-    "b": "AGPL-3.0",
-    "out": {
-      "detail": "agpl-3.0 + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "45": {
-    "a": "AGPL-3.0",
-    "b": "LGPL-2.1",
-    "out": {
-      "detail": "distinct copyleft (agpl-3.0/lgpl-2.1) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "46": {
-    "a": "AGPL-3.0",
-    "b": "Apache-2.0",
-    "out": {
-      "detail": "agpl-3.0 + apache-2.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "47": {
-    "a": "AGPL-3.0",
-    "b": {
-      "spdx_id": "GPL-3.0"
+    {
+      "a": "MIT",
+      "b": "mit",
+      "out": {
+        "detail": "mit + mit combinable",
+        "status": "PROVED"
+      }
     },
-    "out": {
-      "detail": "distinct copyleft (agpl-3.0/gpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "48": {
-    "a": "AGPL-3.0",
-    "b": {
-      "key": "agpl-3.0"
+    {
+      "a": "MIT",
+      "b": "GPL-3.0",
+      "out": {
+        "detail": "mit + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
     },
-    "out": {
-      "detail": "agpl-3.0 + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "49": {
-    "a": "AGPL-3.0",
-    "b": {
-      "name": "MIT License"
+    {
+      "a": "MIT",
+      "b": "AGPL-3.0",
+      "out": {
+        "detail": "mit + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
     },
-    "out": {
-      "detail": "agpl-3.0 + mit license combinable",
-      "status": "PROVED"
-    }
-  },
-  "50": {
-    "a": "LGPL-2.1",
-    "b": null,
-    "out": {
-      "detail": "lgpl-2.1 / ? — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "51": {
-    "a": "LGPL-2.1",
-    "b": "MIT",
-    "out": {
-      "detail": "lgpl-2.1 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "52": {
-    "a": "LGPL-2.1",
-    "b": "mit",
-    "out": {
-      "detail": "lgpl-2.1 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "53": {
-    "a": "LGPL-2.1",
-    "b": "GPL-3.0",
-    "out": {
-      "detail": "distinct copyleft (lgpl-2.1/gpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "54": {
-    "a": "LGPL-2.1",
-    "b": "AGPL-3.0",
-    "out": {
-      "detail": "distinct copyleft (lgpl-2.1/agpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "55": {
-    "a": "LGPL-2.1",
-    "b": "LGPL-2.1",
-    "out": {
-      "detail": "lgpl-2.1 + lgpl-2.1 combinable",
-      "status": "PROVED"
-    }
-  },
-  "56": {
-    "a": "LGPL-2.1",
-    "b": "Apache-2.0",
-    "out": {
-      "detail": "lgpl-2.1 + apache-2.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "57": {
-    "a": "LGPL-2.1",
-    "b": {
-      "spdx_id": "GPL-3.0"
+    {
+      "a": "MIT",
+      "b": "LGPL-2.1",
+      "out": {
+        "detail": "mit + lgpl-2.1 combinable",
+        "status": "PROVED"
+      }
     },
-    "out": {
-      "detail": "distinct copyleft (lgpl-2.1/gpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
+    {
+      "a": "MIT",
+      "b": "Apache-2.0",
+      "out": {
+        "detail": "mit + apache-2.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "MIT",
+      "b": {
+        "spdx_id": "GPL-3.0"
+      },
+      "out": {
+        "detail": "mit + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "MIT",
+      "b": {
+        "key": "agpl-3.0"
+      },
+      "out": {
+        "detail": "mit + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "MIT",
+      "b": {
+        "name": "MIT License"
+      },
+      "out": {
+        "detail": "mit + mit license combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "mit",
+      "b": null,
+      "out": {
+        "detail": "mit / ? — license metadata absent",
+        "status": "UNRESOLVED"
+      }
+    },
+    {
+      "a": "mit",
+      "b": "MIT",
+      "out": {
+        "detail": "mit + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "mit",
+      "b": "mit",
+      "out": {
+        "detail": "mit + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "mit",
+      "b": "GPL-3.0",
+      "out": {
+        "detail": "mit + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "mit",
+      "b": "AGPL-3.0",
+      "out": {
+        "detail": "mit + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "mit",
+      "b": "LGPL-2.1",
+      "out": {
+        "detail": "mit + lgpl-2.1 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "mit",
+      "b": "Apache-2.0",
+      "out": {
+        "detail": "mit + apache-2.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "mit",
+      "b": {
+        "spdx_id": "GPL-3.0"
+      },
+      "out": {
+        "detail": "mit + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "mit",
+      "b": {
+        "key": "agpl-3.0"
+      },
+      "out": {
+        "detail": "mit + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "mit",
+      "b": {
+        "name": "MIT License"
+      },
+      "out": {
+        "detail": "mit + mit license combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "GPL-3.0",
+      "b": null,
+      "out": {
+        "detail": "gpl-3.0 / ? — license metadata absent",
+        "status": "UNRESOLVED"
+      }
+    },
+    {
+      "a": "GPL-3.0",
+      "b": "MIT",
+      "out": {
+        "detail": "gpl-3.0 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "GPL-3.0",
+      "b": "mit",
+      "out": {
+        "detail": "gpl-3.0 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "GPL-3.0",
+      "b": "GPL-3.0",
+      "out": {
+        "detail": "gpl-3.0 + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "GPL-3.0",
+      "b": "AGPL-3.0",
+      "out": {
+        "detail": "distinct copyleft (gpl-3.0/agpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": "GPL-3.0",
+      "b": "LGPL-2.1",
+      "out": {
+        "detail": "distinct copyleft (gpl-3.0/lgpl-2.1) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": "GPL-3.0",
+      "b": "Apache-2.0",
+      "out": {
+        "detail": "gpl-3.0 + apache-2.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "GPL-3.0",
+      "b": {
+        "spdx_id": "GPL-3.0"
+      },
+      "out": {
+        "detail": "gpl-3.0 + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "GPL-3.0",
+      "b": {
+        "key": "agpl-3.0"
+      },
+      "out": {
+        "detail": "distinct copyleft (gpl-3.0/agpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": "GPL-3.0",
+      "b": {
+        "name": "MIT License"
+      },
+      "out": {
+        "detail": "gpl-3.0 + mit license combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "AGPL-3.0",
+      "b": null,
+      "out": {
+        "detail": "agpl-3.0 / ? — license metadata absent",
+        "status": "UNRESOLVED"
+      }
+    },
+    {
+      "a": "AGPL-3.0",
+      "b": "MIT",
+      "out": {
+        "detail": "agpl-3.0 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "AGPL-3.0",
+      "b": "mit",
+      "out": {
+        "detail": "agpl-3.0 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "AGPL-3.0",
+      "b": "GPL-3.0",
+      "out": {
+        "detail": "distinct copyleft (agpl-3.0/gpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": "AGPL-3.0",
+      "b": "AGPL-3.0",
+      "out": {
+        "detail": "agpl-3.0 + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "AGPL-3.0",
+      "b": "LGPL-2.1",
+      "out": {
+        "detail": "distinct copyleft (agpl-3.0/lgpl-2.1) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": "AGPL-3.0",
+      "b": "Apache-2.0",
+      "out": {
+        "detail": "agpl-3.0 + apache-2.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "AGPL-3.0",
+      "b": {
+        "spdx_id": "GPL-3.0"
+      },
+      "out": {
+        "detail": "distinct copyleft (agpl-3.0/gpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": "AGPL-3.0",
+      "b": {
+        "key": "agpl-3.0"
+      },
+      "out": {
+        "detail": "agpl-3.0 + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "AGPL-3.0",
+      "b": {
+        "name": "MIT License"
+      },
+      "out": {
+        "detail": "agpl-3.0 + mit license combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "LGPL-2.1",
+      "b": null,
+      "out": {
+        "detail": "lgpl-2.1 / ? — license metadata absent",
+        "status": "UNRESOLVED"
+      }
+    },
+    {
+      "a": "LGPL-2.1",
+      "b": "MIT",
+      "out": {
+        "detail": "lgpl-2.1 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "LGPL-2.1",
+      "b": "mit",
+      "out": {
+        "detail": "lgpl-2.1 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "LGPL-2.1",
+      "b": "GPL-3.0",
+      "out": {
+        "detail": "distinct copyleft (lgpl-2.1/gpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": "LGPL-2.1",
+      "b": "AGPL-3.0",
+      "out": {
+        "detail": "distinct copyleft (lgpl-2.1/agpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": "LGPL-2.1",
+      "b": "LGPL-2.1",
+      "out": {
+        "detail": "lgpl-2.1 + lgpl-2.1 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "LGPL-2.1",
+      "b": "Apache-2.0",
+      "out": {
+        "detail": "lgpl-2.1 + apache-2.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "LGPL-2.1",
+      "b": {
+        "spdx_id": "GPL-3.0"
+      },
+      "out": {
+        "detail": "distinct copyleft (lgpl-2.1/gpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": "LGPL-2.1",
+      "b": {
+        "key": "agpl-3.0"
+      },
+      "out": {
+        "detail": "distinct copyleft (lgpl-2.1/agpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": "LGPL-2.1",
+      "b": {
+        "name": "MIT License"
+      },
+      "out": {
+        "detail": "lgpl-2.1 + mit license combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "Apache-2.0",
+      "b": null,
+      "out": {
+        "detail": "apache-2.0 / ? — license metadata absent",
+        "status": "UNRESOLVED"
+      }
+    },
+    {
+      "a": "Apache-2.0",
+      "b": "MIT",
+      "out": {
+        "detail": "apache-2.0 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "Apache-2.0",
+      "b": "mit",
+      "out": {
+        "detail": "apache-2.0 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "Apache-2.0",
+      "b": "GPL-3.0",
+      "out": {
+        "detail": "apache-2.0 + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "Apache-2.0",
+      "b": "AGPL-3.0",
+      "out": {
+        "detail": "apache-2.0 + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "Apache-2.0",
+      "b": "LGPL-2.1",
+      "out": {
+        "detail": "apache-2.0 + lgpl-2.1 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "Apache-2.0",
+      "b": "Apache-2.0",
+      "out": {
+        "detail": "apache-2.0 + apache-2.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "Apache-2.0",
+      "b": {
+        "spdx_id": "GPL-3.0"
+      },
+      "out": {
+        "detail": "apache-2.0 + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "Apache-2.0",
+      "b": {
+        "key": "agpl-3.0"
+      },
+      "out": {
+        "detail": "apache-2.0 + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": "Apache-2.0",
+      "b": {
+        "name": "MIT License"
+      },
+      "out": {
+        "detail": "apache-2.0 + mit license combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "spdx_id": "GPL-3.0"
+      },
+      "b": null,
+      "out": {
+        "detail": "gpl-3.0 / ? — license metadata absent",
+        "status": "UNRESOLVED"
+      }
+    },
+    {
+      "a": {
+        "spdx_id": "GPL-3.0"
+      },
+      "b": "MIT",
+      "out": {
+        "detail": "gpl-3.0 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "spdx_id": "GPL-3.0"
+      },
+      "b": "mit",
+      "out": {
+        "detail": "gpl-3.0 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "spdx_id": "GPL-3.0"
+      },
+      "b": "GPL-3.0",
+      "out": {
+        "detail": "gpl-3.0 + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "spdx_id": "GPL-3.0"
+      },
+      "b": "AGPL-3.0",
+      "out": {
+        "detail": "distinct copyleft (gpl-3.0/agpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": {
+        "spdx_id": "GPL-3.0"
+      },
+      "b": "LGPL-2.1",
+      "out": {
+        "detail": "distinct copyleft (gpl-3.0/lgpl-2.1) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": {
+        "spdx_id": "GPL-3.0"
+      },
+      "b": "Apache-2.0",
+      "out": {
+        "detail": "gpl-3.0 + apache-2.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "spdx_id": "GPL-3.0"
+      },
+      "b": {
+        "spdx_id": "GPL-3.0"
+      },
+      "out": {
+        "detail": "gpl-3.0 + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "spdx_id": "GPL-3.0"
+      },
+      "b": {
+        "key": "agpl-3.0"
+      },
+      "out": {
+        "detail": "distinct copyleft (gpl-3.0/agpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": {
+        "spdx_id": "GPL-3.0"
+      },
+      "b": {
+        "name": "MIT License"
+      },
+      "out": {
+        "detail": "gpl-3.0 + mit license combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "key": "agpl-3.0"
+      },
+      "b": null,
+      "out": {
+        "detail": "agpl-3.0 / ? — license metadata absent",
+        "status": "UNRESOLVED"
+      }
+    },
+    {
+      "a": {
+        "key": "agpl-3.0"
+      },
+      "b": "MIT",
+      "out": {
+        "detail": "agpl-3.0 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "key": "agpl-3.0"
+      },
+      "b": "mit",
+      "out": {
+        "detail": "agpl-3.0 + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "key": "agpl-3.0"
+      },
+      "b": "GPL-3.0",
+      "out": {
+        "detail": "distinct copyleft (agpl-3.0/gpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": {
+        "key": "agpl-3.0"
+      },
+      "b": "AGPL-3.0",
+      "out": {
+        "detail": "agpl-3.0 + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "key": "agpl-3.0"
+      },
+      "b": "LGPL-2.1",
+      "out": {
+        "detail": "distinct copyleft (agpl-3.0/lgpl-2.1) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": {
+        "key": "agpl-3.0"
+      },
+      "b": "Apache-2.0",
+      "out": {
+        "detail": "agpl-3.0 + apache-2.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "key": "agpl-3.0"
+      },
+      "b": {
+        "spdx_id": "GPL-3.0"
+      },
+      "out": {
+        "detail": "distinct copyleft (agpl-3.0/gpl-3.0) — combined distribution needs review",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    },
+    {
+      "a": {
+        "key": "agpl-3.0"
+      },
+      "b": {
+        "key": "agpl-3.0"
+      },
+      "out": {
+        "detail": "agpl-3.0 + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "key": "agpl-3.0"
+      },
+      "b": {
+        "name": "MIT License"
+      },
+      "out": {
+        "detail": "agpl-3.0 + mit license combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "name": "MIT License"
+      },
+      "b": null,
+      "out": {
+        "detail": "mit license / ? — license metadata absent",
+        "status": "UNRESOLVED"
+      }
+    },
+    {
+      "a": {
+        "name": "MIT License"
+      },
+      "b": "MIT",
+      "out": {
+        "detail": "mit license + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "name": "MIT License"
+      },
+      "b": "mit",
+      "out": {
+        "detail": "mit license + mit combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "name": "MIT License"
+      },
+      "b": "GPL-3.0",
+      "out": {
+        "detail": "mit license + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "name": "MIT License"
+      },
+      "b": "AGPL-3.0",
+      "out": {
+        "detail": "mit license + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "name": "MIT License"
+      },
+      "b": "LGPL-2.1",
+      "out": {
+        "detail": "mit license + lgpl-2.1 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "name": "MIT License"
+      },
+      "b": "Apache-2.0",
+      "out": {
+        "detail": "mit license + apache-2.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "name": "MIT License"
+      },
+      "b": {
+        "spdx_id": "GPL-3.0"
+      },
+      "out": {
+        "detail": "mit license + gpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "name": "MIT License"
+      },
+      "b": {
+        "key": "agpl-3.0"
+      },
+      "out": {
+        "detail": "mit license + agpl-3.0 combinable",
+        "status": "PROVED"
+      }
+    },
+    {
+      "a": {
+        "name": "MIT License"
+      },
+      "b": {
+        "name": "MIT License"
+      },
+      "out": {
+        "detail": "mit license + mit license combinable",
+        "status": "PROVED"
+      }
     }
-  },
-  "58": {
-    "a": "LGPL-2.1",
-    "b": {
-      "key": "agpl-3.0"
-    },
-    "out": {
-      "detail": "distinct copyleft (lgpl-2.1/agpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "59": {
-    "a": "LGPL-2.1",
-    "b": {
-      "name": "MIT License"
-    },
-    "out": {
-      "detail": "lgpl-2.1 + mit license combinable",
-      "status": "PROVED"
-    }
-  },
-  "60": {
-    "a": "Apache-2.0",
-    "b": null,
-    "out": {
-      "detail": "apache-2.0 / ? — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "61": {
-    "a": "Apache-2.0",
-    "b": "MIT",
-    "out": {
-      "detail": "apache-2.0 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "62": {
-    "a": "Apache-2.0",
-    "b": "mit",
-    "out": {
-      "detail": "apache-2.0 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "63": {
-    "a": "Apache-2.0",
-    "b": "GPL-3.0",
-    "out": {
-      "detail": "apache-2.0 + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "64": {
-    "a": "Apache-2.0",
-    "b": "AGPL-3.0",
-    "out": {
-      "detail": "apache-2.0 + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "65": {
-    "a": "Apache-2.0",
-    "b": "LGPL-2.1",
-    "out": {
-      "detail": "apache-2.0 + lgpl-2.1 combinable",
-      "status": "PROVED"
-    }
-  },
-  "66": {
-    "a": "Apache-2.0",
-    "b": "Apache-2.0",
-    "out": {
-      "detail": "apache-2.0 + apache-2.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "67": {
-    "a": "Apache-2.0",
-    "b": {
-      "spdx_id": "GPL-3.0"
-    },
-    "out": {
-      "detail": "apache-2.0 + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "68": {
-    "a": "Apache-2.0",
-    "b": {
-      "key": "agpl-3.0"
-    },
-    "out": {
-      "detail": "apache-2.0 + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "69": {
-    "a": "Apache-2.0",
-    "b": {
-      "name": "MIT License"
-    },
-    "out": {
-      "detail": "apache-2.0 + mit license combinable",
-      "status": "PROVED"
-    }
-  },
-  "70": {
-    "a": {
-      "spdx_id": "GPL-3.0"
-    },
-    "b": null,
-    "out": {
-      "detail": "gpl-3.0 / ? — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "71": {
-    "a": {
-      "spdx_id": "GPL-3.0"
-    },
-    "b": "MIT",
-    "out": {
-      "detail": "gpl-3.0 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "72": {
-    "a": {
-      "spdx_id": "GPL-3.0"
-    },
-    "b": "mit",
-    "out": {
-      "detail": "gpl-3.0 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "73": {
-    "a": {
-      "spdx_id": "GPL-3.0"
-    },
-    "b": "GPL-3.0",
-    "out": {
-      "detail": "gpl-3.0 + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "74": {
-    "a": {
-      "spdx_id": "GPL-3.0"
-    },
-    "b": "AGPL-3.0",
-    "out": {
-      "detail": "distinct copyleft (gpl-3.0/agpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "75": {
-    "a": {
-      "spdx_id": "GPL-3.0"
-    },
-    "b": "LGPL-2.1",
-    "out": {
-      "detail": "distinct copyleft (gpl-3.0/lgpl-2.1) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "76": {
-    "a": {
-      "spdx_id": "GPL-3.0"
-    },
-    "b": "Apache-2.0",
-    "out": {
-      "detail": "gpl-3.0 + apache-2.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "77": {
-    "a": {
-      "spdx_id": "GPL-3.0"
-    },
-    "b": {
-      "spdx_id": "GPL-3.0"
-    },
-    "out": {
-      "detail": "gpl-3.0 + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "78": {
-    "a": {
-      "spdx_id": "GPL-3.0"
-    },
-    "b": {
-      "key": "agpl-3.0"
-    },
-    "out": {
-      "detail": "distinct copyleft (gpl-3.0/agpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "79": {
-    "a": {
-      "spdx_id": "GPL-3.0"
-    },
-    "b": {
-      "name": "MIT License"
-    },
-    "out": {
-      "detail": "gpl-3.0 + mit license combinable",
-      "status": "PROVED"
-    }
-  },
-  "80": {
-    "a": {
-      "key": "agpl-3.0"
-    },
-    "b": null,
-    "out": {
-      "detail": "agpl-3.0 / ? — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "81": {
-    "a": {
-      "key": "agpl-3.0"
-    },
-    "b": "MIT",
-    "out": {
-      "detail": "agpl-3.0 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "82": {
-    "a": {
-      "key": "agpl-3.0"
-    },
-    "b": "mit",
-    "out": {
-      "detail": "agpl-3.0 + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "83": {
-    "a": {
-      "key": "agpl-3.0"
-    },
-    "b": "GPL-3.0",
-    "out": {
-      "detail": "distinct copyleft (agpl-3.0/gpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "84": {
-    "a": {
-      "key": "agpl-3.0"
-    },
-    "b": "AGPL-3.0",
-    "out": {
-      "detail": "agpl-3.0 + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "85": {
-    "a": {
-      "key": "agpl-3.0"
-    },
-    "b": "LGPL-2.1",
-    "out": {
-      "detail": "distinct copyleft (agpl-3.0/lgpl-2.1) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "86": {
-    "a": {
-      "key": "agpl-3.0"
-    },
-    "b": "Apache-2.0",
-    "out": {
-      "detail": "agpl-3.0 + apache-2.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "87": {
-    "a": {
-      "key": "agpl-3.0"
-    },
-    "b": {
-      "spdx_id": "GPL-3.0"
-    },
-    "out": {
-      "detail": "distinct copyleft (agpl-3.0/gpl-3.0) — combined distribution needs review",
-      "status": "CONDITIONALLY-SATISFIED"
-    }
-  },
-  "88": {
-    "a": {
-      "key": "agpl-3.0"
-    },
-    "b": {
-      "key": "agpl-3.0"
-    },
-    "out": {
-      "detail": "agpl-3.0 + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "89": {
-    "a": {
-      "key": "agpl-3.0"
-    },
-    "b": {
-      "name": "MIT License"
-    },
-    "out": {
-      "detail": "agpl-3.0 + mit license combinable",
-      "status": "PROVED"
-    }
-  },
-  "90": {
-    "a": {
-      "name": "MIT License"
-    },
-    "b": null,
-    "out": {
-      "detail": "mit license / ? — license metadata absent",
-      "status": "UNRESOLVED"
-    }
-  },
-  "91": {
-    "a": {
-      "name": "MIT License"
-    },
-    "b": "MIT",
-    "out": {
-      "detail": "mit license + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "92": {
-    "a": {
-      "name": "MIT License"
-    },
-    "b": "mit",
-    "out": {
-      "detail": "mit license + mit combinable",
-      "status": "PROVED"
-    }
-  },
-  "93": {
-    "a": {
-      "name": "MIT License"
-    },
-    "b": "GPL-3.0",
-    "out": {
-      "detail": "mit license + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "94": {
-    "a": {
-      "name": "MIT License"
-    },
-    "b": "AGPL-3.0",
-    "out": {
-      "detail": "mit license + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "95": {
-    "a": {
-      "name": "MIT License"
-    },
-    "b": "LGPL-2.1",
-    "out": {
-      "detail": "mit license + lgpl-2.1 combinable",
-      "status": "PROVED"
-    }
-  },
-  "96": {
-    "a": {
-      "name": "MIT License"
-    },
-    "b": "Apache-2.0",
-    "out": {
-      "detail": "mit license + apache-2.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "97": {
-    "a": {
-      "name": "MIT License"
-    },
-    "b": {
-      "spdx_id": "GPL-3.0"
-    },
-    "out": {
-      "detail": "mit license + gpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "98": {
-    "a": {
-      "name": "MIT License"
-    },
-    "b": {
-      "key": "agpl-3.0"
-    },
-    "out": {
-      "detail": "mit license + agpl-3.0 combinable",
-      "status": "PROVED"
-    }
-  },
-  "99": {
-    "a": {
-      "name": "MIT License"
-    },
-    "b": {
-      "name": "MIT License"
-    },
-    "out": {
-      "detail": "mit license + mit license combinable",
-      "status": "PROVED"
-    }
-  },
-  "caseId": "license-compat"
+  ]
 }

@@ -1,0 +1,11 @@
+{
+  "caseId": "malformed-missing-repos",
+  "category": "malformed",
+  "input": {
+    "raw": "{\"schemaVersion\":7}"
+  },
+  "output": {
+    "data": "␀undefined",
+    "error": "Could not parse JSON: missing repos[] array"
+  }
+}

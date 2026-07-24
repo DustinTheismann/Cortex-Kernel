@@ -1,316 +1,319 @@
 {
   "caseId": "conv-rules",
-  "edgeCosts": {
-    "bound>certificate:wrap": 2,
-    "bound>claim:assert": 2,
-    "certificate>claim:assert": 1,
-    "certificate>proof_term:reify": 2,
-    "claim>constraint_set:formalize": 2,
-    "constraint_set>optimization_problem:add-objective": 2,
-    "constraint_set>program:compile": 2,
-    "dataset>distribution:empirical": 2,
-    "dataset>tensor:batch": 1,
-    "distribution>measurement:sample": 2,
-    "distribution>scalar:expectation": 4,
-    "distribution>tensor:parameterize": 2,
-    "graph>constraint_set:encode-edges": 2,
-    "graph>subgraph:restrict": 3.5,
-    "graph>tensor:adjacency": 1,
-    "measurement>dataset:collect": 1,
-    "measurement>scalar:aggregate": 3,
-    "measurement>trace:timestamp": 2,
-    "optimization_problem>bound:dual-bound": 2,
-    "optimization_problem>constraint_set:drop-objective": 3.5,
-    "optimization_problem>program:solve": 2,
-    "policy>constraint_set:encode": 2,
-    "policy>program:implement": 2,
-    "program>certificate:attest": 4,
-    "program>trace:execute": 2,
-    "proof_term>certificate:extract": 1,
-    "proof_term>claim:conclude": 1,
-    "scalar>bound:threshold": 2,
-    "scalar>measurement:record": 1,
-    "subgraph>graph:embed": 1,
-    "subgraph>program:lower": 4,
-    "subgraph>tensor:featurize": 4.5,
-    "tensor>dataset:materialize": 1,
-    "tensor>distribution:normalize": 2.5,
-    "tensor>measurement:observe": 2,
-    "tensor>scalar:reduce": 3.5,
-    "trace>dataset:log": 1,
-    "trace>measurement:probe": 1
-  },
-  "registry": {
-    "bound": [
-      {
-        "auth": "cur",
-        "op": "wrap",
-        "pre": "bound is soundly derived",
-        "to": "certificate"
-      },
-      {
-        "auth": "cur",
-        "op": "assert",
-        "pre": "bound supports the claim",
-        "to": "claim"
-      }
-    ],
-    "certificate": [
-      {
-        "auth": "ax",
-        "op": "assert",
-        "to": "claim"
-      },
-      {
-        "auth": "cur",
-        "op": "reify",
-        "pre": "certificate is machine-checkable",
-        "to": "proof_term"
-      }
-    ],
-    "claim": [
-      {
-        "auth": "cur",
-        "op": "formalize",
-        "pre": "claim is fully formalizable (not normative/ambiguous/probabilistic)",
-        "to": "constraint_set"
-      }
-    ],
-    "constraint_set": [
-      {
-        "auth": "cur",
-        "op": "add-objective",
-        "pre": "an objective is defined",
-        "to": "optimization_problem"
-      },
-      {
-        "auth": "cur",
-        "op": "compile",
-        "pre": "constraints are executable",
-        "to": "program"
-      }
-    ],
-    "dataset": [
-      {
-        "auth": "ax",
-        "op": "batch",
-        "to": "tensor"
-      },
-      {
-        "auth": "cur",
-        "op": "empirical",
-        "pre": "samples are i.i.d.",
-        "to": "distribution"
-      }
-    ],
-    "distribution": [
-      {
-        "auth": "cur",
-        "op": "parameterize",
-        "pre": "finite parameterization exists",
-        "to": "tensor"
-      },
-      {
-        "auth": "ax",
-        "lose": [
-          "variance",
-          "higher-moments"
-        ],
-        "lossy": true,
-        "op": "expectation",
-        "to": "scalar"
-      },
-      {
-        "auth": "cur",
-        "op": "sample",
-        "pre": "sampling procedure defined",
-        "to": "measurement"
-      }
-    ],
-    "graph": [
-      {
-        "auth": "ax",
-        "lose": [
-          "global-structure"
-        ],
-        "lossy": true,
-        "op": "restrict",
-        "to": "subgraph"
-      },
-      {
-        "auth": "cur",
-        "op": "encode-edges",
-        "pre": "edges express constraints",
-        "to": "constraint_set"
-      },
-      {
-        "auth": "ax",
-        "op": "adjacency",
-        "to": "tensor"
-      }
-    ],
-    "measurement": [
-      {
-        "auth": "ax",
-        "lossy": true,
-        "op": "aggregate",
-        "to": "scalar"
-      },
-      {
-        "auth": "ax",
-        "op": "collect",
-        "to": "dataset"
-      },
-      {
-        "auth": "cur",
-        "op": "timestamp",
-        "pre": "measurements are ordered",
-        "to": "trace"
-      }
-    ],
-    "optimization_problem": [
-      {
-        "auth": "ax",
-        "lose": [
-          "objective"
-        ],
-        "lossy": true,
-        "op": "drop-objective",
-        "to": "constraint_set"
-      },
-      {
-        "auth": "cur",
-        "op": "solve",
-        "pre": "a solver exists",
-        "to": "program"
-      },
-      {
-        "auth": "cur",
-        "op": "dual-bound",
-        "pre": "duality gap is bounded",
-        "to": "bound"
-      }
-    ],
-    "policy": [
-      {
-        "auth": "cur",
-        "op": "encode",
-        "pre": "policy is expressible as constraints",
-        "to": "constraint_set"
-      },
-      {
-        "auth": "cur",
-        "op": "implement",
-        "pre": "policy is executable",
-        "to": "program"
-      }
-    ],
-    "program": [
-      {
-        "auth": "cur",
-        "op": "execute",
-        "pre": "program terminates on the inputs",
-        "to": "trace"
-      },
-      {
-        "auth": "cur",
-        "lossy": true,
-        "op": "attest",
-        "pre": "execution is independently verifiable",
-        "to": "certificate"
-      }
-    ],
-    "proof_term": [
-      {
-        "auth": "ax",
-        "op": "extract",
-        "to": "certificate"
-      },
-      {
-        "auth": "ax",
-        "op": "conclude",
-        "to": "claim"
-      }
-    ],
-    "scalar": [
-      {
-        "auth": "cur",
-        "op": "threshold",
-        "pre": "scalar is a comparable magnitude",
-        "to": "bound"
-      },
-      {
-        "auth": "ax",
-        "op": "record",
-        "to": "measurement"
-      }
-    ],
-    "subgraph": [
-      {
-        "auth": "ax",
-        "op": "embed",
-        "to": "graph"
-      },
-      {
-        "auth": "cur",
-        "lossy": true,
-        "op": "lower",
-        "pre": "subgraph is executable",
-        "to": "program"
-      },
-      {
-        "auth": "cur",
-        "lose": [
-          "topology"
-        ],
-        "lossy": true,
-        "op": "featurize",
-        "pre": "a feature map is defined",
-        "to": "tensor"
-      }
-    ],
-    "tensor": [
-      {
-        "auth": "cur",
-        "lose": [
-          "scale"
-        ],
-        "op": "normalize",
-        "pre": "nonneg & normalizable to unit mass",
-        "to": "distribution"
-      },
-      {
-        "auth": "cur",
-        "op": "observe",
-        "pre": "tensor is an observable quantity",
-        "to": "measurement"
-      },
-      {
-        "auth": "ax",
-        "lose": [
-          "structure"
-        ],
-        "lossy": true,
-        "op": "reduce",
-        "to": "scalar"
-      },
-      {
-        "auth": "ax",
-        "op": "materialize",
-        "to": "dataset"
-      }
-    ],
-    "trace": [
-      {
-        "auth": "ax",
-        "op": "log",
-        "to": "dataset"
-      },
-      {
-        "auth": "ax",
-        "op": "probe",
-        "to": "measurement"
-      }
-    ]
+  "category": "kernel",
+  "data": {
+    "edgeCosts": {
+      "bound>certificate:wrap": 2,
+      "bound>claim:assert": 2,
+      "certificate>claim:assert": 1,
+      "certificate>proof_term:reify": 2,
+      "claim>constraint_set:formalize": 2,
+      "constraint_set>optimization_problem:add-objective": 2,
+      "constraint_set>program:compile": 2,
+      "dataset>distribution:empirical": 2,
+      "dataset>tensor:batch": 1,
+      "distribution>measurement:sample": 2,
+      "distribution>scalar:expectation": 4,
+      "distribution>tensor:parameterize": 2,
+      "graph>constraint_set:encode-edges": 2,
+      "graph>subgraph:restrict": 3.5,
+      "graph>tensor:adjacency": 1,
+      "measurement>dataset:collect": 1,
+      "measurement>scalar:aggregate": 3,
+      "measurement>trace:timestamp": 2,
+      "optimization_problem>bound:dual-bound": 2,
+      "optimization_problem>constraint_set:drop-objective": 3.5,
+      "optimization_problem>program:solve": 2,
+      "policy>constraint_set:encode": 2,
+      "policy>program:implement": 2,
+      "program>certificate:attest": 4,
+      "program>trace:execute": 2,
+      "proof_term>certificate:extract": 1,
+      "proof_term>claim:conclude": 1,
+      "scalar>bound:threshold": 2,
+      "scalar>measurement:record": 1,
+      "subgraph>graph:embed": 1,
+      "subgraph>program:lower": 4,
+      "subgraph>tensor:featurize": 4.5,
+      "tensor>dataset:materialize": 1,
+      "tensor>distribution:normalize": 2.5,
+      "tensor>measurement:observe": 2,
+      "tensor>scalar:reduce": 3.5,
+      "trace>dataset:log": 1,
+      "trace>measurement:probe": 1
+    },
+    "registry": {
+      "bound": [
+        {
+          "auth": "cur",
+          "op": "wrap",
+          "pre": "bound is soundly derived",
+          "to": "certificate"
+        },
+        {
+          "auth": "cur",
+          "op": "assert",
+          "pre": "bound supports the claim",
+          "to": "claim"
+        }
+      ],
+      "certificate": [
+        {
+          "auth": "ax",
+          "op": "assert",
+          "to": "claim"
+        },
+        {
+          "auth": "cur",
+          "op": "reify",
+          "pre": "certificate is machine-checkable",
+          "to": "proof_term"
+        }
+      ],
+      "claim": [
+        {
+          "auth": "cur",
+          "op": "formalize",
+          "pre": "claim is fully formalizable (not normative/ambiguous/probabilistic)",
+          "to": "constraint_set"
+        }
+      ],
+      "constraint_set": [
+        {
+          "auth": "cur",
+          "op": "add-objective",
+          "pre": "an objective is defined",
+          "to": "optimization_problem"
+        },
+        {
+          "auth": "cur",
+          "op": "compile",
+          "pre": "constraints are executable",
+          "to": "program"
+        }
+      ],
+      "dataset": [
+        {
+          "auth": "ax",
+          "op": "batch",
+          "to": "tensor"
+        },
+        {
+          "auth": "cur",
+          "op": "empirical",
+          "pre": "samples are i.i.d.",
+          "to": "distribution"
+        }
+      ],
+      "distribution": [
+        {
+          "auth": "cur",
+          "op": "parameterize",
+          "pre": "finite parameterization exists",
+          "to": "tensor"
+        },
+        {
+          "auth": "ax",
+          "lose": [
+            "variance",
+            "higher-moments"
+          ],
+          "lossy": true,
+          "op": "expectation",
+          "to": "scalar"
+        },
+        {
+          "auth": "cur",
+          "op": "sample",
+          "pre": "sampling procedure defined",
+          "to": "measurement"
+        }
+      ],
+      "graph": [
+        {
+          "auth": "ax",
+          "lose": [
+            "global-structure"
+          ],
+          "lossy": true,
+          "op": "restrict",
+          "to": "subgraph"
+        },
+        {
+          "auth": "cur",
+          "op": "encode-edges",
+          "pre": "edges express constraints",
+          "to": "constraint_set"
+        },
+        {
+          "auth": "ax",
+          "op": "adjacency",
+          "to": "tensor"
+        }
+      ],
+      "measurement": [
+        {
+          "auth": "ax",
+          "lossy": true,
+          "op": "aggregate",
+          "to": "scalar"
+        },
+        {
+          "auth": "ax",
+          "op": "collect",
+          "to": "dataset"
+        },
+        {
+          "auth": "cur",
+          "op": "timestamp",
+          "pre": "measurements are ordered",
+          "to": "trace"
+        }
+      ],
+      "optimization_problem": [
+        {
+          "auth": "ax",
+          "lose": [
+            "objective"
+          ],
+          "lossy": true,
+          "op": "drop-objective",
+          "to": "constraint_set"
+        },
+        {
+          "auth": "cur",
+          "op": "solve",
+          "pre": "a solver exists",
+          "to": "program"
+        },
+        {
+          "auth": "cur",
+          "op": "dual-bound",
+          "pre": "duality gap is bounded",
+          "to": "bound"
+        }
+      ],
+      "policy": [
+        {
+          "auth": "cur",
+          "op": "encode",
+          "pre": "policy is expressible as constraints",
+          "to": "constraint_set"
+        },
+        {
+          "auth": "cur",
+          "op": "implement",
+          "pre": "policy is executable",
+          "to": "program"
+        }
+      ],
+      "program": [
+        {
+          "auth": "cur",
+          "op": "execute",
+          "pre": "program terminates on the inputs",
+          "to": "trace"
+        },
+        {
+          "auth": "cur",
+          "lossy": true,
+          "op": "attest",
+          "pre": "execution is independently verifiable",
+          "to": "certificate"
+        }
+      ],
+      "proof_term": [
+        {
+          "auth": "ax",
+          "op": "extract",
+          "to": "certificate"
+        },
+        {
+          "auth": "ax",
+          "op": "conclude",
+          "to": "claim"
+        }
+      ],
+      "scalar": [
+        {
+          "auth": "cur",
+          "op": "threshold",
+          "pre": "scalar is a comparable magnitude",
+          "to": "bound"
+        },
+        {
+          "auth": "ax",
+          "op": "record",
+          "to": "measurement"
+        }
+      ],
+      "subgraph": [
+        {
+          "auth": "ax",
+          "op": "embed",
+          "to": "graph"
+        },
+        {
+          "auth": "cur",
+          "lossy": true,
+          "op": "lower",
+          "pre": "subgraph is executable",
+          "to": "program"
+        },
+        {
+          "auth": "cur",
+          "lose": [
+            "topology"
+          ],
+          "lossy": true,
+          "op": "featurize",
+          "pre": "a feature map is defined",
+          "to": "tensor"
+        }
+      ],
+      "tensor": [
+        {
+          "auth": "cur",
+          "lose": [
+            "scale"
+          ],
+          "op": "normalize",
+          "pre": "nonneg & normalizable to unit mass",
+          "to": "distribution"
+        },
+        {
+          "auth": "cur",
+          "op": "observe",
+          "pre": "tensor is an observable quantity",
+          "to": "measurement"
+        },
+        {
+          "auth": "ax",
+          "lose": [
+            "structure"
+          ],
+          "lossy": true,
+          "op": "reduce",
+          "to": "scalar"
+        },
+        {
+          "auth": "ax",
+          "op": "materialize",
+          "to": "dataset"
+        }
+      ],
+      "trace": [
+        {
+          "auth": "ax",
+          "op": "log",
+          "to": "dataset"
+        },
+        {
+          "auth": "ax",
+          "op": "probe",
+          "to": "measurement"
+        }
+      ]
+    }
   }
 }

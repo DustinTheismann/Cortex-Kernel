@@ -1,0 +1,127 @@
+{
+  "caseId": "import-edges-recomputed-when-absent",
+  "category": "serialization",
+  "input": {
+    "file": {
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "a",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "a",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 5,
+          "topics": [
+            "t"
+          ],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        },
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "b",
+          "language": null,
+          "mentionsRepos": [
+            "a"
+          ],
+          "name": "b",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 1,
+          "topics": [
+            "t"
+          ],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7
+    },
+    "prior": null
+  },
+  "output": {
+    "calibration": "␀undefined",
+    "candidates": "␀undefined",
+    "data": {
+      "edges": [
+        {
+          "evidence": "b's README mentions a",
+          "source": "b",
+          "target": "a",
+          "type": "readme-reference",
+          "weight": 3
+        },
+        {
+          "evidence": "topic: t",
+          "source": "a",
+          "target": "b",
+          "type": "shared-topic",
+          "weight": 1
+        }
+      ],
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "a",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "a",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 5,
+          "topics": [
+            "t"
+          ],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        },
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "b",
+          "language": null,
+          "mentionsRepos": [
+            "a"
+          ],
+          "name": "b",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 1,
+          "topics": [
+            "t"
+          ],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7
+    },
+    "error": "",
+    "inputCleared": "",
+    "ledger": "␀undefined",
+    "manualLinks": "␀undefined",
+    "mechCal": "␀undefined",
+    "negatives": "␀undefined",
+    "notes": "␀undefined",
+    "persistedRepos": [
+      "a",
+      "b"
+    ],
+    "preregs": "␀undefined",
+    "ssetKeys": [],
+    "synthNodes": "␀undefined"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "caseId": "export-fifteen-keys-githubUser-undefined",
+  "category": "serialization",
+  "input": {
+    "state": {
+      "data": {
+        "edges": [],
+        "repos": [
+          {
+            "defaultBranch": "main",
+            "dependencies": [],
+            "description": "",
+            "enriched": false,
+            "fileTree": [],
+            "id": "r1",
+            "language": null,
+            "mentionsRepos": [],
+            "name": "r1",
+            "readme": "",
+            "signalFiles": {},
+            "stars": 0,
+            "topics": [],
+            "updatedAt": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    }
+  },
+  "output": {
+    "keys": [
+      "schemaVersion",
+      "product",
+      "generatedAt",
+      "repoCount",
+      "repos",
+      "edges",
+      "synthesisNodes",
+      "notes",
+      "manualLinks",
+      "negatives",
+      "preregs",
+      "prizeCandidates",
+      "ledger",
+      "calibration",
+      "mechCalibration"
+    ],
+    "parsed": {
+      "calibration": [],
+      "edges": [],
+      "ledger": [],
+      "manualLinks": [],
+      "mechCalibration": [],
+      "negatives": [],
+      "notes": [],
+      "preregs": [],
+      "prizeCandidates": [],
+      "product": "OpenSource Cortex v0.5.1 (instantiated contract gate)",
+      "repoCount": 1,
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r1",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r1",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7,
+      "synthesisNodes": []
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "caseId": "malformed-not-json",
+  "category": "malformed",
+  "input": {
+    "raw": "this is not json {"
+  },
+  "output": {
+    "data": "␀undefined",
+    "error": "Could not parse JSON: Unexpected token 'h', \"this is not json {\" is not valid JSON"
+  }
+}

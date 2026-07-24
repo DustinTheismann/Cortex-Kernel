@@ -1,5 +1,6 @@
 {
-  "caseId": "compile-no-shared-ports",
+  "caseId": "incompatible",
+  "category": "compatibility",
   "input": {
     "model": {},
     "schemaA": {
@@ -42,18 +43,27 @@
     }
   },
   "output": {
-    "blockReason": null,
-    "bridge": null,
+    "finalVerdict": "INCOHERENT",
     "impossibility": {
       "code": "NO_SHARED_PORTS",
       "detail": "no output→input port pairing between these mechanisms",
       "from": null,
       "to": null
     },
-    "mechClass": null,
-    "mechCompat": null,
+    "litClass": "SKIPPED",
+    "mechanismGrounded": true,
     "obligations": [],
     "options": [],
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 1,
+      "mechClasses": [],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
     "stage": "PROPOSED",
     "typeCheck": {
       "pass": false,
@@ -61,6 +71,13 @@
       "sharedObject": null,
       "stage": "PROPOSED",
       "verdict": "type_killed"
-    }
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "reason": "structurally impossible [NO_SHARED_PORTS] — no output→input port pairing between these mechanisms",
+        "result": "fail"
+      }
+    ]
   }
 }

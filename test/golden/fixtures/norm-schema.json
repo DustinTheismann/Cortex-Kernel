@@ -1,202 +1,132 @@
 {
-  "0": {
-    "in": null,
-    "out": null
-  },
-  "1": {
-    "in": 42,
-    "out": null
-  },
-  "2": {
-    "in": "x",
-    "out": null
-  },
-  "3": {
-    "in": [],
-    "out": {
-      "assumptions": [],
-      "certifies": [],
-      "consumes": [],
-      "invariants": [],
-      "produces": []
-    }
-  },
-  "4": {
-    "in": {},
-    "out": {
-      "assumptions": [],
-      "certifies": [],
-      "consumes": [],
-      "invariants": [],
-      "produces": []
-    }
-  },
-  "5": {
-    "in": {
-      "consumes": "nope",
-      "produces": [
-        {
-          "kind": "tensor",
-          "name": "p",
-          "semantics": "s",
-          "shape": "unspecified",
-          "units": "unspecified"
-        }
-      ]
+  "caseId": "norm-schema",
+  "category": "kernel",
+  "data": [
+    {
+      "in": null,
+      "out": null
     },
-    "out": {
-      "assumptions": [],
-      "certifies": [],
-      "consumes": [],
-      "invariants": [],
-      "produces": [
-        {
-          "kind": "tensor",
-          "name": "p",
-          "semantics": "s",
-          "shape": "",
-          "units": ""
-        }
-      ]
-    }
-  },
-  "6": {
-    "in": {
-      "assumptions": [
-        1,
-        "two"
-      ],
-      "invariants": null,
-      "produces": [
-        {
-          "kind": "not-a-kind"
-        },
-        {
-          "kind": "bound",
-          "shape": "[n]",
-          "units": "L2"
-        },
-        {},
-        {
-          "kind": "trace"
-        },
-        {
-          "kind": "scalar"
-        }
-      ]
+    {
+      "in": 42,
+      "out": null
     },
-    "out": {
-      "assumptions": [
-        "1",
-        "two"
-      ],
-      "certifies": [],
-      "consumes": [],
-      "invariants": [],
-      "produces": [
-        {
-          "kind": "claim",
-          "name": "",
-          "semantics": "",
-          "shape": "",
-          "units": ""
-        },
-        {
-          "kind": "bound",
-          "name": "",
-          "semantics": "",
-          "shape": "[n]",
-          "units": "L2"
-        },
-        {
-          "kind": "claim",
-          "name": "",
-          "semantics": "",
-          "shape": "",
-          "units": ""
-        },
-        {
-          "kind": "trace",
-          "name": "",
-          "semantics": "",
-          "shape": "",
-          "units": ""
-        }
-      ]
-    }
-  },
-  "7": {
-    "in": {
-      "certifies": [
-        "c1",
-        2
-      ],
-      "consumes": [
-        {
-          "kind": "tensor",
-          "name": "a",
-          "semantics": "x",
-          "shape": "[b,d]",
-          "units": "logits"
-        },
-        {
-          "kind": "z1"
-        },
-        {
-          "kind": "z2"
-        },
-        {
-          "kind": "z3"
-        },
-        {
-          "kind": "z4"
-        }
-      ],
-      "invariants": [
-        "i"
-      ]
+    {
+      "in": "x",
+      "out": null
     },
-    "out": {
-      "assumptions": [],
-      "certifies": [
-        "c1",
-        "2"
-      ],
-      "consumes": [
-        {
-          "kind": "tensor",
-          "name": "a",
-          "semantics": "x",
-          "shape": "[b,d]",
-          "units": "logits"
-        },
-        {
-          "kind": "claim",
-          "name": "",
-          "semantics": "",
-          "shape": "",
-          "units": ""
-        },
-        {
-          "kind": "claim",
-          "name": "",
-          "semantics": "",
-          "shape": "",
-          "units": ""
-        },
-        {
-          "kind": "claim",
-          "name": "",
-          "semantics": "",
-          "shape": "",
-          "units": ""
-        }
-      ],
-      "invariants": [
-        "i"
-      ],
-      "produces": []
+    {
+      "in": [],
+      "out": {
+        "assumptions": [],
+        "certifies": [],
+        "consumes": [],
+        "invariants": [],
+        "produces": []
+      }
+    },
+    {
+      "in": {},
+      "out": {
+        "assumptions": [],
+        "certifies": [],
+        "consumes": [],
+        "invariants": [],
+        "produces": []
+      }
+    },
+    {
+      "in": {
+        "consumes": "nope",
+        "produces": [
+          {
+            "kind": "tensor",
+            "name": "p",
+            "semantics": "s",
+            "shape": "unspecified",
+            "units": "unspecified"
+          }
+        ]
+      },
+      "out": {
+        "assumptions": [],
+        "certifies": [],
+        "consumes": [],
+        "invariants": [],
+        "produces": [
+          {
+            "kind": "tensor",
+            "name": "p",
+            "semantics": "s",
+            "shape": "",
+            "units": ""
+          }
+        ]
+      }
+    },
+    {
+      "in": {
+        "assumptions": [
+          1,
+          "two"
+        ],
+        "invariants": null,
+        "produces": [
+          {
+            "kind": "not-a-kind"
+          },
+          {
+            "kind": "bound",
+            "shape": "[n]",
+            "units": "L2"
+          },
+          {},
+          {
+            "kind": "trace"
+          },
+          {
+            "kind": "scalar"
+          }
+        ]
+      },
+      "out": {
+        "assumptions": [
+          "1",
+          "two"
+        ],
+        "certifies": [],
+        "consumes": [],
+        "invariants": [],
+        "produces": [
+          {
+            "kind": "claim",
+            "name": "",
+            "semantics": "",
+            "shape": "",
+            "units": ""
+          },
+          {
+            "kind": "bound",
+            "name": "",
+            "semantics": "",
+            "shape": "[n]",
+            "units": "L2"
+          },
+          {
+            "kind": "claim",
+            "name": "",
+            "semantics": "",
+            "shape": "",
+            "units": ""
+          },
+          {
+            "kind": "trace",
+            "name": "",
+            "semantics": "",
+            "shape": "",
+            "units": ""
+          }
+        ]
+      }
     }
-  },
-  "caseId": "norm-schema"
+  ]
 }

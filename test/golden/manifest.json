@@ -1,216 +1,379 @@
 {
   "sourceBaseline": "804f767",
-  "oracleSource": "reference/src/cortex-v0.5.1.jsx",
+  "oracleVersion": "v0.5.1",
   "schemaVersion": 7,
-  "note": "sha256 is over the canonical encoding (test/oracle/canonicalize.mjs) of each fixture file. Array order is significant and preserved; only timestamps and uid()-minted ids are stripped.",
+  "canonicalizationVersion": 1,
+  "oracleSource": "reference/src/cortex-v0.5.1.jsx",
+  "limitations": "docs/oracle-limitations.md",
   "cases": [
     {
       "caseId": "mech-kinds",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "468e9a955df9ae83394b0299fb18fcc8f562cbace373f31e6a8010cf9e9b6d00",
-      "fixture": "fixtures/mech-kinds.json"
+      "category": "kernel",
+      "fixture": "fixtures/mech-kinds.json",
+      "sha256": "d8a99f3fd101bbc55a233bcc2a246dbdd2cc22439db7978bff9ef888c77d8ac6",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
       "caseId": "conv-rules",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "b3c03a64349e3e19ad8ca94eff00a1a5265f47227ed608714ab0c9892e472fd1",
-      "fixture": "fixtures/conv-rules.json"
+      "category": "kernel",
+      "fixture": "fixtures/conv-rules.json",
+      "sha256": "abd263247526102ae4b7e31a9b98d1a1b1fd8addd1130d33b2c5bc6172933ad5",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
       "caseId": "multipath-kind-paths",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "57ae8e0bf55f6b5e49496c437c32efc4c568c8f1b2dc5f48b9eee1d76f56e22e",
-      "fixture": "fixtures/multipath-kind-paths.json"
+      "category": "kernel",
+      "fixture": "fixtures/multipath-kind-paths.json",
+      "sha256": "00c5866afed64b1b11505aeb62e3cf98fccad7184488858ba1ebb21c912a37d8",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
       "caseId": "pair-compat",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "9524cc8507b4f40e0f52669a0266dd11f08afbdafc13548538fbe55133228ffe",
-      "fixture": "fixtures/pair-compat.json"
+      "category": "kernel",
+      "fixture": "fixtures/pair-compat.json",
+      "sha256": "1d0d308d5d2668b052a966226310407a057a5a8f87047bd5880422c5ff669f26",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
       "caseId": "shape-compat",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "ccb945acdacc3a2682096327b6a6c427cfea022dfa07f25e5ba5c78d50b31fd0",
-      "fixture": "fixtures/shape-compat.json"
+      "category": "kernel",
+      "fixture": "fixtures/shape-compat.json",
+      "sha256": "562dc915d980d18a3ce676e1fa95956592d6b229ee01a0b2a491c9d42697dfeb",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
       "caseId": "unit-compat",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "2cf5ad3253f7b05a82108d11b0b3f842ea669dd1c3e5640583ceb2414c1be745",
-      "fixture": "fixtures/unit-compat.json"
+      "category": "kernel",
+      "fixture": "fixtures/unit-compat.json",
+      "sha256": "4cc92bc710ba58c53c080f0ac9315ec7f324548564de450b15a14e7acb81db72",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
       "caseId": "license-compat",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "9ae4ee72be67b676860d237b5c264c97057a876739d05d56c20faee80f802502",
-      "fixture": "fixtures/license-compat.json"
+      "category": "kernel",
+      "fixture": "fixtures/license-compat.json",
+      "sha256": "e9018744d4ee923a11232ce31806657b1478494625fae10b3a694584952de1a2",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
       "caseId": "synth-test",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "23760d09473b9da95b0b73b19610338b8d74b374429bf67599f81dd3c4bdf2b7",
-      "fixture": "fixtures/synth-test.json"
+      "category": "kernel",
+      "fixture": "fixtures/synth-test.json",
+      "sha256": "c3273a08565e3675be798a19e4ba18d95578baf784011ce30a7ce75996a2df3c",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
       "caseId": "norm-schema",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "31cf6f6c5096069a4bfa06adb39d54faa836d0e617d453c802818f9750ee39ad",
-      "fixture": "fixtures/norm-schema.json"
+      "category": "kernel",
+      "fixture": "fixtures/norm-schema.json",
+      "sha256": "101195e150988a3c8dd933d41dfe75f4a56bd36e10c478ef2f61dd385c3f3f02",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
       "caseId": "classify-lit",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "30c23f3f54ddfa62cc4fbab448d0588acc43a44b2e953a44a64fdbb96000eb1a",
-      "fixture": "fixtures/classify-lit.json"
+      "category": "kernel",
+      "fixture": "fixtures/classify-lit.json",
+      "sha256": "2a5dd8caf3983fcb2db3ac57cb6b6f274691a3026c78d04f6cf42117fe17846f",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
       "caseId": "compute-edges",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "83bcc1838fa3bea3a58a60dec0b4310444e49701925036d19e0d53527e5cea01",
-      "fixture": "fixtures/compute-edges.json"
+      "category": "kernel",
+      "fixture": "fixtures/compute-edges.json",
+      "sha256": "ef1857656e7f67d90dd669f0d9737d3c96ab062138e80ea34a11f5f977e449a0",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-exact-shared-object",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "740d5709c478fa96c0982f9c3657c54332d5e2b0cf154046a33480dad79f0e1c",
-      "fixture": "fixtures/compile-exact-shared-object.json"
+      "caseId": "directly-compatible",
+      "category": "compatibility",
+      "fixture": "fixtures/directly-compatible.json",
+      "sha256": "6d39c7a0e3a787b530488542944c3696e35d6d9ee09be3c83d531bc1fea3b309",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "type_valid",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-axiomatic-path",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "7ac536e1e2a50681ad5994a5eb88dcce6d7df8e8ddb6d9860c9f205d997a0c8e",
-      "fixture": "fixtures/compile-axiomatic-path.json"
+      "caseId": "incompatible",
+      "category": "compatibility",
+      "fixture": "fixtures/incompatible.json",
+      "sha256": "8171583e446191c4d856bff91743a4c43b1c664068655e73459ae7d5964ff9b2",
+      "expectedStage": "PROPOSED",
+      "expectedVerdict": "type_killed",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-unresolved-precondition",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "d53f438c928be38d5e09ec8c15d4865543ac5e44f4bcb4d667851935cf7f5415",
-      "fixture": "fixtures/compile-unresolved-precondition.json"
+      "caseId": "single-conversion-path",
+      "category": "planning",
+      "fixture": "fixtures/single-conversion-path.json",
+      "sha256": "ede6575f419ee6d61d586ef97bb06b573c9c7e3492efa157d9f9a80efe8a94b8",
+      "expectedStage": "CONTRACT_ADMISSIBLE",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-refuted-precondition",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "90e3945b7594b33fe16b96ee1087321e40547fdd0b8e45bb23aee60ca179b41f",
-      "fixture": "fixtures/compile-refuted-precondition.json"
+      "caseId": "multiple-competing-paths",
+      "category": "planning",
+      "fixture": "fixtures/multiple-competing-paths.json",
+      "sha256": "b4db8cb5e93f2102b2fffaf4b1defda4889063a13bb7b3a8daf0fae2aabbbd15",
+      "expectedStage": "CONTRACT_ADMISSIBLE",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-contract-admissible",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "51bcbb41419c1f69f4bcca6ff7928f18b6c10210aee9f560e4725e5e64b19f34",
-      "fixture": "fixtures/compile-contract-admissible.json"
+      "caseId": "equal-cost-path-tie",
+      "category": "planning",
+      "fixture": "fixtures/equal-cost-path-tie.json",
+      "sha256": "03d185005f0f79aaa2539fc75984381864f147bb438fdca1e54d0a1ff2dc537e",
+      "expectedStage": "CONTRACT_ADMISSIBLE",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-epistemically-supported",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "063efcd5acf519292fa3b0ccb0f50f7b043af9d05f941fc8ae40a7e98fc4b6d6",
-      "fixture": "fixtures/compile-epistemically-supported.json"
+      "caseId": "soft-precondition-satisfied",
+      "category": "preconditions",
+      "fixture": "fixtures/soft-precondition-satisfied.json",
+      "sha256": "89c347373ce2c2473c68ef0b6e1c974aa8c47406e0fb6e092e50d11a329c4209",
+      "expectedStage": "CONTRACT_ADMISSIBLE",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-unit-contradiction",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "6ecaef2e2500a9b503deb5190d443157333bdfc776d76527741bbcda51df2eaa",
-      "fixture": "fixtures/compile-unit-contradiction.json"
+      "caseId": "soft-precondition-unresolved",
+      "category": "preconditions",
+      "fixture": "fixtures/soft-precondition-unresolved.json",
+      "sha256": "62d3c67f9d3030e22fbb8748d4ed1aa65f76843e4be706be01101e99eacbd682",
+      "expectedStage": "TYPE_COMPOSABLE",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-lossy-path",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "a3cbdde197b0464c391aafb7afd944068ecb48f22195817047ac67ed663d3a25",
-      "fixture": "fixtures/compile-lossy-path.json"
+      "caseId": "soft-precondition-failed",
+      "category": "preconditions",
+      "fixture": "fixtures/soft-precondition-failed.json",
+      "sha256": "10de2b3fe9bc255e11a8ac32afcde93793dd737969d6334f157b25ebbe7add84",
+      "expectedStage": "TYPE_COMPOSABLE",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-no-kind-path",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "ad129a45bbbd06fbdb5d8557ea72bd2b6a8f25ccce7d9f71c9b913f243e66d72",
-      "fixture": "fixtures/compile-no-kind-path.json"
+      "caseId": "hard-incompatibility",
+      "category": "compatibility",
+      "fixture": "fixtures/hard-incompatibility.json",
+      "sha256": "b55d101f36129b155c616e1d617aee34633d79274ff3d84a1713f16d28875f29",
+      "expectedStage": "PATH_FOUND",
+      "expectedVerdict": "type_killed",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-no-shared-ports",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "2b145e940dc4d63e40a6585c9b2d05f67353a6b69d8f893ffc676e7e66ac5e4a",
-      "fixture": "fixtures/compile-no-shared-ports.json"
+      "caseId": "missing-conversion-rule",
+      "category": "compatibility",
+      "fixture": "fixtures/missing-conversion-rule.json",
+      "sha256": "fc9fd04417669f48713b41e2b8ec2952e844ff5d1d415a10e6042caf9f8343fd",
+      "expectedStage": "PROPOSED",
+      "expectedVerdict": "type_killed",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "caseId": "compile-no-schema",
-      "oracleSource": "reference/src/cortex-v0.5.1.jsx",
-      "sourceBaseline": "804f767",
-      "schemaVersion": 7,
-      "sha256": "ada3f8a5b90a05c6721201b69ed75e2bc7b1085bd48b9783386be056ddfafd86",
-      "fixture": "fixtures/compile-no-schema.json"
-    }
-  ],
-  "blockers": [
-    {
-      "area": "model-schema-extraction",
-      "sourceLines": "839-855 (verifyCascade step 1)",
-      "reason": "Typed mechanism schemas are inferred by window.claude.complete — nondeterministic model output; cannot be a golden oracle.",
-      "boundary": "Captured instead at its output: schemas are supplied directly as the compiler input (schemaA/schemaB) in every compile-* case."
+      "caseId": "no-schema",
+      "category": "compatibility",
+      "fixture": "fixtures/no-schema.json",
+      "sha256": "3b91698f9b17f5ebd001e3b5833ee74a312b6b153f7c61bb9395f4068aa9c160",
+      "expectedStage": "PROPOSED",
+      "expectedVerdict": "type_killed",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "area": "soft-obligation-judgments",
-      "sourceLines": "872-881 (verifyCascade step 2 model call)",
-      "reason": "Per-edge precondition statuses and invariant/metric judgments are model-supplied — nondeterministic in situ.",
-      "boundary": "Injected deterministically at the model boundary (window.claude stub driven by each case's `model` policy); the surrounding contract-instantiation/PO/ladder logic runs verbatim from the frozen source."
+      "caseId": "partially-instantiated-obligations",
+      "category": "obligations",
+      "fixture": "fixtures/partially-instantiated-obligations.json",
+      "sha256": "f8404bb9f59edd5525f31e8789d9d31e75342bd5c593ae575dcc582ba0206dc1",
+      "expectedStage": "TYPE_COMPOSABLE",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "area": "literature-probe",
-      "sourceLines": "926-943 (verifyCascade step 3)",
-      "reason": "openAlexCount performs a live OpenAlex network request; litEstimateViaModel falls back to the model; entries carry wall-clock timestamps and uid() ids.",
-      "boundary": "Not captured in Phase 1 — network + nondeterministic. classifyLit boundaries (the pure classifier) ARE captured separately."
+      "caseId": "advancement-through-type-composable",
+      "category": "ladder",
+      "fixture": "fixtures/advancement-through-type-composable.json",
+      "sha256": "720f3d1320b5bbada303aee87c77650c25ecbd5ea78b936baf5aa1ed06647025",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "area": "prize-candidate-export",
-      "sourceLines": "944-957 (verifyCascade step 4)",
-      "reason": "setCandidates/setPreregs/setProbeLog/doExport mutate React state and trigger a browser download; uid() and timestamps throughout.",
-      "boundary": "Not captured — UI-coupled and nondeterministic."
+      "caseId": "lit-unexplored",
+      "category": "literature",
+      "fixture": "fixtures/lit-unexplored.json",
+      "sha256": "24de6a72d6e3a8c66127d3437515c66f3264bd417b3ab99b185962e1cefc6541",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
-      "area": "schema-v7-import-export-envelope",
-      "sourceLines": "711-733 (onFile), 751-757 (doExport)",
-      "reason": "onFile/doExport depend on FileReader, Blob, document.createElement, setData, sset and React state — DOM/React coupled.",
-      "boundary": "The pure edge-derivation (computeEdges) IS captured. The deterministic envelope transforms (notes array↔map, mechCalibration keying + silent drop, unknown-key drop on re-export, 15-vs-16-key serialization) are enumerated in data/brain-index.schema and require a stubbed-execution harness in a later phase."
+      "caseId": "lit-emerging",
+      "category": "literature",
+      "fixture": "fixtures/lit-emerging.json",
+      "sha256": "74bfdb566f2cefc64f5be3566087493118b7709abf3b2e465f533df29b53be21",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "lit-known",
+      "category": "literature",
+      "fixture": "fixtures/lit-known.json",
+      "sha256": "817622348e9f7d907edbd206dfe842d2a819508075a258e55c033c96bfcb3047",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "lit-unverified",
+      "category": "literature",
+      "fixture": "fixtures/lit-unverified.json",
+      "sha256": "71c87fa299c52414c8c5289ede46df1c8009dfa22b17c95c3ce501f0f2735c5c",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "import-with-githubUser",
+      "category": "serialization",
+      "fixture": "fixtures/import-with-githubUser.json",
+      "sha256": "48b82d14c64124c5664c0f15d3e6d0a324bf024e1ae461ae783c5083c18e2b70",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "import-without-githubUser",
+      "category": "serialization",
+      "fixture": "fixtures/import-without-githubUser.json",
+      "sha256": "74a821499c52ca0771b63d239cbd337364ddded6b92116f4f721eb644f08825e",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "import-repo-edge-roundtrip-edges-present",
+      "category": "serialization",
+      "fixture": "fixtures/import-repo-edge-roundtrip-edges-present.json",
+      "sha256": "0e295db66ffbd7c53e382c92bef1dcfb878ddff1ffa6aaac636231b1706e0db0",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "import-edges-recomputed-when-absent",
+      "category": "serialization",
+      "fixture": "fixtures/import-edges-recomputed-when-absent.json",
+      "sha256": "59847521d7a966728a6ed479ad8194085ec7ea74b6eca0443ff292c02f347d5d",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "import-unknown-extra-fields",
+      "category": "serialization",
+      "fixture": "fixtures/import-unknown-extra-fields.json",
+      "sha256": "5be99e372da042cb82648a10ce870cbe495599773be79eff3b3005ec5da57181",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "import-empty-graph",
+      "category": "serialization",
+      "fixture": "fixtures/import-empty-graph.json",
+      "sha256": "161bf4ade547ef8da6388b431418df98d730ed8399e4182199a3fbd83ffe4a61",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "malformed-missing-repos",
+      "category": "malformed",
+      "fixture": "fixtures/malformed-missing-repos.json",
+      "sha256": "369a7ab7285143b293059d966f3f6534135b247ec6a668007435ef77f2ed249b",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "malformed-repos-not-array",
+      "category": "malformed",
+      "fixture": "fixtures/malformed-repos-not-array.json",
+      "sha256": "9bc10208aa475620503c1066e9290e24d0b2f510e32fc819eb6d8e1569ce5d96",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "malformed-not-json",
+      "category": "malformed",
+      "fixture": "fixtures/malformed-not-json.json",
+      "sha256": "28ac4021972293c33a736fa334aa631514f9511d4c6620599e9f452d11a71ed7",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "export-sixteen-keys",
+      "category": "serialization",
+      "fixture": "fixtures/export-sixteen-keys.json",
+      "sha256": "c2d125591ef268100945b5d54965f7aced70de04d224f234c1c909b22a33affe",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "export-fifteen-keys-githubUser-undefined",
+      "category": "serialization",
+      "fixture": "fixtures/export-fifteen-keys-githubUser-undefined.json",
+      "sha256": "677cbcf1732f7dc3122286ebe00f0a01b3567a907dc7f4933f1d854d07a39b2c",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "export-drops-unknown-fields",
+      "category": "serialization",
+      "fixture": "fixtures/export-drops-unknown-fields.json",
+      "sha256": "6e1cfd4feb7f6f5e21efd9cd97cafa971b9a08c80c23b740e74866949388c7cd",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "roundtrip-repo-edge",
+      "category": "serialization",
+      "fixture": "fixtures/roundtrip-repo-edge.json",
+      "sha256": "9166d9861f9eb4b3eeb2e99b891b63b0ae2b7cbd22b643ecda28449b1b825879",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     }
   ]
 }

@@ -1,5 +1,6 @@
 {
-  "caseId": "compile-refuted-precondition",
+  "caseId": "soft-precondition-failed",
+  "category": "preconditions",
   "input": {
     "model": {
       "invariant": "unknown",
@@ -148,7 +149,11 @@
         "units": ""
       }
     },
+    "finalVerdict": "PLAUSIBLE",
     "impossibility": null,
+    "litClass": "OFF",
+    "litCount": null,
+    "litNote": "␀undefined",
     "mechClass": {
       "sourceKind": "tensor",
       "targetKind": "distribution"
@@ -288,6 +293,8 @@
       "sharedFormalObject": false,
       "verdict": "conversion_required"
     },
+    "mechanismGrounded": true,
+    "modelEstimated": false,
     "obligations": [
       {
         "detail": "tensor → distribution via normalize",
@@ -474,6 +481,22 @@
         "unit": "unresolved"
       }
     ],
+    "preregId": "prereg:<id>",
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 0,
+      "mechClasses": [
+        {
+          "sourceKind": "tensor",
+          "targetKind": "distribution"
+        }
+      ],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
     "stage": "TYPE_COMPOSABLE",
     "typeCheck": {
       "pass": true,
@@ -481,6 +504,19 @@
       "sharedObject": "tensor → distribution (normalize)",
       "stage": "TYPE_COMPOSABLE",
       "verdict": "conversion_required"
-    }
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "result": "pass",
+        "sharedObject": "tensor → distribution (normalize)"
+      },
+      {
+        "count": null,
+        "instrument": "openalex",
+        "preregId": "prereg:<id>",
+        "result": "OFF"
+      }
+    ]
   }
 }
