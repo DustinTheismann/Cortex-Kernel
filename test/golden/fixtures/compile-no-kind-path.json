@@ -1,0 +1,66 @@
+{
+  "caseId": "compile-no-kind-path",
+  "input": {
+    "model": {},
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ]
+    },
+    "schemaB": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [
+        {
+          "kind": "policy",
+          "name": "p",
+          "semantics": "policy mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": []
+    }
+  },
+  "output": {
+    "blockReason": null,
+    "bridge": null,
+    "impossibility": {
+      "code": "NO_KIND_PATH",
+      "detail": "no admissible conversion between any shared ports",
+      "from": null,
+      "to": null
+    },
+    "mechClass": null,
+    "mechCompat": null,
+    "obligations": [],
+    "options": [],
+    "stage": "PROPOSED",
+    "typeCheck": {
+      "pass": false,
+      "reason": "structurally impossible [NO_KIND_PATH] — no admissible conversion between any shared ports",
+      "sharedObject": null,
+      "stage": "PROPOSED",
+      "verdict": "type_killed"
+    }
+  }
+}

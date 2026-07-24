@@ -1,0 +1,48 @@
+{
+  "caseId": "compile-no-schema",
+  "input": {
+    "model": {},
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ]
+    },
+    "schemaB": null
+  },
+  "output": {
+    "blockReason": null,
+    "bridge": null,
+    "impossibility": {
+      "code": "NO_SCHEMA",
+      "detail": "mechanism schema unavailable — fail-closed",
+      "from": null,
+      "to": null
+    },
+    "mechClass": null,
+    "mechCompat": null,
+    "obligations": [],
+    "options": [],
+    "stage": "PROPOSED",
+    "typeCheck": {
+      "pass": false,
+      "reason": "structurally impossible [NO_SCHEMA] — mechanism schema unavailable — fail-closed",
+      "sharedObject": null,
+      "stage": "PROPOSED",
+      "verdict": "type_killed"
+    }
+  }
+}

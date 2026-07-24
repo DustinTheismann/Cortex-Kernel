@@ -1,0 +1,172 @@
+{
+  "caseId": "compile-unit-contradiction",
+  "input": {
+    "model": {
+      "invariant": "unknown",
+      "metric": "unknown"
+    },
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "probability"
+        }
+      ]
+    },
+    "schemaB": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "seconds"
+        }
+      ],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": []
+    }
+  },
+  "output": {
+    "blockReason": null,
+    "bridge": null,
+    "impossibility": {
+      "code": "UNIT_CONTRADICTION",
+      "detail": "units probability ⟶ seconds cannot compose",
+      "from": "tensor",
+      "to": "tensor"
+    },
+    "mechClass": {
+      "sourceKind": "tensor",
+      "targetKind": "tensor"
+    },
+    "mechCompat": {
+      "consideredPaths": 1,
+      "matchedPorts": [
+        {
+          "adapter": [],
+          "compatibility": "exact",
+          "dir": "A→B",
+          "lossy": false,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": "probability"
+          },
+          "targetInput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": "seconds"
+          }
+        }
+      ],
+      "prunedPaths": 0,
+      "sharedFormalObject": true,
+      "verdict": "type_killed"
+    },
+    "obligations": [
+      {
+        "detail": "tensor ≡ tensor",
+        "id": "PO-1",
+        "method": "deterministic",
+        "name": "Kind path",
+        "status": "PROVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-2",
+        "method": "deterministic",
+        "name": "Shape compatibility",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "probability ⟶ seconds",
+        "id": "PO-3",
+        "method": "deterministic",
+        "name": "Unit preservation",
+        "status": "REFUTED"
+      },
+      {
+        "detail": "? / ? — license metadata absent",
+        "id": "PO-4",
+        "method": "deterministic",
+        "name": "License metadata screening",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "path is fully axiomatic — no semantic precondition",
+        "id": "PO-5",
+        "method": "deterministic",
+        "name": "Preconditions",
+        "status": "PROVED"
+      },
+      {
+        "detail": "no properties destroyed on path",
+        "id": "PO-6",
+        "method": "model-assisted",
+        "name": "Invariant preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "",
+        "id": "PO-7",
+        "method": "model-assisted",
+        "name": "Metric measures outcome",
+        "status": "UNRESOLVED"
+      }
+    ],
+    "options": [
+      {
+        "adapters": [],
+        "dir": "A→B",
+        "exact": true,
+        "risk": 90.5,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": "probability"
+        },
+        "staticRisk": 0,
+        "targetInput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": "seconds"
+        },
+        "unit": "refuted"
+      }
+    ],
+    "stage": "PATH_FOUND",
+    "typeCheck": {
+      "pass": false,
+      "reason": "structurally impossible [UNIT_CONTRADICTION] — units probability ⟶ seconds cannot compose",
+      "sharedObject": null,
+      "stage": "PATH_FOUND",
+      "verdict": "type_killed"
+    }
+  }
+}

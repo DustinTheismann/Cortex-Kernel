@@ -1,0 +1,39 @@
+{
+  "0": {
+    "in": null,
+    "out": "UNVERIFIED"
+  },
+  "1": {
+    "in": 0,
+    "out": "UNEXPLORED"
+  },
+  "2": {
+    "in": 24,
+    "out": "UNEXPLORED"
+  },
+  "3": {
+    "in": 25,
+    "out": "EMERGING"
+  },
+  "4": {
+    "in": 26,
+    "out": "EMERGING"
+  },
+  "5": {
+    "in": 299,
+    "out": "EMERGING"
+  },
+  "6": {
+    "in": 300,
+    "out": "EMERGING"
+  },
+  "7": {
+    "in": 301,
+    "out": "KNOWN"
+  },
+  "8": {
+    "in": 5000,
+    "out": "KNOWN"
+  },
+  "caseId": "classify-lit"
+}

@@ -1,0 +1,66 @@
+{
+  "caseId": "compile-no-shared-ports",
+  "input": {
+    "model": {},
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": []
+    },
+    "schemaB": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": []
+    }
+  },
+  "output": {
+    "blockReason": null,
+    "bridge": null,
+    "impossibility": {
+      "code": "NO_SHARED_PORTS",
+      "detail": "no output→input port pairing between these mechanisms",
+      "from": null,
+      "to": null
+    },
+    "mechClass": null,
+    "mechCompat": null,
+    "obligations": [],
+    "options": [],
+    "stage": "PROPOSED",
+    "typeCheck": {
+      "pass": false,
+      "reason": "structurally impossible [NO_SHARED_PORTS] — no output→input port pairing between these mechanisms",
+      "sharedObject": null,
+      "stage": "PROPOSED",
+      "verdict": "type_killed"
+    }
+  }
+}

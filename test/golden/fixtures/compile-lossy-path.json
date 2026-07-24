@@ -1,0 +1,492 @@
+{
+  "caseId": "compile-lossy-path",
+  "input": {
+    "model": {
+      "invariant": "unknown",
+      "metric": "unknown"
+    },
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ]
+    },
+    "schemaB": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [
+        {
+          "kind": "scalar",
+          "name": "s",
+          "semantics": "scalar mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": []
+    }
+  },
+  "output": {
+    "blockReason": "EVIDENCE_PENDING",
+    "bridge": {
+      "adapters": [
+        {
+          "auth": "ax",
+          "from": "tensor",
+          "lose": [
+            "structure"
+          ],
+          "lossy": true,
+          "op": "reduce",
+          "pre": "",
+          "ruleId": "tensor>scalar:reduce",
+          "to": "scalar"
+        }
+      ],
+      "destroyedProperties": [
+        "structure"
+      ],
+      "dir": "A→B",
+      "executableTest": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('tensor→scalar preserves semantics', () => {\n  const x = sample_tensor();          // tensor mechanism\n  const y = reduce(x);\n  assert isValid_scalar(y);            // scalar mechanism\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});",
+      "preservedInvariants": [
+        "invariant-y"
+      ],
+      "proofObligations": [
+        {
+          "detail": "tensor → scalar via reduce",
+          "id": "PO-1",
+          "method": "deterministic",
+          "name": "Kind path",
+          "status": "PROVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-2",
+          "method": "deterministic",
+          "name": "Shape compatibility",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-3",
+          "method": "deterministic",
+          "name": "Unit preservation",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "? / ? — license metadata absent",
+          "id": "PO-4",
+          "method": "deterministic",
+          "name": "License metadata screening",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "path is fully axiomatic — no semantic precondition",
+          "id": "PO-5",
+          "method": "deterministic",
+          "name": "Preconditions",
+          "status": "PROVED"
+        },
+        {
+          "detail": "destroys: structure",
+          "id": "PO-6",
+          "method": "model-assisted",
+          "name": "Invariant preservation",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "",
+          "id": "PO-7",
+          "method": "model-assisted",
+          "name": "Metric measures outcome",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "lossy hops: reduce — adapter must bound loss",
+          "id": "PO-8",
+          "method": "deterministic",
+          "name": "Bounded information loss",
+          "status": "CONDITIONALLY-SATISFIED"
+        }
+      ],
+      "requiredAssumptions": [
+        "assumption-x"
+      ],
+      "riskCost": 4.5,
+      "ruleInstantiations": [],
+      "sourcePort": {
+        "kind": "tensor",
+        "name": "t",
+        "semantics": "tensor mechanism",
+        "shape": "",
+        "units": ""
+      },
+      "targetPort": {
+        "kind": "scalar",
+        "name": "s",
+        "semantics": "scalar mechanism",
+        "shape": "",
+        "units": ""
+      }
+    },
+    "impossibility": null,
+    "mechClass": {
+      "sourceKind": "tensor",
+      "targetKind": "scalar"
+    },
+    "mechCompat": {
+      "consideredPaths": 3,
+      "matchedPorts": [
+        {
+          "adapter": [
+            {
+              "auth": "ax",
+              "from": "tensor",
+              "lose": [
+                "structure"
+              ],
+              "lossy": true,
+              "op": "reduce",
+              "pre": "",
+              "ruleId": "tensor>scalar:reduce",
+              "to": "scalar"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": true,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "scalar",
+            "name": "s",
+            "semantics": "scalar mechanism",
+            "shape": "",
+            "units": ""
+          }
+        },
+        {
+          "adapter": [
+            {
+              "auth": "cur",
+              "from": "tensor",
+              "lose": [],
+              "lossy": false,
+              "op": "observe",
+              "pre": "tensor is an observable quantity",
+              "ruleId": "tensor>measurement:observe",
+              "to": "measurement"
+            },
+            {
+              "auth": "ax",
+              "from": "measurement",
+              "lose": [],
+              "lossy": true,
+              "op": "aggregate",
+              "pre": "",
+              "ruleId": "measurement>scalar:aggregate",
+              "to": "scalar"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": true,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "scalar",
+            "name": "s",
+            "semantics": "scalar mechanism",
+            "shape": "",
+            "units": ""
+          }
+        },
+        {
+          "adapter": [
+            {
+              "auth": "ax",
+              "from": "tensor",
+              "lose": [],
+              "lossy": false,
+              "op": "materialize",
+              "pre": "",
+              "ruleId": "tensor>dataset:materialize",
+              "to": "dataset"
+            },
+            {
+              "auth": "ax",
+              "from": "dataset",
+              "lose": [],
+              "lossy": false,
+              "op": "batch",
+              "pre": "",
+              "ruleId": "dataset>tensor:batch",
+              "to": "tensor"
+            },
+            {
+              "auth": "ax",
+              "from": "tensor",
+              "lose": [
+                "structure"
+              ],
+              "lossy": true,
+              "op": "reduce",
+              "pre": "",
+              "ruleId": "tensor>scalar:reduce",
+              "to": "scalar"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": true,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "scalar",
+            "name": "s",
+            "semantics": "scalar mechanism",
+            "shape": "",
+            "units": ""
+          }
+        }
+      ],
+      "prunedPaths": 0,
+      "sharedFormalObject": false,
+      "verdict": "conversion_required"
+    },
+    "obligations": [
+      {
+        "detail": "tensor → scalar via reduce",
+        "id": "PO-1",
+        "method": "deterministic",
+        "name": "Kind path",
+        "status": "PROVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-2",
+        "method": "deterministic",
+        "name": "Shape compatibility",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-3",
+        "method": "deterministic",
+        "name": "Unit preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "? / ? — license metadata absent",
+        "id": "PO-4",
+        "method": "deterministic",
+        "name": "License metadata screening",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "path is fully axiomatic — no semantic precondition",
+        "id": "PO-5",
+        "method": "deterministic",
+        "name": "Preconditions",
+        "status": "PROVED"
+      },
+      {
+        "detail": "destroys: structure",
+        "id": "PO-6",
+        "method": "model-assisted",
+        "name": "Invariant preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "",
+        "id": "PO-7",
+        "method": "model-assisted",
+        "name": "Metric measures outcome",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "lossy hops: reduce — adapter must bound loss",
+        "id": "PO-8",
+        "method": "deterministic",
+        "name": "Bounded information loss",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    ],
+    "options": [
+      {
+        "adapters": [
+          {
+            "auth": "ax",
+            "from": "tensor",
+            "lose": [
+              "structure"
+            ],
+            "lossy": true,
+            "op": "reduce",
+            "pre": "",
+            "ruleId": "tensor>scalar:reduce",
+            "to": "scalar"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 4.5,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 3.5,
+        "targetInput": {
+          "kind": "scalar",
+          "name": "s",
+          "semantics": "scalar mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      },
+      {
+        "adapters": [
+          {
+            "auth": "cur",
+            "from": "tensor",
+            "lose": [],
+            "lossy": false,
+            "op": "observe",
+            "pre": "tensor is an observable quantity",
+            "ruleId": "tensor>measurement:observe",
+            "to": "measurement"
+          },
+          {
+            "auth": "ax",
+            "from": "measurement",
+            "lose": [],
+            "lossy": true,
+            "op": "aggregate",
+            "pre": "",
+            "ruleId": "measurement>scalar:aggregate",
+            "to": "scalar"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 6,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 5,
+        "targetInput": {
+          "kind": "scalar",
+          "name": "s",
+          "semantics": "scalar mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      },
+      {
+        "adapters": [
+          {
+            "auth": "ax",
+            "from": "tensor",
+            "lose": [],
+            "lossy": false,
+            "op": "materialize",
+            "pre": "",
+            "ruleId": "tensor>dataset:materialize",
+            "to": "dataset"
+          },
+          {
+            "auth": "ax",
+            "from": "dataset",
+            "lose": [],
+            "lossy": false,
+            "op": "batch",
+            "pre": "",
+            "ruleId": "dataset>tensor:batch",
+            "to": "tensor"
+          },
+          {
+            "auth": "ax",
+            "from": "tensor",
+            "lose": [
+              "structure"
+            ],
+            "lossy": true,
+            "op": "reduce",
+            "pre": "",
+            "ruleId": "tensor>scalar:reduce",
+            "to": "scalar"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 6.5,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 5.5,
+        "targetInput": {
+          "kind": "scalar",
+          "name": "s",
+          "semantics": "scalar mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      }
+    ],
+    "stage": "CONTRACT_ADMISSIBLE",
+    "typeCheck": {
+      "pass": true,
+      "reason": "composable via adapter — reached CONTRACT_ADMISSIBLE · 3 paths considered, 0 pruned",
+      "sharedObject": "tensor → scalar (reduce)",
+      "stage": "CONTRACT_ADMISSIBLE",
+      "verdict": "conversion_required"
+    }
+  }
+}

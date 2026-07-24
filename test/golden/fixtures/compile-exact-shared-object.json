@@ -1,0 +1,245 @@
+{
+  "caseId": "compile-exact-shared-object",
+  "input": {
+    "model": {
+      "invariant": "unknown",
+      "metric": "unknown"
+    },
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "certified L2 radius",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ]
+    },
+    "schemaB": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "input field",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": []
+    }
+  },
+  "output": {
+    "blockReason": "EVIDENCE_PENDING",
+    "bridge": {
+      "adapters": [],
+      "destroyedProperties": [],
+      "dir": "A→B",
+      "executableTest": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('tensor→tensor preserves semantics', () => {\n  const x = sample_tensor();          // certified L2 radius\n  const y = x;\n  assert isValid_tensor(y);            // input field\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});",
+      "preservedInvariants": [
+        "invariant-y"
+      ],
+      "proofObligations": [
+        {
+          "detail": "tensor ≡ tensor",
+          "id": "PO-1",
+          "method": "deterministic",
+          "name": "Kind path",
+          "status": "PROVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-2",
+          "method": "deterministic",
+          "name": "Shape compatibility",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-3",
+          "method": "deterministic",
+          "name": "Unit preservation",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "? / ? — license metadata absent",
+          "id": "PO-4",
+          "method": "deterministic",
+          "name": "License metadata screening",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "path is fully axiomatic — no semantic precondition",
+          "id": "PO-5",
+          "method": "deterministic",
+          "name": "Preconditions",
+          "status": "PROVED"
+        },
+        {
+          "detail": "no properties destroyed on path",
+          "id": "PO-6",
+          "method": "model-assisted",
+          "name": "Invariant preservation",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "",
+          "id": "PO-7",
+          "method": "model-assisted",
+          "name": "Metric measures outcome",
+          "status": "UNRESOLVED"
+        }
+      ],
+      "requiredAssumptions": [
+        "assumption-x"
+      ],
+      "riskCost": 1,
+      "ruleInstantiations": [],
+      "sourcePort": {
+        "kind": "tensor",
+        "name": "t",
+        "semantics": "certified L2 radius",
+        "shape": "",
+        "units": ""
+      },
+      "targetPort": {
+        "kind": "tensor",
+        "name": "t",
+        "semantics": "input field",
+        "shape": "",
+        "units": ""
+      }
+    },
+    "impossibility": null,
+    "mechClass": {
+      "sourceKind": "tensor",
+      "targetKind": "tensor"
+    },
+    "mechCompat": {
+      "consideredPaths": 1,
+      "matchedPorts": [
+        {
+          "adapter": [],
+          "compatibility": "exact",
+          "dir": "A→B",
+          "lossy": false,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "certified L2 radius",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "input field",
+            "shape": "",
+            "units": ""
+          }
+        }
+      ],
+      "prunedPaths": 0,
+      "sharedFormalObject": true,
+      "verdict": "type_valid"
+    },
+    "obligations": [
+      {
+        "detail": "tensor ≡ tensor",
+        "id": "PO-1",
+        "method": "deterministic",
+        "name": "Kind path",
+        "status": "PROVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-2",
+        "method": "deterministic",
+        "name": "Shape compatibility",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-3",
+        "method": "deterministic",
+        "name": "Unit preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "? / ? — license metadata absent",
+        "id": "PO-4",
+        "method": "deterministic",
+        "name": "License metadata screening",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "path is fully axiomatic — no semantic precondition",
+        "id": "PO-5",
+        "method": "deterministic",
+        "name": "Preconditions",
+        "status": "PROVED"
+      },
+      {
+        "detail": "no properties destroyed on path",
+        "id": "PO-6",
+        "method": "model-assisted",
+        "name": "Invariant preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "",
+        "id": "PO-7",
+        "method": "model-assisted",
+        "name": "Metric measures outcome",
+        "status": "UNRESOLVED"
+      }
+    ],
+    "options": [
+      {
+        "adapters": [],
+        "dir": "A→B",
+        "exact": true,
+        "risk": 1,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "certified L2 radius",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 0,
+        "targetInput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "input field",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      }
+    ],
+    "stage": "CONTRACT_ADMISSIBLE",
+    "typeCheck": {
+      "pass": true,
+      "reason": "shared formal object — reached CONTRACT_ADMISSIBLE",
+      "sharedObject": "tensor: certified L2 radius",
+      "stage": "CONTRACT_ADMISSIBLE",
+      "verdict": "type_valid"
+    }
+  }
+}
