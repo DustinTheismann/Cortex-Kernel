@@ -92,3 +92,13 @@ Recommended phase.
 - **Required evidence.** Case studies where the tournament exposes a hidden assumption a single planner missed.
 - **Parity impact.** None — the frozen planner is one competitor; its output is unchanged.
 - **Recommended phase.** Phase 5.
+
+## 9. Causal repository topology engine
+
+- **Novelty claim.** Distinguish raw graph connectivity from *causal importance* — a Causal Connectivity Index, not a popularity score.
+- **Technical mechanism.** Beyond counting links, estimate for each repository: which repositories it enables downstream capability for; which are merely co-mentioned; which act as replaceable adapters; which are structural bottlenecks; which failures would fragment the ecosystem; and which new bridge would generate the largest connectivity gain. Built via counterfactual removal over a causal (not merely associational) topology.
+- **Expected advantage.** Turns the corpus from a connectivity map into a causal-influence map — potentially one of the project's strongest differentiators.
+- **Research risk.** High. Causal identification from observational graph data is hard; naive centrality is not causation.
+- **Required evidence.** Dependency-graph ingestion; package-manager lineage; contribution and fork relationships; import-level usage; temporal adoption data; counterfactual removal tests; and calibration against real ecosystem failures before any claim of causal validity.
+- **Parity impact.** None. Must **not** enter the v0.5.1 extraction; the deterministic kernel is unaffected. Frontier lane only.
+- **Recommended phase.** Phase 5+ (gated on the evidence above; advisory until independently validated).
