@@ -8,7 +8,25 @@
 // "refuted" lowercase here; obligations upper-case them). Reason strings are
 // observable and copied character-for-character.
 
-import { SOFT_STATUS_MAP } from "./types.js";
+import { SOFT_STATUS_MAP, MECH_KINDS } from "./types.js";
+
+/**
+ * Normalize a raw mechanism schema (normSchema), verbatim. Non-objects → null.
+ * Each port list is capped at 4; unknown kinds fail-close to "claim";
+ * "unspecified" shape/units collapse to "". Non-array meta fields → [].
+ */
+export const normSchema = (s) => {
+  if (!s || typeof s !== "object") return null;
+  const norm = (arr) => (Array.isArray(arr) ? arr : []).slice(0, 4).map((p) => ({
+    name: (p && p.name) || "",
+    kind: (p && MECH_KINDS.includes(p.kind)) ? p.kind : "claim",
+    shape: (p && p.shape && p.shape !== "unspecified") ? String(p.shape) : "",
+    units: (p && p.units && p.units !== "unspecified") ? String(p.units) : "",
+    semantics: (p && p.semantics) || "",
+  }));
+  const strs = (arr) => (Array.isArray(arr) ? arr : []).map(String);
+  return { consumes: norm(s.consumes), produces: norm(s.produces), certifies: strs(s.certifies), assumptions: strs(s.assumptions), invariants: strs(s.invariants) };
+};
 
 // wildcard/underspecified shape tokens
 const _wild = (s) => /[*?]|\bn\b|any|var|dynamic|batch|unspecified/i.test(s || "");

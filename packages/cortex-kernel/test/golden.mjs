@@ -18,13 +18,34 @@ import { sha256 } from "../../../test/oracle/canonicalize.mjs";
 import { MECH_KINDS } from "../src/types.js";
 import { CONV_RULES, edgeCost } from "../src/registry.js";
 import { shapeCompat, unitCompat, licenseCompat } from "../src/compatibility.js";
-import { adaptersFor, pairCompat } from "../src/planner.js";
+import { adaptersFor, pairCompat, planPortBridges } from "../src/planner.js";
 import { synthTest } from "../src/obligations.js";
+import { normSchema } from "../src/compatibility.js";
+import { classifyLit } from "../src/verdicts.js";
+import { evaluateCascade } from "../src/index.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const manifest = JSON.parse(readFileSync(join(root, "test/golden/manifest.json"), "utf8"));
 // Test inputs are shared with the oracle (they define the cases, not the behavior).
-const { SHAPES, UNITS, LICENSES, SYNTH_CASES } = await import(join(root, "test/oracle/cases.mjs"));
+const { SHAPES, UNITS, LICENSES, SYNTH_CASES, CLASSIFY_INPUTS, RAW_SCHEMAS } = await import(join(root, "test/oracle/cases.mjs"));
+const fixtureInput = (caseId) => JSON.parse(readFileSync(join(root, "test/golden/fixtures", caseId + ".json"), "utf8")).input;
+
+// Cascade categories run the full evaluateCascade over the fixture's input.
+// The `model` policy is resolved into per-ruleId soft evidence exactly as the
+// frozen soft-judgment call was answered (over the planned top-3 options).
+const CASCADE_CATEGORIES = new Set(["compatibility", "planning", "preconditions", "obligations", "ladder", "literature"]);
+const resolveSoft = (schemaA, schemaB, model = {}) => {
+  const { options } = planPortBridges(normSchema(schemaA), normSchema(schemaB));
+  const preconditions = {};
+  options.forEach((o) => o.adapters.forEach((s) => { if (s.auth === "cur" && s.pre) preconditions[s.ruleId] = (model.preOverrides && model.preOverrides[s.ruleId]) || model.pre || "unknown"; }));
+  return { preconditions, invariantPreserved: model.invariant || "unknown", metricMeaningful: model.metric || "unknown", note: model.note || "" };
+};
+const cascadeProduce = (caseId, category) => {
+  const input = fixtureInput(caseId);
+  const soft = resolveSoft(input.schemaA, input.schemaB, input.model);
+  const output = evaluateCascade({ schemaA: input.schemaA, schemaB: input.schemaB, repoA: { id: "repoA" }, repoB: { id: "repoB" }, soft, litGround: input.litGround, litCount: input.litCount });
+  return { caseId, category, input, output };
+};
 
 // caseId → () => fixture object (must match the oracle's { caseId, category, ...data } shape)
 const PRODUCERS = {
@@ -66,13 +87,16 @@ const PRODUCERS = {
       return { po: c.po, ci: c.ci, out: synthTest(c.po, c.ci, { adapter: best.adapter || [] }) };
     }),
   }),
+  "classify-lit": () => ({ caseId: "classify-lit", category: "kernel", data: CLASSIFY_INPUTS.map((c) => ({ in: c, out: classifyLit(c) })) }),
+  "norm-schema": () => ({ caseId: "norm-schema", category: "kernel", data: RAW_SCHEMAS.map((s) => ({ in: s, out: normSchema(s) })) }),
 };
 
 const run = () => {
   const strict = process.argv.includes("--strict");
   const matched = [], pending = [], failed = [];
   for (const c of manifest.cases) {
-    const produce = PRODUCERS[c.caseId];
+    let produce = PRODUCERS[c.caseId];
+    if (!produce && CASCADE_CATEGORIES.has(c.category)) produce = () => cascadeProduce(c.caseId, c.category);
     if (!produce) { pending.push(c.caseId); continue; }
     const got = sha256(produce());
     if (got === c.sha256) matched.push(c.caseId);
