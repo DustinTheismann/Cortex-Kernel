@@ -6,21 +6,53 @@ on:
   pull_request:
 
 jobs:
-  test:
+  kernel:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/cortex-kernel
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm ci
-      - name: Golden fixtures are in sync with the frozen artifact
-        run: |
-          npm run golden:regen
-          git diff --exit-code -- test/golden/fixtures
-      - name: Packed artifact contains the built library and imports cleanly
+
+      # Gate 1: the frozen reference artifact is byte-identical to every alias
+      # and to the sources embedded in the standalones.
+      - name: reference-integrity
+        working-directory: packages/cortex-kernel
+        run: node --test test/reference.test.mjs
+
+      # Gate 2: the oracle golden corpus still matches the frozen source
+      # (fixtures + manifest hashes + deterministic double-build).
+      - name: oracle-check
+        run: node test/oracle/harness.mjs --check
+
+      # Gate 3: extracted-kernel unit tests (registry integrity, compatibility,
+      # planner metamorphic properties, contracts/obligations, cascade,
+      # serialization, trace invariance, no-browser/no-network source scan).
+      - name: kernel-unit
+        working-directory: packages/cortex-kernel
+        run: npm test
+
+      # Gate 4 (critical): the extracted kernel reproduces every manifest hash.
+      # Fails on fixture/hash mismatch, array reordering, semantic-invariant
+      # regression, a missing case, an unexpected output field, or nondeterminism.
+      - name: kernel-golden
+        working-directory: packages/cortex-kernel
+        run: npm run kernel:golden -- --check
+
+      # Gate 5: the differential comparator + the hard trace-invariance proof
+      # (enabling trace never changes the canonical decision hash).
+      - name: kernel-differential
+        working-directory: packages/cortex-kernel
+        run: node --test test/trace-invariance.test.mjs
+
+      # Gate 6: the packed ESM artifact imports cleanly in a fresh process.
+      - name: package-smoke
+        working-directory: packages/cortex-kernel
         run: npm run pack:smoke
-      - run: npm test
+
+      # Gate 7: repeated invocation is bit-stable (oracle + kernel golden both
+      # re-verified; each performs its own deterministic double-build).
+      - name: determinism
+        run: |
+          node test/oracle/harness.mjs --check
+          node packages/cortex-kernel/test/golden.mjs --check

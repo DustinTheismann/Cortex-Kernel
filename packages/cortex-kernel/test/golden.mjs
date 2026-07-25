@@ -13,7 +13,9 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { resolve, dirname, join } from "node:path";
-import { sha256 } from "../../../test/oracle/canonicalize.mjs";
+import { sha256, stableStringify } from "../../../test/oracle/canonicalize.mjs";
+import { compareDecisions, formatReport } from "../../../test/differential/compare.mjs";
+import { checkDecision } from "../../../test/oracle/invariants.mjs";
 
 import { MECH_KINDS } from "../src/types.js";
 import { CONV_RULES, edgeCost } from "../src/registry.js";
@@ -120,26 +122,51 @@ const PRODUCERS = {
   },
 };
 
+const producerFor = (c) => {
+  if (PRODUCERS[c.caseId]) return PRODUCERS[c.caseId];
+  if (CASCADE_CATEGORIES.has(c.category)) return () => cascadeProduce(c.caseId, c.category);
+  if (c.category === "serialization") return () => serializationProduce(c.caseId, c.category);
+  if (c.category === "malformed") return () => malformedProduce(c.caseId, c.category);
+  return null;
+};
+
+const diskFixture = (c) => JSON.parse(readFileSync(join(root, "test/golden", c.fixture), "utf8"));
+
+// --check: the parity gate. Strict (every case must have a producer), fails on
+// fixture/hash mismatch, array reordering, semantic-invariant regression,
+// missing case, or an unexpected output field, and requires deterministic
+// double-run. Mismatches print a readable field-level diff, not just hashes.
 const run = () => {
-  const strict = process.argv.includes("--strict");
-  const matched = [], pending = [], failed = [];
+  const check = process.argv.includes("--check");
+  const strict = check || process.argv.includes("--strict");
+  const matched = [], pending = [], problems = [];
+
   for (const c of manifest.cases) {
-    let produce = PRODUCERS[c.caseId];
-    if (!produce && CASCADE_CATEGORIES.has(c.category)) produce = () => cascadeProduce(c.caseId, c.category);
-    if (!produce && c.category === "serialization") produce = () => serializationProduce(c.caseId, c.category);
-    if (!produce && c.category === "malformed") produce = () => malformedProduce(c.caseId, c.category);
+    const produce = producerFor(c);
     if (!produce) { pending.push(c.caseId); continue; }
-    const got = sha256(produce());
-    if (got === c.sha256) matched.push(c.caseId);
-    else failed.push({ caseId: c.caseId, expected: c.sha256, got });
+    const obj = produce();
+    if (sha256(obj) === c.sha256) matched.push(c.caseId);
+    else {
+      const rep = formatReport(compareDecisions(diskFixture(c), obj));
+      problems.push(`FAILED ${c.caseId} (fixture/hash mismatch)\n${rep.split("\n").map((l) => "    " + l).join("\n")}`);
+      continue;
+    }
+    if (check) {
+      // determinism: an independent build must serialize identically
+      if (stableStringify(obj) !== stableStringify(produce())) problems.push(`NONDETERMINISTIC ${c.caseId}`);
+      // semantic-invariant regression (cascade decisions only)
+      if (CASCADE_CATEGORIES.has(c.category)) {
+        const v = checkDecision(obj.output);
+        if (v.length) problems.push(`INVARIANT ${c.caseId}: ${v.join("; ")}`);
+      }
+    }
   }
 
-  console.log(`kernel:golden — matched ${matched.length}, pending ${pending.length}, failed ${failed.length} (of ${manifest.cases.length})`);
+  console.log(`kernel:golden — matched ${matched.length}, pending ${pending.length}, failed ${problems.length} (of ${manifest.cases.length})`);
   if (pending.length) console.log("  pending: " + pending.join(", "));
-  for (const f of failed) console.error(`  FAILED ${f.caseId}\n    expected ${f.expected}\n    got      ${f.got}`);
+  for (const p of problems) console.error("  " + p);
 
-  const bad = failed.length > 0 || (strict && pending.length > 0);
-  if (bad) process.exit(1);
+  if (problems.length > 0 || (strict && pending.length > 0)) process.exit(1);
 };
 
 run();

@@ -6,8 +6,9 @@ effects. Every observable decision is reproduced **byte-for-byte** against the
 Phase 1 golden corpus (`test/golden/` at the repo root); the frozen standalone
 (`reference/src/cortex-v0.5.1.jsx`) remains the sole authority.
 
-> Status: **Phase 2 extraction in progress.** The public surface grows one
-> parity-verified module at a time. It is not published yet.
+> Status: **Full golden-oracle parity achieved.** The extracted kernel
+> reproduces all 41 oracle fixtures byte-for-byte after canonicalization
+> (`npm run kernel:golden -- --check`). Not published yet.
 
 ## Design rules
 
