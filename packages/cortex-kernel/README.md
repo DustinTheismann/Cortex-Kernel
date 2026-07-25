@@ -34,9 +34,11 @@ Exports appear here only once their module reproduces the golden corpus.
 
 ## Explainability trace (infrastructure)
 
-Decision operations accept `{ trace: true }` and return a structurally separate
-`trace` alongside `decision`. **Enabling trace never changes the canonical
-decision hash** — enforced by a differential test.
+`evaluateCascade` accepts `{ trace: true }` and returns a structurally separate
+`trace` alongside the canonical `decision`. Internal extraction stages
+(contracts, obligations, advancement, verdicts) also support the isolated
+tracer without changing decision semantics. **Enabling trace never changes the
+canonical decision hash** — enforced by a differential test.
 
 ## Development
 
@@ -53,8 +55,8 @@ src/
   index.js         public API
   types.js         mechanism kinds, stages, obligation ids, verdicts, impossibility, SCHEMA_VERSION
   registry.js      conversion registry + edge costs + integrity assertions
-  compatibility.js pair / shape / unit / license compatibility
-  planner.js       min-risk multipath enumeration, ranking, selection
+  compatibility.js schema normalization and shape / unit / license predicates
+  planner.js       pair compatibility, multipath planning, ranking, selection
   contracts.js     per-edge contract instantiation
   obligations.js   proof-obligation vector + statuses
   advancement.js   deterministic five-stage ladder
