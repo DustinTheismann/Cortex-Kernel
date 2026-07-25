@@ -1,0 +1,83 @@
+{
+  "caseId": "import-unknown-extra-fields",
+  "category": "serialization",
+  "input": {
+    "file": {
+      "extra": {
+        "nested": true
+      },
+      "futureField": 1,
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r1",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r1",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7,
+      "weirdArray": [
+        1,
+        2
+      ]
+    },
+    "prior": null
+  },
+  "output": {
+    "calibration": "␀undefined",
+    "candidates": "␀undefined",
+    "data": {
+      "edges": [],
+      "extra": {
+        "nested": true
+      },
+      "futureField": 1,
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r1",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r1",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7,
+      "weirdArray": [
+        1,
+        2
+      ]
+    },
+    "error": "",
+    "inputCleared": "",
+    "ledger": "␀undefined",
+    "manualLinks": "␀undefined",
+    "mechCal": "␀undefined",
+    "negatives": "␀undefined",
+    "notes": "␀undefined",
+    "persistedRepos": [
+      "r1"
+    ],
+    "preregs": "␀undefined",
+    "ssetKeys": [],
+    "synthNodes": "␀undefined"
+  }
+}

@@ -1,0 +1,540 @@
+{
+  "caseId": "equal-cost-path-tie",
+  "category": "planning",
+  "input": {
+    "model": {
+      "invariant": "unknown",
+      "metric": "unknown",
+      "pre": "satisfied"
+    },
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": [
+        {
+          "kind": "distribution",
+          "name": "d",
+          "semantics": "distribution mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ]
+    },
+    "schemaB": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [
+        {
+          "kind": "dataset",
+          "name": "d",
+          "semantics": "dataset mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": []
+    }
+  },
+  "output": {
+    "blockReason": "EVIDENCE_PENDING",
+    "bridge": {
+      "adapters": [
+        {
+          "auth": "cur",
+          "from": "distribution",
+          "lose": [],
+          "lossy": false,
+          "op": "parameterize",
+          "pre": "finite parameterization exists",
+          "ruleId": "distribution>tensor:parameterize",
+          "to": "tensor"
+        },
+        {
+          "auth": "ax",
+          "from": "tensor",
+          "lose": [],
+          "lossy": false,
+          "op": "materialize",
+          "pre": "",
+          "ruleId": "tensor>dataset:materialize",
+          "to": "dataset"
+        }
+      ],
+      "destroyedProperties": [],
+      "dir": "A→B",
+      "executableTest": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('distribution→dataset preserves semantics', () => {\n  const x = sample_distribution();          // distribution mechanism\n  const y = materialize(parameterize(x));\n  assert isValid_dataset(y);            // dataset mechanism\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});",
+      "preservedInvariants": [
+        "invariant-y"
+      ],
+      "proofObligations": [
+        {
+          "detail": "distribution → dataset via parameterize → materialize",
+          "id": "PO-1",
+          "method": "deterministic",
+          "name": "Kind path",
+          "status": "PROVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-2",
+          "method": "deterministic",
+          "name": "Shape compatibility",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-3",
+          "method": "deterministic",
+          "name": "Unit preservation",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "? / ? — license metadata absent",
+          "id": "PO-4",
+          "method": "deterministic",
+          "name": "License metadata screening",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "finite parameterization exists",
+          "id": "PO-5.1",
+          "method": "model-assisted",
+          "name": "Precondition · parameterize",
+          "status": "CONDITIONALLY-SATISFIED"
+        },
+        {
+          "detail": "no properties destroyed on path",
+          "id": "PO-6",
+          "method": "model-assisted",
+          "name": "Invariant preservation",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "",
+          "id": "PO-7",
+          "method": "model-assisted",
+          "name": "Metric measures outcome",
+          "status": "UNRESOLVED"
+        }
+      ],
+      "requiredAssumptions": [
+        "assumption-x"
+      ],
+      "riskCost": 4,
+      "ruleInstantiations": [
+        {
+          "op": "parameterize",
+          "pre": "finite parameterization exists",
+          "ruleId": "distribution>tensor:parameterize",
+          "status": "CONDITIONALLY-SATISFIED"
+        }
+      ],
+      "sourcePort": {
+        "kind": "distribution",
+        "name": "d",
+        "semantics": "distribution mechanism",
+        "shape": "",
+        "units": ""
+      },
+      "targetPort": {
+        "kind": "dataset",
+        "name": "d",
+        "semantics": "dataset mechanism",
+        "shape": "",
+        "units": ""
+      }
+    },
+    "finalVerdict": "PLAUSIBLE",
+    "impossibility": null,
+    "litClass": "OFF",
+    "litCount": null,
+    "litNote": "␀undefined",
+    "mechClass": {
+      "sourceKind": "distribution",
+      "targetKind": "dataset"
+    },
+    "mechCompat": {
+      "consideredPaths": 3,
+      "matchedPorts": [
+        {
+          "adapter": [
+            {
+              "auth": "cur",
+              "from": "distribution",
+              "lose": [],
+              "lossy": false,
+              "op": "parameterize",
+              "pre": "finite parameterization exists",
+              "ruleId": "distribution>tensor:parameterize",
+              "to": "tensor"
+            },
+            {
+              "auth": "ax",
+              "from": "tensor",
+              "lose": [],
+              "lossy": false,
+              "op": "materialize",
+              "pre": "",
+              "ruleId": "tensor>dataset:materialize",
+              "to": "dataset"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": false,
+          "sourceOutput": {
+            "kind": "distribution",
+            "name": "d",
+            "semantics": "distribution mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "dataset",
+            "name": "d",
+            "semantics": "dataset mechanism",
+            "shape": "",
+            "units": ""
+          }
+        },
+        {
+          "adapter": [
+            {
+              "auth": "cur",
+              "from": "distribution",
+              "lose": [],
+              "lossy": false,
+              "op": "sample",
+              "pre": "sampling procedure defined",
+              "ruleId": "distribution>measurement:sample",
+              "to": "measurement"
+            },
+            {
+              "auth": "ax",
+              "from": "measurement",
+              "lose": [],
+              "lossy": false,
+              "op": "collect",
+              "pre": "",
+              "ruleId": "measurement>dataset:collect",
+              "to": "dataset"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": false,
+          "sourceOutput": {
+            "kind": "distribution",
+            "name": "d",
+            "semantics": "distribution mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "dataset",
+            "name": "d",
+            "semantics": "dataset mechanism",
+            "shape": "",
+            "units": ""
+          }
+        },
+        {
+          "adapter": [
+            {
+              "auth": "cur",
+              "from": "distribution",
+              "lose": [],
+              "lossy": false,
+              "op": "parameterize",
+              "pre": "finite parameterization exists",
+              "ruleId": "distribution>tensor:parameterize",
+              "to": "tensor"
+            },
+            {
+              "auth": "cur",
+              "from": "tensor",
+              "lose": [],
+              "lossy": false,
+              "op": "observe",
+              "pre": "tensor is an observable quantity",
+              "ruleId": "tensor>measurement:observe",
+              "to": "measurement"
+            },
+            {
+              "auth": "ax",
+              "from": "measurement",
+              "lose": [],
+              "lossy": false,
+              "op": "collect",
+              "pre": "",
+              "ruleId": "measurement>dataset:collect",
+              "to": "dataset"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": false,
+          "sourceOutput": {
+            "kind": "distribution",
+            "name": "d",
+            "semantics": "distribution mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "dataset",
+            "name": "d",
+            "semantics": "dataset mechanism",
+            "shape": "",
+            "units": ""
+          }
+        }
+      ],
+      "prunedPaths": 0,
+      "sharedFormalObject": false,
+      "verdict": "conversion_required"
+    },
+    "mechanismGrounded": true,
+    "modelEstimated": false,
+    "obligations": [
+      {
+        "detail": "distribution → dataset via parameterize → materialize",
+        "id": "PO-1",
+        "method": "deterministic",
+        "name": "Kind path",
+        "status": "PROVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-2",
+        "method": "deterministic",
+        "name": "Shape compatibility",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-3",
+        "method": "deterministic",
+        "name": "Unit preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "? / ? — license metadata absent",
+        "id": "PO-4",
+        "method": "deterministic",
+        "name": "License metadata screening",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "finite parameterization exists",
+        "id": "PO-5.1",
+        "method": "model-assisted",
+        "name": "Precondition · parameterize",
+        "status": "CONDITIONALLY-SATISFIED"
+      },
+      {
+        "detail": "no properties destroyed on path",
+        "id": "PO-6",
+        "method": "model-assisted",
+        "name": "Invariant preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "",
+        "id": "PO-7",
+        "method": "model-assisted",
+        "name": "Metric measures outcome",
+        "status": "UNRESOLVED"
+      }
+    ],
+    "options": [
+      {
+        "adapters": [
+          {
+            "auth": "cur",
+            "from": "distribution",
+            "lose": [],
+            "lossy": false,
+            "op": "parameterize",
+            "pre": "finite parameterization exists",
+            "ruleId": "distribution>tensor:parameterize",
+            "to": "tensor"
+          },
+          {
+            "auth": "ax",
+            "from": "tensor",
+            "lose": [],
+            "lossy": false,
+            "op": "materialize",
+            "pre": "",
+            "ruleId": "tensor>dataset:materialize",
+            "to": "dataset"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 4,
+        "sourceOutput": {
+          "kind": "distribution",
+          "name": "d",
+          "semantics": "distribution mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 3,
+        "targetInput": {
+          "kind": "dataset",
+          "name": "d",
+          "semantics": "dataset mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      },
+      {
+        "adapters": [
+          {
+            "auth": "cur",
+            "from": "distribution",
+            "lose": [],
+            "lossy": false,
+            "op": "sample",
+            "pre": "sampling procedure defined",
+            "ruleId": "distribution>measurement:sample",
+            "to": "measurement"
+          },
+          {
+            "auth": "ax",
+            "from": "measurement",
+            "lose": [],
+            "lossy": false,
+            "op": "collect",
+            "pre": "",
+            "ruleId": "measurement>dataset:collect",
+            "to": "dataset"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 4,
+        "sourceOutput": {
+          "kind": "distribution",
+          "name": "d",
+          "semantics": "distribution mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 3,
+        "targetInput": {
+          "kind": "dataset",
+          "name": "d",
+          "semantics": "dataset mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      },
+      {
+        "adapters": [
+          {
+            "auth": "cur",
+            "from": "distribution",
+            "lose": [],
+            "lossy": false,
+            "op": "parameterize",
+            "pre": "finite parameterization exists",
+            "ruleId": "distribution>tensor:parameterize",
+            "to": "tensor"
+          },
+          {
+            "auth": "cur",
+            "from": "tensor",
+            "lose": [],
+            "lossy": false,
+            "op": "observe",
+            "pre": "tensor is an observable quantity",
+            "ruleId": "tensor>measurement:observe",
+            "to": "measurement"
+          },
+          {
+            "auth": "ax",
+            "from": "measurement",
+            "lose": [],
+            "lossy": false,
+            "op": "collect",
+            "pre": "",
+            "ruleId": "measurement>dataset:collect",
+            "to": "dataset"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 6,
+        "sourceOutput": {
+          "kind": "distribution",
+          "name": "d",
+          "semantics": "distribution mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 5,
+        "targetInput": {
+          "kind": "dataset",
+          "name": "d",
+          "semantics": "dataset mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      }
+    ],
+    "preregId": "prereg:<id>",
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 0,
+      "mechClasses": [
+        {
+          "sourceKind": "distribution",
+          "targetKind": "dataset"
+        }
+      ],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
+    "stage": "CONTRACT_ADMISSIBLE",
+    "typeCheck": {
+      "pass": true,
+      "reason": "composable via adapter — reached CONTRACT_ADMISSIBLE · 3 paths considered, 0 pruned",
+      "sharedObject": "distribution → dataset (parameterize → materialize)",
+      "stage": "CONTRACT_ADMISSIBLE",
+      "verdict": "conversion_required"
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "result": "pass",
+        "sharedObject": "distribution → dataset (parameterize → materialize)"
+      },
+      {
+        "count": null,
+        "instrument": "openalex",
+        "preregId": "prereg:<id>",
+        "result": "OFF"
+      }
+    ]
+  }
+}

@@ -1,0 +1,699 @@
+{
+  "caseId": "partially-instantiated-obligations",
+  "category": "obligations",
+  "input": {
+    "model": {
+      "invariant": "unknown",
+      "metric": "unknown",
+      "preOverrides": {
+        "bound>certificate:wrap": "unknown",
+        "scalar>bound:threshold": "satisfied"
+      }
+    },
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ]
+    },
+    "schemaB": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [
+        {
+          "kind": "certificate",
+          "name": "c",
+          "semantics": "certificate mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": []
+    }
+  },
+  "output": {
+    "blockReason": "PRECONDITION_UNRESOLVED",
+    "bridge": {
+      "adapters": [
+        {
+          "auth": "ax",
+          "from": "tensor",
+          "lose": [
+            "structure"
+          ],
+          "lossy": true,
+          "op": "reduce",
+          "pre": "",
+          "ruleId": "tensor>scalar:reduce",
+          "to": "scalar"
+        },
+        {
+          "auth": "cur",
+          "from": "scalar",
+          "lose": [],
+          "lossy": false,
+          "op": "threshold",
+          "pre": "scalar is a comparable magnitude",
+          "ruleId": "scalar>bound:threshold",
+          "to": "bound"
+        },
+        {
+          "auth": "cur",
+          "from": "bound",
+          "lose": [],
+          "lossy": false,
+          "op": "wrap",
+          "pre": "bound is soundly derived",
+          "ruleId": "bound>certificate:wrap",
+          "to": "certificate"
+        }
+      ],
+      "destroyedProperties": [
+        "structure"
+      ],
+      "dir": "A→B",
+      "executableTest": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('tensor→certificate preserves semantics', () => {\n  const x = sample_tensor();          // tensor mechanism\n  const y = wrap(threshold(reduce(x)));\n  assert isValid_certificate(y);            // certificate mechanism\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});",
+      "preservedInvariants": [
+        "invariant-y"
+      ],
+      "proofObligations": [
+        {
+          "detail": "tensor → certificate via reduce → threshold → wrap",
+          "id": "PO-1",
+          "method": "deterministic",
+          "name": "Kind path",
+          "status": "PROVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-2",
+          "method": "deterministic",
+          "name": "Shape compatibility",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-3",
+          "method": "deterministic",
+          "name": "Unit preservation",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "? / ? — license metadata absent",
+          "id": "PO-4",
+          "method": "deterministic",
+          "name": "License metadata screening",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "scalar is a comparable magnitude",
+          "id": "PO-5.1",
+          "method": "model-assisted",
+          "name": "Precondition · threshold",
+          "status": "CONDITIONALLY-SATISFIED"
+        },
+        {
+          "detail": "bound is soundly derived",
+          "id": "PO-5.2",
+          "method": "model-assisted",
+          "name": "Precondition · wrap",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "destroys: structure",
+          "id": "PO-6",
+          "method": "model-assisted",
+          "name": "Invariant preservation",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "",
+          "id": "PO-7",
+          "method": "model-assisted",
+          "name": "Metric measures outcome",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "lossy hops: reduce — adapter must bound loss",
+          "id": "PO-8",
+          "method": "deterministic",
+          "name": "Bounded information loss",
+          "status": "CONDITIONALLY-SATISFIED"
+        }
+      ],
+      "requiredAssumptions": [
+        "assumption-x"
+      ],
+      "riskCost": 8.5,
+      "ruleInstantiations": [
+        {
+          "op": "threshold",
+          "pre": "scalar is a comparable magnitude",
+          "ruleId": "scalar>bound:threshold",
+          "status": "CONDITIONALLY-SATISFIED"
+        },
+        {
+          "op": "wrap",
+          "pre": "bound is soundly derived",
+          "ruleId": "bound>certificate:wrap",
+          "status": "UNRESOLVED"
+        }
+      ],
+      "sourcePort": {
+        "kind": "tensor",
+        "name": "t",
+        "semantics": "tensor mechanism",
+        "shape": "",
+        "units": ""
+      },
+      "targetPort": {
+        "kind": "certificate",
+        "name": "c",
+        "semantics": "certificate mechanism",
+        "shape": "",
+        "units": ""
+      }
+    },
+    "finalVerdict": "PLAUSIBLE",
+    "impossibility": null,
+    "litClass": "OFF",
+    "litCount": null,
+    "litNote": "␀undefined",
+    "mechClass": {
+      "sourceKind": "tensor",
+      "targetKind": "certificate"
+    },
+    "mechCompat": {
+      "consideredPaths": 3,
+      "matchedPorts": [
+        {
+          "adapter": [
+            {
+              "auth": "ax",
+              "from": "tensor",
+              "lose": [
+                "structure"
+              ],
+              "lossy": true,
+              "op": "reduce",
+              "pre": "",
+              "ruleId": "tensor>scalar:reduce",
+              "to": "scalar"
+            },
+            {
+              "auth": "cur",
+              "from": "scalar",
+              "lose": [],
+              "lossy": false,
+              "op": "threshold",
+              "pre": "scalar is a comparable magnitude",
+              "ruleId": "scalar>bound:threshold",
+              "to": "bound"
+            },
+            {
+              "auth": "cur",
+              "from": "bound",
+              "lose": [],
+              "lossy": false,
+              "op": "wrap",
+              "pre": "bound is soundly derived",
+              "ruleId": "bound>certificate:wrap",
+              "to": "certificate"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": true,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "certificate",
+            "name": "c",
+            "semantics": "certificate mechanism",
+            "shape": "",
+            "units": ""
+          }
+        },
+        {
+          "adapter": [
+            {
+              "auth": "cur",
+              "from": "tensor",
+              "lose": [],
+              "lossy": false,
+              "op": "observe",
+              "pre": "tensor is an observable quantity",
+              "ruleId": "tensor>measurement:observe",
+              "to": "measurement"
+            },
+            {
+              "auth": "ax",
+              "from": "measurement",
+              "lose": [],
+              "lossy": true,
+              "op": "aggregate",
+              "pre": "",
+              "ruleId": "measurement>scalar:aggregate",
+              "to": "scalar"
+            },
+            {
+              "auth": "cur",
+              "from": "scalar",
+              "lose": [],
+              "lossy": false,
+              "op": "threshold",
+              "pre": "scalar is a comparable magnitude",
+              "ruleId": "scalar>bound:threshold",
+              "to": "bound"
+            },
+            {
+              "auth": "cur",
+              "from": "bound",
+              "lose": [],
+              "lossy": false,
+              "op": "wrap",
+              "pre": "bound is soundly derived",
+              "ruleId": "bound>certificate:wrap",
+              "to": "certificate"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": true,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "certificate",
+            "name": "c",
+            "semantics": "certificate mechanism",
+            "shape": "",
+            "units": ""
+          }
+        },
+        {
+          "adapter": [
+            {
+              "auth": "ax",
+              "from": "tensor",
+              "lose": [],
+              "lossy": false,
+              "op": "materialize",
+              "pre": "",
+              "ruleId": "tensor>dataset:materialize",
+              "to": "dataset"
+            },
+            {
+              "auth": "ax",
+              "from": "dataset",
+              "lose": [],
+              "lossy": false,
+              "op": "batch",
+              "pre": "",
+              "ruleId": "dataset>tensor:batch",
+              "to": "tensor"
+            },
+            {
+              "auth": "ax",
+              "from": "tensor",
+              "lose": [
+                "structure"
+              ],
+              "lossy": true,
+              "op": "reduce",
+              "pre": "",
+              "ruleId": "tensor>scalar:reduce",
+              "to": "scalar"
+            },
+            {
+              "auth": "cur",
+              "from": "scalar",
+              "lose": [],
+              "lossy": false,
+              "op": "threshold",
+              "pre": "scalar is a comparable magnitude",
+              "ruleId": "scalar>bound:threshold",
+              "to": "bound"
+            },
+            {
+              "auth": "cur",
+              "from": "bound",
+              "lose": [],
+              "lossy": false,
+              "op": "wrap",
+              "pre": "bound is soundly derived",
+              "ruleId": "bound>certificate:wrap",
+              "to": "certificate"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": true,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "certificate",
+            "name": "c",
+            "semantics": "certificate mechanism",
+            "shape": "",
+            "units": ""
+          }
+        }
+      ],
+      "prunedPaths": 0,
+      "sharedFormalObject": false,
+      "verdict": "conversion_required"
+    },
+    "mechanismGrounded": true,
+    "modelEstimated": false,
+    "obligations": [
+      {
+        "detail": "tensor → certificate via reduce → threshold → wrap",
+        "id": "PO-1",
+        "method": "deterministic",
+        "name": "Kind path",
+        "status": "PROVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-2",
+        "method": "deterministic",
+        "name": "Shape compatibility",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-3",
+        "method": "deterministic",
+        "name": "Unit preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "? / ? — license metadata absent",
+        "id": "PO-4",
+        "method": "deterministic",
+        "name": "License metadata screening",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "scalar is a comparable magnitude",
+        "id": "PO-5.1",
+        "method": "model-assisted",
+        "name": "Precondition · threshold",
+        "status": "CONDITIONALLY-SATISFIED"
+      },
+      {
+        "detail": "bound is soundly derived",
+        "id": "PO-5.2",
+        "method": "model-assisted",
+        "name": "Precondition · wrap",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "destroys: structure",
+        "id": "PO-6",
+        "method": "model-assisted",
+        "name": "Invariant preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "",
+        "id": "PO-7",
+        "method": "model-assisted",
+        "name": "Metric measures outcome",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "lossy hops: reduce — adapter must bound loss",
+        "id": "PO-8",
+        "method": "deterministic",
+        "name": "Bounded information loss",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    ],
+    "options": [
+      {
+        "adapters": [
+          {
+            "auth": "ax",
+            "from": "tensor",
+            "lose": [
+              "structure"
+            ],
+            "lossy": true,
+            "op": "reduce",
+            "pre": "",
+            "ruleId": "tensor>scalar:reduce",
+            "to": "scalar"
+          },
+          {
+            "auth": "cur",
+            "from": "scalar",
+            "lose": [],
+            "lossy": false,
+            "op": "threshold",
+            "pre": "scalar is a comparable magnitude",
+            "ruleId": "scalar>bound:threshold",
+            "to": "bound"
+          },
+          {
+            "auth": "cur",
+            "from": "bound",
+            "lose": [],
+            "lossy": false,
+            "op": "wrap",
+            "pre": "bound is soundly derived",
+            "ruleId": "bound>certificate:wrap",
+            "to": "certificate"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 8.5,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 7.5,
+        "targetInput": {
+          "kind": "certificate",
+          "name": "c",
+          "semantics": "certificate mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      },
+      {
+        "adapters": [
+          {
+            "auth": "cur",
+            "from": "tensor",
+            "lose": [],
+            "lossy": false,
+            "op": "observe",
+            "pre": "tensor is an observable quantity",
+            "ruleId": "tensor>measurement:observe",
+            "to": "measurement"
+          },
+          {
+            "auth": "ax",
+            "from": "measurement",
+            "lose": [],
+            "lossy": true,
+            "op": "aggregate",
+            "pre": "",
+            "ruleId": "measurement>scalar:aggregate",
+            "to": "scalar"
+          },
+          {
+            "auth": "cur",
+            "from": "scalar",
+            "lose": [],
+            "lossy": false,
+            "op": "threshold",
+            "pre": "scalar is a comparable magnitude",
+            "ruleId": "scalar>bound:threshold",
+            "to": "bound"
+          },
+          {
+            "auth": "cur",
+            "from": "bound",
+            "lose": [],
+            "lossy": false,
+            "op": "wrap",
+            "pre": "bound is soundly derived",
+            "ruleId": "bound>certificate:wrap",
+            "to": "certificate"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 10,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 9,
+        "targetInput": {
+          "kind": "certificate",
+          "name": "c",
+          "semantics": "certificate mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      },
+      {
+        "adapters": [
+          {
+            "auth": "ax",
+            "from": "tensor",
+            "lose": [],
+            "lossy": false,
+            "op": "materialize",
+            "pre": "",
+            "ruleId": "tensor>dataset:materialize",
+            "to": "dataset"
+          },
+          {
+            "auth": "ax",
+            "from": "dataset",
+            "lose": [],
+            "lossy": false,
+            "op": "batch",
+            "pre": "",
+            "ruleId": "dataset>tensor:batch",
+            "to": "tensor"
+          },
+          {
+            "auth": "ax",
+            "from": "tensor",
+            "lose": [
+              "structure"
+            ],
+            "lossy": true,
+            "op": "reduce",
+            "pre": "",
+            "ruleId": "tensor>scalar:reduce",
+            "to": "scalar"
+          },
+          {
+            "auth": "cur",
+            "from": "scalar",
+            "lose": [],
+            "lossy": false,
+            "op": "threshold",
+            "pre": "scalar is a comparable magnitude",
+            "ruleId": "scalar>bound:threshold",
+            "to": "bound"
+          },
+          {
+            "auth": "cur",
+            "from": "bound",
+            "lose": [],
+            "lossy": false,
+            "op": "wrap",
+            "pre": "bound is soundly derived",
+            "ruleId": "bound>certificate:wrap",
+            "to": "certificate"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 10.5,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 9.5,
+        "targetInput": {
+          "kind": "certificate",
+          "name": "c",
+          "semantics": "certificate mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      }
+    ],
+    "preregId": "prereg:<id>",
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 0,
+      "mechClasses": [
+        {
+          "sourceKind": "tensor",
+          "targetKind": "certificate"
+        }
+      ],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
+    "stage": "TYPE_COMPOSABLE",
+    "typeCheck": {
+      "pass": true,
+      "reason": "composable via adapter — reached TYPE_COMPOSABLE · 3 paths considered, 0 pruned",
+      "sharedObject": "tensor → certificate (reduce → threshold → wrap)",
+      "stage": "TYPE_COMPOSABLE",
+      "verdict": "conversion_required"
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "result": "pass",
+        "sharedObject": "tensor → certificate (reduce → threshold → wrap)"
+      },
+      {
+        "count": null,
+        "instrument": "openalex",
+        "preregId": "prereg:<id>",
+        "result": "OFF"
+      }
+    ]
+  }
+}

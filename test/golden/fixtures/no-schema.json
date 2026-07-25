@@ -1,0 +1,65 @@
+{
+  "caseId": "no-schema",
+  "category": "compatibility",
+  "input": {
+    "model": {},
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ]
+    },
+    "schemaB": null
+  },
+  "output": {
+    "finalVerdict": "INCOHERENT",
+    "impossibility": {
+      "code": "NO_SCHEMA",
+      "detail": "mechanism schema unavailable — fail-closed",
+      "from": null,
+      "to": null
+    },
+    "litClass": "SKIPPED",
+    "mechanismGrounded": true,
+    "obligations": [],
+    "options": [],
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 1,
+      "mechClasses": [],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
+    "stage": "PROPOSED",
+    "typeCheck": {
+      "pass": false,
+      "reason": "structurally impossible [NO_SCHEMA] — mechanism schema unavailable — fail-closed",
+      "sharedObject": null,
+      "stage": "PROPOSED",
+      "verdict": "type_killed"
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "reason": "structurally impossible [NO_SCHEMA] — mechanism schema unavailable — fail-closed",
+        "result": "fail"
+      }
+    ]
+  }
+}

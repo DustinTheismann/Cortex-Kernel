@@ -1,0 +1,90 @@
+{
+  "caseId": "import-without-githubUser",
+  "category": "serialization",
+  "input": {
+    "file": {
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r1",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r1",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7
+    },
+    "prior": {
+      "data": {
+        "edges": [],
+        "githubUser": "previous-user",
+        "repos": [
+          {
+            "defaultBranch": "main",
+            "dependencies": [],
+            "description": "",
+            "enriched": false,
+            "fileTree": [],
+            "id": "old",
+            "language": null,
+            "mentionsRepos": [],
+            "name": "old",
+            "readme": "",
+            "signalFiles": {},
+            "stars": 0,
+            "topics": [],
+            "updatedAt": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    }
+  },
+  "output": {
+    "calibration": "␀undefined",
+    "candidates": "␀undefined",
+    "data": {
+      "edges": [],
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r1",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r1",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7
+    },
+    "error": "",
+    "inputCleared": "",
+    "ledger": "␀undefined",
+    "manualLinks": "␀undefined",
+    "mechCal": "␀undefined",
+    "negatives": "␀undefined",
+    "notes": "␀undefined",
+    "persistedRepos": [
+      "r1"
+    ],
+    "preregs": "␀undefined",
+    "ssetKeys": [],
+    "synthNodes": "␀undefined"
+  }
+}

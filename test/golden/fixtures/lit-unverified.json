@@ -1,0 +1,524 @@
+{
+  "caseId": "lit-unverified",
+  "category": "literature",
+  "input": {
+    "litCount": null,
+    "litGround": true,
+    "model": {
+      "invariant": "satisfied",
+      "metric": "satisfied",
+      "pre": "satisfied"
+    },
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ]
+    },
+    "schemaB": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [
+        {
+          "kind": "distribution",
+          "name": "d",
+          "semantics": "distribution mechanism",
+          "shape": "unspecified",
+          "units": "unspecified"
+        }
+      ],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": []
+    }
+  },
+  "output": {
+    "blockReason": null,
+    "bridge": {
+      "adapters": [
+        {
+          "auth": "cur",
+          "from": "tensor",
+          "lose": [
+            "scale"
+          ],
+          "lossy": false,
+          "op": "normalize",
+          "pre": "nonneg & normalizable to unit mass",
+          "ruleId": "tensor>distribution:normalize",
+          "to": "distribution"
+        }
+      ],
+      "destroyedProperties": [
+        "scale"
+      ],
+      "dir": "A→B",
+      "executableTest": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('tensor→distribution preserves semantics', () => {\n  const x = sample_tensor();          // tensor mechanism\n  const y = normalize(x);\n  assert isValid_distribution(y);            // distribution mechanism\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});",
+      "preservedInvariants": [
+        "invariant-y"
+      ],
+      "proofObligations": [
+        {
+          "detail": "tensor → distribution via normalize",
+          "id": "PO-1",
+          "method": "deterministic",
+          "name": "Kind path",
+          "status": "PROVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-2",
+          "method": "deterministic",
+          "name": "Shape compatibility",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-3",
+          "method": "deterministic",
+          "name": "Unit preservation",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "? / ? — license metadata absent",
+          "id": "PO-4",
+          "method": "deterministic",
+          "name": "License metadata screening",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "nonneg & normalizable to unit mass",
+          "id": "PO-5.1",
+          "method": "model-assisted",
+          "name": "Precondition · normalize",
+          "status": "CONDITIONALLY-SATISFIED"
+        },
+        {
+          "detail": "destroys: scale",
+          "id": "PO-6",
+          "method": "model-assisted",
+          "name": "Invariant preservation",
+          "status": "CONDITIONALLY-SATISFIED"
+        },
+        {
+          "detail": "",
+          "id": "PO-7",
+          "method": "model-assisted",
+          "name": "Metric measures outcome",
+          "status": "CONDITIONALLY-SATISFIED"
+        }
+      ],
+      "requiredAssumptions": [
+        "assumption-x"
+      ],
+      "riskCost": 3.5,
+      "ruleInstantiations": [
+        {
+          "op": "normalize",
+          "pre": "nonneg & normalizable to unit mass",
+          "ruleId": "tensor>distribution:normalize",
+          "status": "CONDITIONALLY-SATISFIED"
+        }
+      ],
+      "sourcePort": {
+        "kind": "tensor",
+        "name": "t",
+        "semantics": "tensor mechanism",
+        "shape": "",
+        "units": ""
+      },
+      "targetPort": {
+        "kind": "distribution",
+        "name": "d",
+        "semantics": "distribution mechanism",
+        "shape": "",
+        "units": ""
+      }
+    },
+    "finalVerdict": "UNVERIFIED",
+    "impossibility": null,
+    "litClass": "UNVERIFIED",
+    "litCount": null,
+    "litNote": "␀undefined",
+    "mechClass": {
+      "sourceKind": "tensor",
+      "targetKind": "distribution"
+    },
+    "mechCompat": {
+      "consideredPaths": 3,
+      "matchedPorts": [
+        {
+          "adapter": [
+            {
+              "auth": "cur",
+              "from": "tensor",
+              "lose": [
+                "scale"
+              ],
+              "lossy": false,
+              "op": "normalize",
+              "pre": "nonneg & normalizable to unit mass",
+              "ruleId": "tensor>distribution:normalize",
+              "to": "distribution"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": false,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "distribution",
+            "name": "d",
+            "semantics": "distribution mechanism",
+            "shape": "",
+            "units": ""
+          }
+        },
+        {
+          "adapter": [
+            {
+              "auth": "ax",
+              "from": "tensor",
+              "lose": [],
+              "lossy": false,
+              "op": "materialize",
+              "pre": "",
+              "ruleId": "tensor>dataset:materialize",
+              "to": "dataset"
+            },
+            {
+              "auth": "cur",
+              "from": "dataset",
+              "lose": [],
+              "lossy": false,
+              "op": "empirical",
+              "pre": "samples are i.i.d.",
+              "ruleId": "dataset>distribution:empirical",
+              "to": "distribution"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": false,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "distribution",
+            "name": "d",
+            "semantics": "distribution mechanism",
+            "shape": "",
+            "units": ""
+          }
+        },
+        {
+          "adapter": [
+            {
+              "auth": "ax",
+              "from": "tensor",
+              "lose": [],
+              "lossy": false,
+              "op": "materialize",
+              "pre": "",
+              "ruleId": "tensor>dataset:materialize",
+              "to": "dataset"
+            },
+            {
+              "auth": "ax",
+              "from": "dataset",
+              "lose": [],
+              "lossy": false,
+              "op": "batch",
+              "pre": "",
+              "ruleId": "dataset>tensor:batch",
+              "to": "tensor"
+            },
+            {
+              "auth": "cur",
+              "from": "tensor",
+              "lose": [
+                "scale"
+              ],
+              "lossy": false,
+              "op": "normalize",
+              "pre": "nonneg & normalizable to unit mass",
+              "ruleId": "tensor>distribution:normalize",
+              "to": "distribution"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": false,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "distribution",
+            "name": "d",
+            "semantics": "distribution mechanism",
+            "shape": "",
+            "units": ""
+          }
+        }
+      ],
+      "prunedPaths": 0,
+      "sharedFormalObject": false,
+      "verdict": "conversion_required"
+    },
+    "mechanismGrounded": true,
+    "modelEstimated": false,
+    "obligations": [
+      {
+        "detail": "tensor → distribution via normalize",
+        "id": "PO-1",
+        "method": "deterministic",
+        "name": "Kind path",
+        "status": "PROVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-2",
+        "method": "deterministic",
+        "name": "Shape compatibility",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-3",
+        "method": "deterministic",
+        "name": "Unit preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "? / ? — license metadata absent",
+        "id": "PO-4",
+        "method": "deterministic",
+        "name": "License metadata screening",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "nonneg & normalizable to unit mass",
+        "id": "PO-5.1",
+        "method": "model-assisted",
+        "name": "Precondition · normalize",
+        "status": "CONDITIONALLY-SATISFIED"
+      },
+      {
+        "detail": "destroys: scale",
+        "id": "PO-6",
+        "method": "model-assisted",
+        "name": "Invariant preservation",
+        "status": "CONDITIONALLY-SATISFIED"
+      },
+      {
+        "detail": "",
+        "id": "PO-7",
+        "method": "model-assisted",
+        "name": "Metric measures outcome",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    ],
+    "options": [
+      {
+        "adapters": [
+          {
+            "auth": "cur",
+            "from": "tensor",
+            "lose": [
+              "scale"
+            ],
+            "lossy": false,
+            "op": "normalize",
+            "pre": "nonneg & normalizable to unit mass",
+            "ruleId": "tensor>distribution:normalize",
+            "to": "distribution"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 3.5,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 2.5,
+        "targetInput": {
+          "kind": "distribution",
+          "name": "d",
+          "semantics": "distribution mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      },
+      {
+        "adapters": [
+          {
+            "auth": "ax",
+            "from": "tensor",
+            "lose": [],
+            "lossy": false,
+            "op": "materialize",
+            "pre": "",
+            "ruleId": "tensor>dataset:materialize",
+            "to": "dataset"
+          },
+          {
+            "auth": "cur",
+            "from": "dataset",
+            "lose": [],
+            "lossy": false,
+            "op": "empirical",
+            "pre": "samples are i.i.d.",
+            "ruleId": "dataset>distribution:empirical",
+            "to": "distribution"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 4,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 3,
+        "targetInput": {
+          "kind": "distribution",
+          "name": "d",
+          "semantics": "distribution mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      },
+      {
+        "adapters": [
+          {
+            "auth": "ax",
+            "from": "tensor",
+            "lose": [],
+            "lossy": false,
+            "op": "materialize",
+            "pre": "",
+            "ruleId": "tensor>dataset:materialize",
+            "to": "dataset"
+          },
+          {
+            "auth": "ax",
+            "from": "dataset",
+            "lose": [],
+            "lossy": false,
+            "op": "batch",
+            "pre": "",
+            "ruleId": "dataset>tensor:batch",
+            "to": "tensor"
+          },
+          {
+            "auth": "cur",
+            "from": "tensor",
+            "lose": [
+              "scale"
+            ],
+            "lossy": false,
+            "op": "normalize",
+            "pre": "nonneg & normalizable to unit mass",
+            "ruleId": "tensor>distribution:normalize",
+            "to": "distribution"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 5.5,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 4.5,
+        "targetInput": {
+          "kind": "distribution",
+          "name": "d",
+          "semantics": "distribution mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
+      }
+    ],
+    "preregId": "prereg:<id>",
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 0,
+      "mechClasses": [
+        {
+          "sourceKind": "tensor",
+          "targetKind": "distribution"
+        }
+      ],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
+    "stage": "EPISTEMICALLY_SUPPORTED",
+    "typeCheck": {
+      "pass": true,
+      "reason": "composable via adapter — reached EPISTEMICALLY_SUPPORTED · 3 paths considered, 0 pruned",
+      "sharedObject": "tensor → distribution (normalize)",
+      "stage": "EPISTEMICALLY_SUPPORTED",
+      "verdict": "conversion_required"
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "result": "pass",
+        "sharedObject": "tensor → distribution (normalize)"
+      },
+      {
+        "count": null,
+        "instrument": "openalex",
+        "preregId": "prereg:<id>",
+        "result": "UNVERIFIED"
+      }
+    ]
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "caseId": "roundtrip-repo-edge",
+  "category": "serialization",
+  "input": {
+    "file": {
+      "edges": [
+        {
+          "evidence": "e",
+          "source": "r1",
+          "target": "r2",
+          "type": "manual",
+          "weight": 1
+        }
+      ],
+      "githubUser": "octocat",
+      "repos": [
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r1",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r1",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        },
+        {
+          "defaultBranch": "main",
+          "dependencies": [],
+          "description": "",
+          "enriched": false,
+          "fileTree": [],
+          "id": "r2",
+          "language": null,
+          "mentionsRepos": [],
+          "name": "r2",
+          "readme": "",
+          "signalFiles": {},
+          "stars": 0,
+          "topics": [],
+          "updatedAt": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "schemaVersion": 7
+    }
+  },
+  "output": {
+    "edges": [
+      {
+        "evidence": "e",
+        "source": "r1",
+        "target": "r2",
+        "type": "manual",
+        "weight": 1
+      }
+    ],
+    "exportedKeys": [
+      "schemaVersion",
+      "product",
+      "generatedAt",
+      "githubUser",
+      "repoCount",
+      "repos",
+      "edges",
+      "synthesisNodes",
+      "notes",
+      "manualLinks",
+      "negatives",
+      "preregs",
+      "prizeCandidates",
+      "ledger",
+      "calibration",
+      "mechCalibration"
+    ],
+    "importedGithubUser": "octocat",
+    "repos": [
+      {
+        "defaultBranch": "main",
+        "dependencies": [],
+        "description": "",
+        "enriched": false,
+        "fileTree": [],
+        "id": "r1",
+        "language": null,
+        "mentionsRepos": [],
+        "name": "r1",
+        "readme": "",
+        "signalFiles": {},
+        "stars": 0,
+        "topics": [],
+        "updatedAt": "2026-01-01T00:00:00Z"
+      },
+      {
+        "defaultBranch": "main",
+        "dependencies": [],
+        "description": "",
+        "enriched": false,
+        "fileTree": [],
+        "id": "r2",
+        "language": null,
+        "mentionsRepos": [],
+        "name": "r2",
+        "readme": "",
+        "signalFiles": {},
+        "stars": 0,
+        "topics": [],
+        "updatedAt": "2026-01-01T00:00:00Z"
+      }
+    ],
+    "roundTrips": true
+  }
+}
