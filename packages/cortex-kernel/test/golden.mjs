@@ -19,11 +19,12 @@ import { MECH_KINDS } from "../src/types.js";
 import { CONV_RULES, edgeCost } from "../src/registry.js";
 import { shapeCompat, unitCompat, licenseCompat } from "../src/compatibility.js";
 import { adaptersFor, pairCompat } from "../src/planner.js";
+import { synthTest } from "../src/obligations.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const manifest = JSON.parse(readFileSync(join(root, "test/golden/manifest.json"), "utf8"));
 // Test inputs are shared with the oracle (they define the cases, not the behavior).
-const { SHAPES, UNITS, LICENSES } = await import(join(root, "test/oracle/cases.mjs"));
+const { SHAPES, UNITS, LICENSES, SYNTH_CASES } = await import(join(root, "test/oracle/cases.mjs"));
 
 // caseId → () => fixture object (must match the oracle's { caseId, category, ...data } shape)
 const PRODUCERS = {
@@ -58,6 +59,13 @@ const PRODUCERS = {
     for (const a of MECH_KINDS) for (const b of MECH_KINDS) t[a + ">" + b] = pairCompat({ kind: a }, { kind: b });
     return { caseId: "pair-compat", category: "kernel", data: t };
   },
+  "synth-test": () => ({
+    caseId: "synth-test", category: "kernel",
+    data: SYNTH_CASES.map((c) => {
+      const best = pairCompat(c.po, c.ci);
+      return { po: c.po, ci: c.ci, out: synthTest(c.po, c.ci, { adapter: best.adapter || [] }) };
+    }),
+  }),
 };
 
 const run = () => {
