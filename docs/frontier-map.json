@@ -1,0 +1,85 @@
+{
+  "artifact": "epistemic-frontier-map",
+  "generatedFrom": {
+    "manifest": "test/golden/manifest.json",
+    "coverage": "test/golden/coverage.json",
+    "narrative": "docs/oracle-limitations.md"
+  },
+  "verified": {
+    "fixtures": 41,
+    "behavioralClaims": 35,
+    "claimsEvidenced": 35,
+    "note": "Finitely many points, plus seeded differential sampling and one independent implementation. Not a proof over the input space."
+  },
+  "unverified": {
+    "blockers": [
+      {
+        "area": "model-schema-extraction",
+        "sourceLines": "839-855 (verifyCascade step 1)",
+        "reason": "Typed mechanism schemas are inferred by window.claude.complete — nondeterministic model output; cannot be a golden oracle.",
+        "instrumentation": "Captured at its output instead: schemas are supplied directly as compiler input in every cascade case. Not captured; documented only at the boundary.",
+        "confidence": "none",
+        "closureCondition": "Requires an execution harness for the coupled subsystem, or acceptance that it is out of scope for behavioral capture."
+      },
+      {
+        "area": "soft-obligation-judgments",
+        "sourceLines": "872-881 (verifyCascade step 2 model call)",
+        "reason": "Per-edge precondition statuses and invariant/metric judgments are model-supplied — nondeterministic in situ.",
+        "instrumentation": "The single window.claude call is stubbed; the surrounding contract-instantiation, obligation and ladder logic runs verbatim from the frozen source.",
+        "confidence": "high",
+        "closureCondition": "Requires eliminating the injected boundary — i.e. a deterministic replacement for the nondeterministic dependency."
+      },
+      {
+        "area": "literature-probe",
+        "sourceLines": "926-943 (verifyCascade step 3)",
+        "reason": "openAlexCount performs a live network request; the fallback is a model call. Both nondeterministic.",
+        "instrumentation": "The count is injected; classifyLit, the final-verdict mapping and the prize predicate then run verbatim.",
+        "confidence": "high",
+        "closureCondition": "Requires eliminating the injected boundary — i.e. a deterministic replacement for the nondeterministic dependency."
+      },
+      {
+        "area": "prize-candidate-export",
+        "sourceLines": "944-957 (verifyCascade step 4)",
+        "reason": "React state setters, uid() identifiers, wall-clock timestamps and a deferred download.",
+        "instrumentation": "Setters are captured and uid() is a deterministic counter; the derived records run verbatim. Persistence and scheduling are not captured.",
+        "confidence": "high",
+        "closureCondition": "Requires eliminating the injected boundary — i.e. a deterministic replacement for the nondeterministic dependency."
+      },
+      {
+        "area": "schema-v7-import",
+        "sourceLines": "711-733 (onFile)",
+        "reason": "FileReader plus ~15 React setters and IndexedDB persistence.",
+        "instrumentation": "FileReader is stubbed and setters captured; onFile runs verbatim.",
+        "confidence": "high",
+        "closureCondition": "Requires eliminating the injected boundary — i.e. a deterministic replacement for the nondeterministic dependency."
+      },
+      {
+        "area": "schema-v7-export",
+        "sourceLines": "751-757 (doExport)",
+        "reason": "Blob, URL.createObjectURL and DOM append/click.",
+        "instrumentation": "Blob captures the payload; doExport runs verbatim, so the serialized bytes are genuine.",
+        "confidence": "high",
+        "closureCondition": "Requires eliminating the injected boundary — i.e. a deterministic replacement for the nondeterministic dependency."
+      },
+      {
+        "area": "persisted-state-hydration",
+        "sourceLines": "196-234 (persistence layer)",
+        "reason": "window.storage/IndexedDB, React mount lifecycle and closure refs.",
+        "instrumentation": "Not captured; documented only.",
+        "confidence": "none",
+        "closureCondition": "Requires an execution harness for the coupled subsystem, or acceptance that it is out of scope for behavioral capture."
+      }
+    ],
+    "deficitScore": 2.75,
+    "deficitScale": "Sum over blockers of a confidence weight (none 1.0, medium 0.5, high 0.15). Lower is better; 0 means nothing is left uncaptured."
+  },
+  "openObligations": [
+    {
+      "id": "SO-8",
+      "statement": "No mechanized refinement proof exists that the extraction and the frozen reference denote the same function.",
+      "tractability": "The deterministic core is finite-state (16 kinds, a fixed rule set, bounded path depth) and is tractable to verify exhaustively or in a proof assistant.",
+      "closureCondition": "Exhaustive symbolic execution over the schema space, or a machine-checked refinement proof."
+    }
+  ],
+  "honestStatement": "This file exists so the boundary of what is verified is visible and shrinking, rather than implicit and assumed."
+}

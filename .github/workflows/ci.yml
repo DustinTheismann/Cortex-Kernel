@@ -77,3 +77,15 @@ jobs:
         run: |
           npm run conformance:build
           npm run conformance
+
+      # Gate 11: the certification chain is intact — links unbroken,
+      # certificates unaltered since certification, and the head entry still
+      # describes the current corpus. A behavioral change without a ledger
+      # entry fails here.
+      - name: ledger
+        run: npm run ledger:verify
+
+      # Gate 12: the unverified surface did not grow. New unverified behavior
+      # must be a deliberate, regenerated decision rather than a silent drift.
+      - name: frontier-map
+        run: npm run frontier:check

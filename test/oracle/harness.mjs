@@ -198,7 +198,36 @@ const manifestFor = (records) => ({
     expectedVerdict: r.expectedVerdict,
     oracleSource: ORACLE_SOURCE,
   })),
+  blockers: BLOCKERS,
 });
+
+// Machine-readable extraction blockers — the structured source of truth behind
+// the narrative in docs/oracle-limitations.md, and the input to the epistemic
+// frontier map. Kept in the manifest so the unverified surface travels with the
+// corpus rather than living only in prose that can quietly go stale.
+const BLOCKERS = [
+  { area: "model-schema-extraction", sourceLines: "839-855 (verifyCascade step 1)",
+    reason: "Typed mechanism schemas are inferred by window.claude.complete — nondeterministic model output; cannot be a golden oracle.",
+    boundary: "Captured at its output instead: schemas are supplied directly as compiler input in every cascade case. Not captured; documented only at the boundary." },
+  { area: "soft-obligation-judgments", sourceLines: "872-881 (verifyCascade step 2 model call)",
+    reason: "Per-edge precondition statuses and invariant/metric judgments are model-supplied — nondeterministic in situ.",
+    boundary: "The single window.claude call is stubbed; the surrounding contract-instantiation, obligation and ladder logic runs verbatim from the frozen source." },
+  { area: "literature-probe", sourceLines: "926-943 (verifyCascade step 3)",
+    reason: "openAlexCount performs a live network request; the fallback is a model call. Both nondeterministic.",
+    boundary: "The count is injected; classifyLit, the final-verdict mapping and the prize predicate then run verbatim." },
+  { area: "prize-candidate-export", sourceLines: "944-957 (verifyCascade step 4)",
+    reason: "React state setters, uid() identifiers, wall-clock timestamps and a deferred download.",
+    boundary: "Setters are captured and uid() is a deterministic counter; the derived records run verbatim. Persistence and scheduling are not captured." },
+  { area: "schema-v7-import", sourceLines: "711-733 (onFile)",
+    reason: "FileReader plus ~15 React setters and IndexedDB persistence.",
+    boundary: "FileReader is stubbed and setters captured; onFile runs verbatim." },
+  { area: "schema-v7-export", sourceLines: "751-757 (doExport)",
+    reason: "Blob, URL.createObjectURL and DOM append/click.",
+    boundary: "Blob captures the payload; doExport runs verbatim, so the serialized bytes are genuine." },
+  { area: "persisted-state-hydration", sourceLines: "196-234 (persistence layer)",
+    reason: "window.storage/IndexedDB, React mount lifecycle and closure refs.",
+    boundary: "Not captured; documented only." },
+];
 
 // ---- generate / check -----------------------------------------------------
 

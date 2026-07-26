@@ -22,7 +22,7 @@
     "fixtureCount": 41,
     "manifest": {
       "path": "test/golden/manifest.json",
-      "sha256": "1a7f8c94ec88e809054b985957ea95ea1f332a47a38c4e1d662c4d42dcfac663"
+      "sha256": "08f6c59234f0a1304a5844f327cac3a365afd1a8c6ab00d12241d6a026d14646"
     },
     "invariantVersion": {
       "set": "test/oracle/invariants.mjs",
@@ -35,7 +35,7 @@
   },
   "release": {
     "kernelMergeCommitSha": "5777134ca3ae07620fb7d00b7653c094f01552a1",
-    "certifiedAtCommit": "d12e11e7fc156c04a0baef2f5cf49cb33bdb03c6",
+    "certifiedAtCommit": "ec211096c42f97630888ccb21c7ff1564ae62524",
     "workflow": {
       "name": "kernel",
       "runId": "30141097317",

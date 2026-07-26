@@ -14,8 +14,13 @@
     "kernel:golden": "npm --prefix packages/cortex-kernel run kernel:golden -- --check",
     "kernel:test": "npm --prefix packages/cortex-kernel test",
     "fuzz": "node test/differential/fuzz.mjs --cases=2000",
-    "verify": "npm run oracle:check && npm run kernel:test && npm run kernel:golden && npm run fuzz && npm run certify:check && npm run conformance",
+    "verify": "npm run oracle:check && npm run kernel:test && npm run kernel:golden && npm run fuzz && npm run certify:check && npm run conformance && npm run ledger:verify && npm run frontier:check",
     "conformance": "node conformance/verify.mjs",
-    "conformance:build": "cargo build --release --offline --manifest-path impl/rust/Cargo.toml"
+    "conformance:build": "cargo build --release --offline --manifest-path impl/rust/Cargo.toml",
+    "ledger": "node scripts/ledger.mjs",
+    "ledger:verify": "node scripts/ledger.mjs --verify",
+    "frontier:map": "node scripts/frontier-map.mjs",
+    "frontier:check": "node scripts/frontier-map.mjs --check",
+    "self-ladder": "node scripts/self-ladder.mjs"
   }
 }
