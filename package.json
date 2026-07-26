@@ -1,0 +1,18 @@
+{
+  "name": "cortex-kernel-repo",
+  "private": true,
+  "type": "module",
+  "description": "Repository-level verification entry points for the frozen v0.5.1 reference, its behavioral oracle, and the extracted @opensource-cortex/kernel package.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "certify": "node scripts/certify.mjs",
+    "certify:check": "node scripts/certify.mjs --check",
+    "oracle:check": "node test/oracle/harness.mjs --check",
+    "kernel:golden": "npm --prefix packages/cortex-kernel run kernel:golden -- --check",
+    "kernel:test": "npm --prefix packages/cortex-kernel test",
+    "verify": "npm run oracle:check && npm run kernel:test && npm run kernel:golden && npm run certify:check"
+  }
+}

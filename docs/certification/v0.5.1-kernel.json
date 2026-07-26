@@ -3,24 +3,6 @@
   "subject": "@opensource-cortex/kernel",
   "kernelVersion": "0.5.1",
   "releaseTag": "v0.5.1-kernel",
-  "referenceCommitSha": "804f767e2b9e9eb292c8368e60e9f3224a6a54f7",
-  "kernelMergeCommitSha": "5777134ca3ae07620fb7d00b7653c094f01552a1",
-  "oracleVersion": "v0.5.1",
-  "canonicalizationVersion": 1,
-  "schemaVersion": 7,
-  "fixtureCount": 41,
-  "manifest": {
-    "path": "test/golden/manifest.json",
-    "sha256": "1a7f8c94ec88e809054b985957ea95ea1f332a47a38c4e1d662c4d42dcfac663"
-  },
-  "invariantVersion": {
-    "set": "test/oracle/invariants.mjs",
-    "sha256": "1028978d419a76061111d1207093542d409c7459abf285e2a3594535d88ddde4"
-  },
-  "canonicalizer": {
-    "path": "test/oracle/canonicalize.mjs",
-    "sha256": "7126285d8516f07ee4a29f2547555f57d7fe9c32a785e528ec6cf4c7508e0141"
-  },
   "acceptanceCommand": "npm run kernel:golden -- --check",
   "gates": [
     "reference-integrity",
@@ -29,13 +11,43 @@
     "kernel-golden",
     "kernel-differential",
     "package-smoke",
-    "determinism"
+    "determinism",
+    "certification"
   ],
-  "workflow": {
-    "name": "kernel",
-    "runId": "30141097317",
-    "conclusion": "success",
-    "url": "https://github.com/DustinTheismann/Cortex-Kernel/actions/runs/30141097317"
+  "evidence": {
+    "referenceCommitSha": "804f767e2b9e9eb292c8368e60e9f3224a6a54f7",
+    "oracleVersion": "v0.5.1",
+    "canonicalizationVersion": 1,
+    "schemaVersion": 7,
+    "fixtureCount": 41,
+    "manifest": {
+      "path": "test/golden/manifest.json",
+      "sha256": "1a7f8c94ec88e809054b985957ea95ea1f332a47a38c4e1d662c4d42dcfac663"
+    },
+    "invariantVersion": {
+      "set": "test/oracle/invariants.mjs",
+      "sha256": "1028978d419a76061111d1207093542d409c7459abf285e2a3594535d88ddde4"
+    },
+    "canonicalizer": {
+      "path": "test/oracle/canonicalize.mjs",
+      "sha256": "7126285d8516f07ee4a29f2547555f57d7fe9c32a785e528ec6cf4c7508e0141"
+    }
   },
-  "releaseTimestamp": "2026-07-25T03:03:00Z"
+  "release": {
+    "kernelMergeCommitSha": "5777134ca3ae07620fb7d00b7653c094f01552a1",
+    "certifiedAtCommit": "d12e11e7fc156c04a0baef2f5cf49cb33bdb03c6",
+    "workflow": {
+      "name": "kernel",
+      "runId": "30141097317",
+      "conclusion": "success",
+      "url": "https://github.com/DustinTheismann/Cortex-Kernel/actions/runs/30141097317"
+    },
+    "releaseTimestamp": "2026-07-25T03:03:00Z"
+  },
+  "buildEnvironment": {
+    "node": "v22.22.2",
+    "npm": "v10.9.7",
+    "platform": "linux",
+    "arch": "x64"
+  }
 }

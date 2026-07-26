@@ -56,3 +56,9 @@ jobs:
         run: |
           node test/oracle/harness.mjs --check
           node packages/cortex-kernel/test/golden.mjs --check
+
+      # Gate 8: the committed behavioral certificate still describes this
+      # repository — an oracle or canonicalizer change that was not
+      # re-certified fails here rather than shipping a stale claim.
+      - name: certification
+        run: npm run certify:check
