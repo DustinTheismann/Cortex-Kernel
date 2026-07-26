@@ -41,3 +41,13 @@ test("package imports with a deterministic surface and no import-time side effec
   const again = await import("../src/index.js");
   assert.equal(mod, again); // stable module identity, no re-execution effects
 });
+
+test("the kernel never imports research, conformance, or test scaffolding", () => {
+  // Parity isolation: advisory modules may read the kernel, never the reverse.
+  for (const f of jsFiles(srcDir)) {
+    const code = stripComments(readFileSync(f, "utf8"));
+    for (const forbidden of [/from\s+["'][^"']*\/research\//, /from\s+["'][^"']*\/conformance\//, /from\s+["'][^"']*\/test\//]) {
+      assert.ok(!forbidden.test(code), `${f} imports from a non-kernel tree (${forbidden})`);
+    }
+  }
+});
