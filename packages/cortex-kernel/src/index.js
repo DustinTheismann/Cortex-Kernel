@@ -16,6 +16,7 @@ export { evaluateObligations } from "./obligations.js";
 export { evaluateDeterministicCascade } from "./advancement.js";
 export { applyLiteratureAssessment, deriveFinalVerdict as deriveVerdict } from "./verdicts.js";
 export { importBrainIndex, exportBrainIndex } from "./serialization.js";
+export { buildWitness, verifyWitness, REJECTION } from "./witness.js";
 
 import { normSchema } from "./compatibility.js";
 import { evaluateDeterministicCascade } from "./advancement.js";

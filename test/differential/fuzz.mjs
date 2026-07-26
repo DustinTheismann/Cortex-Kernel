@@ -20,7 +20,7 @@
 import { runCascade, projectDecision } from "../oracle/adapter.mjs";
 import { sha256 } from "../oracle/canonicalize.mjs";
 import { compareDecisions, formatReport } from "./compare.mjs";
-import { evaluateCascade } from "../../packages/cortex-kernel/src/index.js";
+import { evaluateCascade, buildWitness, verifyWitness } from "../../packages/cortex-kernel/src/index.js";
 import { planPortBridges } from "../../packages/cortex-kernel/src/planner.js";
 import { normSchema } from "../../packages/cortex-kernel/src/compatibility.js";
 import { MECH_KINDS } from "../../packages/cortex-kernel/src/types.js";
@@ -98,7 +98,7 @@ const main = async () => {
   const cases = argNum("cases", 500);
   const r = rng(seed);
 
-  const seen = { stages: new Set(), codes: new Set(), litClasses: new Set(), blockReasons: new Set(), verdicts: new Set(), prize: 0, po8: 0, po4nonUnresolved: 0, pruned: 0 };
+  const seen = { stages: new Set(), codes: new Set(), litClasses: new Set(), blockReasons: new Set(), verdicts: new Set(), prize: 0, po8: 0, po4nonUnresolved: 0, pruned: 0, witnessChecks: 0 };
   const divergences = [];
 
   for (let i = 0; i < cases; i++) {
@@ -127,6 +127,15 @@ const main = async () => {
       divergences.push({ index: i, input: g, report: formatReport(compareDecisions(oracleDecision, kernelDecision)) });
       if (divergences.length >= 3) break; // enough to diagnose
     }
+
+    // Universality of witnesses: every decision the system can produce must
+    // carry a witness that verifies independently against the registry.
+    const w = verifyWitness(buildWitness(kernelDecision));
+    if (!w.valid) {
+      divergences.push({ index: i, input: g, report: "witness failed verification:\n    " + w.violations.join("\n    ") });
+      if (divergences.length >= 3) break;
+    }
+    seen.witnessChecks += w.checks.length;
   }
 
   console.log(`differential fuzz — seed ${seed}, ${cases} cases`);
@@ -136,6 +145,7 @@ const main = async () => {
   console.log(`  block reasons:        ${[...seen.blockReasons].sort().join(", ") || "(none)"}`);
   console.log(`  typeCheck verdicts:   ${[...seen.verdicts].sort().join(", ")}`);
   console.log(`  prize candidates: ${seen.prize} · PO-8 lossy: ${seen.po8} · PO-4 resolved: ${seen.po4nonUnresolved} · pruned-path cases: ${seen.pruned}`);
+  console.log(`  witness checks passed: ${seen.witnessChecks} (every decision independently re-verified against the registry)`);
 
   if (divergences.length) {
     console.error(`\nDIVERGENCE: ${divergences.length} case(s) where the extracted kernel disagrees with the frozen oracle.`);
