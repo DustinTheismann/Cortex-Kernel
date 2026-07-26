@@ -15,7 +15,11 @@
     "certification"
   ],
   "evidence": {
-    "referenceCommitSha": "804f767e2b9e9eb292c8368e60e9f3224a6a54f7",
+    "referenceSource": {
+      "path": "reference/src/cortex-v0.5.1.jsx",
+      "sha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
+    },
+    "referenceBaseline": "804f767",
     "oracleVersion": "v0.5.1",
     "canonicalizationVersion": 1,
     "schemaVersion": 7,
@@ -35,7 +39,8 @@
   },
   "release": {
     "kernelMergeCommitSha": "5777134ca3ae07620fb7d00b7653c094f01552a1",
-    "certifiedAtCommit": "d12e11e7fc156c04a0baef2f5cf49cb33bdb03c6",
+    "referenceCommitSha": "804f767e2b9e9eb292c8368e60e9f3224a6a54f7",
+    "certifiedAtCommit": "3677cd0b6d2eacbd86b8d4c6fa4eb02111afe17b",
     "workflow": {
       "name": "kernel",
       "runId": "30141097317",
