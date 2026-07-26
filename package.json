@@ -14,6 +14,8 @@
     "kernel:golden": "npm --prefix packages/cortex-kernel run kernel:golden -- --check",
     "kernel:test": "npm --prefix packages/cortex-kernel test",
     "fuzz": "node test/differential/fuzz.mjs --cases=2000",
-    "verify": "npm run oracle:check && npm run kernel:test && npm run kernel:golden && npm run fuzz && npm run certify:check"
+    "verify": "npm run oracle:check && npm run kernel:test && npm run kernel:golden && npm run fuzz && npm run certify:check && npm run conformance",
+    "conformance": "node conformance/verify.mjs",
+    "conformance:build": "cargo build --release --offline --manifest-path impl/rust/Cargo.toml"
   }
 }

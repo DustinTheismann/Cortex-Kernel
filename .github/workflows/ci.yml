@@ -69,3 +69,11 @@ jobs:
       # field-level diff with a reproducing seed.
       - name: differential-fuzz
         run: npm run fuzz
+
+      # Gate 10: cross-language conformance. Every registered implementation
+      # must reproduce the corpus hashes it declares support for. This is what
+      # keeps the contract portable rather than a JavaScript artifact.
+      - name: conformance
+        run: |
+          npm run conformance:build
+          npm run conformance

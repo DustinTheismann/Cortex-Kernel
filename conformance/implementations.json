@@ -1,0 +1,14 @@
+{
+  "corpus": "test/golden/manifest.json",
+  "protocol": "conformance/README.md",
+  "implementations": [
+    {
+      "id": "rust",
+      "language": "Rust",
+      "path": "impl/rust",
+      "build": "cargo build --release --offline --manifest-path impl/rust/Cargo.toml",
+      "command": ["./impl/rust/target/release/cortex-conformance"],
+      "notes": "Dependency-free peer implementation of the deterministic core: registry, edge costs, min-risk multipath planner, and the shape/unit/license predicates. Written against the frozen semantics, certified by corpus reproduction — not a transliteration of the JavaScript."
+    }
+  ]
+}
