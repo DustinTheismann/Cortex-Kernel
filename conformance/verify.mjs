@@ -90,6 +90,19 @@ const verifyImplementation = (impl) => {
     else failed.push({ caseId, reason: `hash mismatch\n      expected ${entry.sha256}\n      got      ${got}` });
   }
 
+  // implemented_not_declared: probe the UNDECLARED cases too. An
+  // implementation that can already reproduce a fixture but has not committed
+  // to supporting it is hiding coverage from the monotonic baseline.
+  const undeclaredPassing = [];
+  for (const c of manifest.cases) {
+    if (supported.includes(c.caseId)) continue;
+    let payload;
+    try { payload = JSON.parse(runImpl(impl, [c.caseId])); } catch { continue; } // unsupported: expected
+    const fx = JSON.parse(readFileSync(join(root, "test/golden", c.fixture), "utf8"));
+    const wrapped = { caseId: c.caseId, category: c.category, ...(fx.data !== undefined ? { data: payload } : payload) };
+    if (sha256(wrapped) === c.sha256) undeclaredPassing.push(c.caseId);
+  }
+
   // Monotonicity: declared support may only grow. Dropping a case would
   // otherwise hide a regression behind a still-green 8/8.
   const base = (baseline.implementations[impl.id] || {}).declared || [];
@@ -108,7 +121,8 @@ const verifyImplementation = (impl) => {
     status: matchedSet.has(c.caseId) ? "supported"
       : failedSet.has(c.caseId) ? "known_divergence"
         : unauthorizedDrops.includes(c.caseId) ? "regressed_undeclared"
-          : declaredSet.has(c.caseId) ? "implemented_not_declared" : "not_implemented",
+          : undeclaredPassing.includes(c.caseId) ? "implemented_not_declared"
+            : declaredSet.has(c.caseId) ? "declared_but_unverifiable" : "not_implemented",
     hashMatch: matchedSet.has(c.caseId),
     semanticAreas: areasFor(c.caseId, c.category),
   }));
@@ -119,7 +133,7 @@ const verifyImplementation = (impl) => {
   return {
     id: impl.id,
     status: failed.length || unknown.length || unauthorizedDrops.length ? "fail" : "pass",
-    label, matched, failed, unknown, unauthorizedDrops,
+    label, matched, failed, unknown, unauthorizedDrops, undeclaredPassing,
     coverage: `${matched.length}/${manifest.cases.length}`,
     coverageMap, coveredAreas, uncoveredAreas: allAreas.filter((a) => !coveredAreas.includes(a)),
     binarySha256: existsSync(binary) ? fileHash(impl.command[0].replace(/^\.\//, "")) : null,
@@ -146,6 +160,11 @@ for (const impl of targets) {
   console.log(`      areas:  ${r.coveredAreas.join(", ")}`);
   for (const f of r.failed) { console.error(`      FAILED ${f.caseId}: ${f.reason}`); hardFailure = true; }
   for (const u of r.unknown) { console.error(`      claims unknown case: ${u}`); hardFailure = true; }
+  for (const u of r.undeclaredPassing) {
+    console.error(`      UNDECLARED ${u}: reproduces the corpus hash but is not declared.`);
+    console.error("        Add it to --cases and to conformance/baseline.json, or record why it is excluded.");
+    hardFailure = true;
+  }
   for (const d of r.unauthorizedDrops) {
     console.error(`      REGRESSION ${d}: was in the conformance baseline but is no longer declared.`);
     console.error("        Declared support is monotonic. Reducing it requires an authorized edit to conformance/baseline.json.");

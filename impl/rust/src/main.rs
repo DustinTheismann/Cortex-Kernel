@@ -360,9 +360,47 @@ fn classify_lit(count: Option<f64>) -> &'static str {
 
 // --------------------------------------------------------------- corpus cases
 
+/// A port as the synth-test fixture carries it: `kind` plus optionally a
+/// `name` or `semantics`. Field PRESENCE is observable in the echoed input.
+#[derive(Clone)]
+struct SynthPort { kind: &'static str, name: Option<&'static str>, semantics: Option<&'static str> }
+
+impl SynthPort {
+    fn json(&self) -> J {
+        let mut pairs: Vec<(&str, J)> = vec![("kind", J::s(self.kind))];
+        if let Some(n) = self.name { pairs.push(("name", J::s(n))); }
+        if let Some(sem) = self.semantics { pairs.push(("semantics", J::s(sem))); }
+        obj(pairs)
+    }
+    /// The frozen synthTest label preference: semantics, else name, else kind.
+    fn label(&self) -> &'static str { self.semantics.or(self.name).unwrap_or(self.kind) }
+}
+
+/// Property-test skeleton (synthTest), verbatim. The adapter chain folds into
+/// nested calls: [normalize] over x becomes `normalize(x)`; an empty chain
+/// leaves `x` untouched.
+fn synth_test(po: &SynthPort, ci: &SynthPort, adapter: &[Step]) -> String {
+    let mut expr = String::from("x");
+    for s in adapter { expr = format!("{}({})", s.op, expr); }
+    format!(
+        "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('{}→{} preserves semantics', () => {{\n  const x = sample_{}();          // {}\n  const y = {};\n  assert isValid_{}(y);            // {}\n  assert approxPreserves(semantics(x), semantics(y), eps);\n}});",
+        po.kind, ci.kind, po.kind, po.label(), expr, ci.kind, ci.label())
+}
+
 const SHAPES: [&str; 11] = ["", "[batch,d]", "[BATCH,D]", "DAG", "dag", "scalar", "[n]", "any", "unspecified", "3x3", "*"];
 const UNITS: [&str; 7] = ["", "probability", "Probability", "dimensionless", "logits", "L2-radius", "seconds"];
 const CLASSIFY_INPUTS: [Option<f64>; 9] = [None, Some(0.0), Some(24.0), Some(25.0), Some(26.0), Some(299.0), Some(300.0), Some(301.0), Some(5000.0)];
+
+fn synth_cases() -> Vec<(SynthPort, SynthPort)> {
+    vec![
+        (SynthPort { kind: "tensor", name: None, semantics: Some("certified radius") },
+         SynthPort { kind: "tensor", name: None, semantics: Some("input field") }),
+        (SynthPort { kind: "tensor", name: Some("T"), semantics: None },
+         SynthPort { kind: "bound", name: Some("B"), semantics: None }),
+        (SynthPort { kind: "graph", name: None, semantics: None },
+         SynthPort { kind: "claim", name: None, semantics: None }),
+    ]
+}
 
 fn licenses() -> Vec<Lic> {
     vec![
@@ -436,6 +474,16 @@ fn build(case_id: &str) -> Option<J> {
             Some(J::A(out))
         }
 
+        "synth-test" => Some(J::A(synth_cases().iter().map(|(po, ci)| {
+            // The selected adapter chain is the frozen pairCompat first option.
+            let rs = adapters_for(&rules, po.kind, ci.kind, 3);
+            let adapter: Vec<Step> = if rs.is_empty() { vec![] } else { rs[0].path.clone() };
+            obj(vec![
+                ("po", po.json()), ("ci", ci.json()),
+                ("out", J::S(synth_test(po, ci, &adapter))),
+            ])
+        }).collect())),
+
         "classify-lit" => Some(J::A(CLASSIFY_INPUTS.iter().map(|c| obj(vec![
             ("in", match c { None => J::Null, Some(v) => J::N(*v) }),
             ("out", J::s(classify_lit(*c))),
@@ -453,7 +501,8 @@ fn main() {
     }
     if args[1] == "--cases" {
         let supported = ["mech-kinds", "conv-rules", "multipath-kind-paths", "pair-compat",
-                         "shape-compat", "unit-compat", "license-compat", "classify-lit"];
+                         "shape-compat", "unit-compat", "license-compat", "classify-lit",
+                         "synth-test"];
         println!("{}", J::A(supported.iter().map(|c| J::s(c)).collect()).to_json());
         return;
     }

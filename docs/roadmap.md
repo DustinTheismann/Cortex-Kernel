@@ -15,7 +15,7 @@ and never modify parity work.
   ESM, no React/DOM/network, reproducing every fixture byte-for-byte
   (`v0.5.1-kernel`).
 - ✓ **Certification + hardened CI** — reproducible certification artifact,
-  eight CI gates, actions pinned to immutable SHAs, weekly Dependabot.
+  a gated CI pipeline, actions pinned to immutable SHAs, weekly Dependabot.
 
 - ✓ **Verification beyond the corpus** — seeded differential fuzzing of the
   frozen oracle against the extraction; thousands of generated inputs per run.

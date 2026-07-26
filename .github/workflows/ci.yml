@@ -103,3 +103,9 @@ jobs:
       # every implementation, so it is a canonicalizationVersion event.
       - name: canonicalization-vectors
         run: npm run vectors
+
+      # Gate 15: documentation cannot drift from the workflow. The gate set has
+      # grown three times, each time leaving a stale count or table behind; the
+      # workflow is the source of truth and every other inventory must match.
+      - name: gate-inventory
+        run: npm run gates

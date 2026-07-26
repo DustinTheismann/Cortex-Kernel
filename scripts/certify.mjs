@@ -111,11 +111,20 @@ const buildCertificate = (existing) => ({
   kernelVersion: "0.5.1",
   releaseTag: RELEASE_TAG,
   acceptanceCommand: "npm run kernel:golden -- --check",
-  gates: ["reference-integrity", "oracle-check", "kernel-unit", "kernel-golden", "kernel-differential", "package-smoke", "determinism", "certification"],
+  // Derived from the workflow, never hardcoded: a hardcoded list goes stale
+  // the moment a gate is added, and a certificate that misstates its own gate
+  // set is exactly the kind of quiet drift this repository exists to prevent.
+  gates: workflowGates(),
   evidence: deriveEvidence(),
   release: releaseMetadata(existing),
   buildEnvironment: buildEnvironment(),
 });
+
+/** The gate names defined by the CI workflow — the source of truth. */
+const workflowGates = () => {
+  const wf = readFileSync(join(root, ".github/workflows/ci.yml"), "utf8");
+  return [...wf.matchAll(/^\s+- name:\s+(\S+)\s*$/gm)].map((m) => m[1]);
+};
 
 const readExisting = () => (existsSync(OUT) ? JSON.parse(readFileSync(OUT, "utf8")) : null);
 

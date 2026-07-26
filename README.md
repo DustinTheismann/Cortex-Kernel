@@ -108,6 +108,9 @@ npm run verify        # the whole chain, in order
 | `conformance` | Every registered implementation reproduces its declared corpus hashes |
 | `ledger` | The certification chain is intact and describes the current corpus |
 | `frontier-map` | The unverified surface did not grow |
+| `dependency-policy` | Both npm manifests and lock files remain dependency-free; the Rust package graph contains exactly the implementation crate itself. |
+| `canonicalization-vectors` | Adversarial language-neutral vectors pin absent/null/undefined distinctions, Unicode key ordering, array order, numeric edge cases, generated identifiers, and timestamp exclusion. |
+| `gate-inventory` | The workflow, README table, prose counts, and certificate describe the same gate set. |
 
 What the evidence does **not** establish is stated by the repository itself:
 

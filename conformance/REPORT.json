@@ -1,13 +1,13 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-26T21:34:36.951Z",
+  "generatedAt": "2026-07-26T22:12:15.276Z",
   "ciRun": null,
   "integrity": {
     "manifestSha256": "08f6c59234f0a1304a5844f327cac3a365afd1a8c6ab00d12241d6a026d14646",
     "canonicalizationSpecSha256": "b79a5b422ee6e183f52c650719c67df9380512837b784892b217ec609944bab0",
     "canonicalizerSha256": "7126285d8516f07ee4a29f2547555f57d7fe9c32a785e528ec6cf4c7508e0141",
-    "verifierSha256": "a9fa5eba27d865550a699496ac9a7939536ee79c67bfaf878bb35a0933d513c7",
-    "baselineSha256": "698cb202258039f9f3370756b8644b8811d8c0311d5376b7cac2132d1ea5ee6e",
+    "verifierSha256": "7988a2c66c7fe8d66a29b157d239332de612091b3cb116899b37c16f067d6305",
+    "baselineSha256": "09d675a3f8c8e623d20365302ebcf266dadd8584d3103aa0cfea8b6df76f6763",
     "referenceSourceSha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
   },
   "corpus": {
@@ -25,8 +25,8 @@
       "implementation": "rust",
       "language": "Rust",
       "status": "pass",
-      "fixtures": "8/41",
-      "canonicalHashesIdentical": 8,
+      "fixtures": "9/41",
+      "canonicalHashesIdentical": 9,
       "declaredCasesFailing": 0,
       "cases": [
         "mech-kinds",
@@ -36,7 +36,8 @@
         "shape-compat",
         "unit-compat",
         "license-compat",
-        "classify-lit"
+        "classify-lit",
+        "synth-test"
       ],
       "semanticAreasCovered": [
         "compatibility",
@@ -47,6 +48,7 @@
         "literature-classification",
         "multipath-planning",
         "path-enumeration",
+        "property-test-skeleton",
         "ranking",
         "registry",
         "selected-path-ordering",
@@ -61,7 +63,6 @@
         "import-export",
         "literature-assessment",
         "obligations",
-        "property-test-skeleton",
         "schema-normalization",
         "serialization",
         "stage-advancement",
@@ -146,8 +147,8 @@
         {
           "fixture": "synth-test",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "property-test-skeleton"
           ]
@@ -491,7 +492,7 @@
           ]
         }
       ],
-      "binarySha256": "de30b8b4d96a6ec0b43628639cb09e3558b8b3542d6909e02f44afb0f5eda0c6",
+      "binarySha256": "a2aac672771ecd9a0487aaae59eb847798899c02490ed77bba9b40fed0cdabb2",
       "toolchain": {
         "compiler": "rustc 1.94.1 (e408947bf 2026-03-25)",
         "targetTriple": "x86_64-unknown-linux-gnu",

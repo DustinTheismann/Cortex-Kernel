@@ -12,7 +12,14 @@
     "kernel-differential",
     "package-smoke",
     "determinism",
-    "certification"
+    "certification",
+    "differential-fuzz",
+    "conformance",
+    "ledger",
+    "frontier-map",
+    "dependency-policy",
+    "canonicalization-vectors",
+    "gate-inventory"
   ],
   "evidence": {
     "referenceSource": {
@@ -40,7 +47,7 @@
   "release": {
     "kernelMergeCommitSha": "5777134ca3ae07620fb7d00b7653c094f01552a1",
     "referenceCommitSha": "804f767e2b9e9eb292c8368e60e9f3224a6a54f7",
-    "certifiedAtCommit": "df9c971f39f7c56a18724aba9eadaf2ed5872412",
+    "certifiedAtCommit": "35bcd79efb2bfa1577cccb4c7c6eaf2ad202155f",
     "workflow": {
       "name": "kernel",
       "runId": "30141097317",
