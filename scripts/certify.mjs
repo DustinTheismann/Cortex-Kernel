@@ -36,12 +36,15 @@ const RELEASE_TAG = "v0.5.1-kernel";
 const OUT = join(root, "docs/certification", RELEASE_TAG + ".json");
 
 const sh = (cmd, args) => execFileSync(cmd, args, { cwd: root, encoding: "utf8" }).trim();
+/** git that tolerates a shallow clone: returns null rather than throwing. */
+const shSafe = (cmd, args) => { try { return sh(cmd, args); } catch { return null; } };
 const sha256 = (relPath) => createHash("sha256").update(readFileSync(join(root, relPath))).digest("hex");
 
 const HASHED_FILES = {
   manifest: "test/golden/manifest.json",
   invariants: "test/oracle/invariants.mjs",
   canonicalizer: "test/oracle/canonicalize.mjs",
+  referenceSource: "reference/src/cortex-v0.5.1.jsx",
 };
 
 /**
@@ -53,7 +56,12 @@ const HASHED_FILES = {
 const deriveEvidence = () => {
   const manifest = JSON.parse(readFileSync(join(root, HASHED_FILES.manifest), "utf8"));
   return {
-    referenceCommitSha: sh("git", ["rev-parse", manifest.sourceBaseline]),
+    // Content-addressed, not history-addressed. Hashing the frozen source is
+    // both stronger than recording a commit SHA (it detects tampering that a
+    // commit record cannot) and independent of clone depth, so verification
+    // works in a shallow checkout, from a tarball, or with no git at all.
+    referenceSource: { path: HASHED_FILES.referenceSource, sha256: sha256(HASHED_FILES.referenceSource) },
+    referenceBaseline: manifest.sourceBaseline,
     oracleVersion: manifest.oracleVersion,
     canonicalizationVersion: manifest.canonicalizationVersion,
     schemaVersion: manifest.schemaVersion,
@@ -80,9 +88,13 @@ const releaseMetadata = (existing) => {
   };
   const prior = (existing && existing.release) || {};
   const runId = arg("run-id") || process.env.GITHUB_RUN_ID || prior.workflow?.runId || null;
+  const manifest = JSON.parse(readFileSync(join(root, HASHED_FILES.manifest), "utf8"));
   return {
     kernelMergeCommitSha: arg("merge-commit") || prior.kernelMergeCommitSha || null,
-    certifiedAtCommit: arg("head") || sh("git", ["rev-parse", "HEAD"]),
+    // Provenance, not compared evidence: resolving a short SHA needs history a
+    // shallow clone does not have, so this is best-effort and carried forward.
+    referenceCommitSha: arg("reference-commit") || shSafe("git", ["rev-parse", manifest.sourceBaseline]) || prior.referenceCommitSha || null,
+    certifiedAtCommit: arg("head") || shSafe("git", ["rev-parse", "HEAD"]),
     workflow: {
       name: prior.workflow?.name || "kernel",
       runId,
