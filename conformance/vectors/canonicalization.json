@@ -1,0 +1,534 @@
+{
+  "artifact": "canonicalization-vectors",
+  "canonicalizationVersion": 1,
+  "spec": "conformance/CANONICALIZATION.md",
+  "encoding": {
+    "$undefined": "An object {\"$undefined\": true} in `input` denotes the JavaScript value undefined, which JSON cannot express.",
+    "$negativeZero": "An object {\"$negativeZero\": true} denotes -0."
+  },
+  "note": "Each vector's sha256 is over the canonical encoding of its value. An implementation agrees on canonicalization when it reproduces every hash.",
+  "vectors": [
+    {
+      "id": "absent-key",
+      "note": "A key that is simply not present.",
+      "input": {
+        "a": 1
+      },
+      "canonical": {
+        "a": 1
+      },
+      "sha256": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862"
+    },
+    {
+      "id": "null-value",
+      "note": "null is preserved as null, never dropped.",
+      "input": {
+        "a": 1,
+        "b": null
+      },
+      "canonical": {
+        "a": 1,
+        "b": null
+      },
+      "sha256": "46e0ff59f6164548317489fbea1133a48f7a83c325c3535e44559c9619afb76b"
+    },
+    {
+      "id": "undefined-value",
+      "note": "undefined becomes the sentinel — distinct from null AND from absent.",
+      "input": {
+        "a": 1,
+        "b": {
+          "$undefined": true
+        }
+      },
+      "canonical": {
+        "a": 1,
+        "b": "␀undefined"
+      },
+      "sha256": "2bf5068c17ddc5a6d264a38049f66f9e2ef00ec8f5305209eca7797176498f63"
+    },
+    {
+      "id": "null-vs-undefined-siblings",
+      "note": "Both in one object must remain distinguishable.",
+      "input": {
+        "n": null,
+        "u": {
+          "$undefined": true
+        }
+      },
+      "canonical": {
+        "n": null,
+        "u": "␀undefined"
+      },
+      "sha256": "0d027206a2c08e5b783da70c9ebe40a77daf1192677d26df32ca0b38cbafad94"
+    },
+    {
+      "id": "negative-zero",
+      "note": "-0 normalizes to 0.",
+      "input": {
+        "z": {
+          "$negativeZero": true
+        }
+      },
+      "canonical": {
+        "z": 0
+      },
+      "sha256": "e313adcae40818c4a48a6f5a32c7ab937365ffb0962282a5bf1a629f8d456b63"
+    },
+    {
+      "id": "integer-vs-float",
+      "note": "3 and 3.0 are the same JSON number.",
+      "input": {
+        "a": 3,
+        "b": 3,
+        "c": 3.5
+      },
+      "canonical": {
+        "a": 3,
+        "b": 3,
+        "c": 3.5
+      },
+      "sha256": "1f18782a3ec31e36e5c8cdd550bb3761f99e6544e9283f96a08130fc0849fb13"
+    },
+    {
+      "id": "numeric-precision",
+      "note": "Shortest round-trip form.",
+      "input": {
+        "a": 0.1,
+        "b": 1e+21,
+        "c": 1e-7,
+        "d": 9007199254740991
+      },
+      "canonical": {
+        "a": 0.1,
+        "b": 1e+21,
+        "c": 1e-7,
+        "d": 9007199254740991
+      },
+      "sha256": "ff775421c93136336b7883eee28dfa2330c836b0e3b5cdb46bf0a78e7d296654"
+    },
+    {
+      "id": "numeric-negative",
+      "note": "Negative and zero.",
+      "input": {
+        "a": -1,
+        "b": 0,
+        "c": -2.5
+      },
+      "canonical": {
+        "a": -1,
+        "b": 0,
+        "c": -2.5
+      },
+      "sha256": "bffe64663e393492038c30ce3888fb4efd965bd8e72cfd498ddce1c1a2719c68"
+    },
+    {
+      "id": "key-ordering-ascii",
+      "note": null,
+      "input": {
+        "0": 5,
+        "b": 1,
+        "a": 2,
+        "C": 3,
+        "_": 4
+      },
+      "canonical": {
+        "0": 5,
+        "C": 3,
+        "_": 4,
+        "a": 2,
+        "b": 1
+      },
+      "sha256": "098ccfa10337a7ad46ec0e7e66ba8ec9757644b23cf62e030d7a0e03f71d6efb"
+    },
+    {
+      "id": "key-ordering-unicode",
+      "note": "Sorted by UTF-16 code unit, not locale collation.",
+      "input": {
+        "é": 1,
+        "e": 2,
+        "z": 3,
+        "Z": 4,
+        "ß": 5,
+        "日": 6
+      },
+      "canonical": {
+        "Z": 4,
+        "e": 2,
+        "z": 3,
+        "ß": 5,
+        "é": 1,
+        "日": 6
+      },
+      "sha256": "a4778af441b58ede9b82b7d567eff3fe15a99114adf24208afd73783256294ef"
+    },
+    {
+      "id": "key-ordering-nested",
+      "note": null,
+      "input": {
+        "outer": {
+          "z": {
+            "b": 1,
+            "a": 2
+          },
+          "a": [
+            {
+              "y": 1,
+              "x": 2
+            }
+          ]
+        }
+      },
+      "canonical": {
+        "outer": {
+          "a": [
+            {
+              "x": 2,
+              "y": 1
+            }
+          ],
+          "z": {
+            "a": 2,
+            "b": 1
+          }
+        }
+      },
+      "sha256": "cf3c95adb968964cd72923fd5f9fc26e7b64d091439b78c8f6c3e7073376faed"
+    },
+    {
+      "id": "array-order-preserved",
+      "note": "Descending input must stay descending.",
+      "input": {
+        "xs": [
+          3,
+          2,
+          1
+        ]
+      },
+      "canonical": {
+        "xs": [
+          3,
+          2,
+          1
+        ]
+      },
+      "sha256": "14caa3cdaf6404a3c254fb0bee4023390435099e1f596034fff4c39781658130"
+    },
+    {
+      "id": "array-of-objects-order",
+      "note": null,
+      "input": {
+        "xs": [
+          {
+            "id": "b"
+          },
+          {
+            "id": "a"
+          }
+        ]
+      },
+      "canonical": {
+        "xs": [
+          {
+            "id": "b"
+          },
+          {
+            "id": "a"
+          }
+        ]
+      },
+      "sha256": "40894bdb93e6588298e51f4206d51487ff8dd049ee522858477b7e663be7f987"
+    },
+    {
+      "id": "array-duplicates-kept",
+      "note": "Deduplication is forbidden.",
+      "input": {
+        "xs": [
+          1,
+          1,
+          2,
+          1
+        ]
+      },
+      "canonical": {
+        "xs": [
+          1,
+          1,
+          2,
+          1
+        ]
+      },
+      "sha256": "0c30ea0c9146016c3fe5b227ae7b3dd878ddf30463f2d96d1d52f58230c450cc"
+    },
+    {
+      "id": "nested-array-order",
+      "note": null,
+      "input": {
+        "xs": [
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      },
+      "canonical": {
+        "xs": [
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      },
+      "sha256": "7d09d6f27d5455b2379f32b91dc36a73ccd2609869b7a1777882f9962704b737"
+    },
+    {
+      "id": "empty-object",
+      "note": null,
+      "input": {},
+      "canonical": {},
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "id": "empty-array",
+      "note": null,
+      "input": {
+        "xs": []
+      },
+      "canonical": {
+        "xs": []
+      },
+      "sha256": "b98ab719a1913916a14abb3d37cb42d7a793b62137731ff709d2fc4dbe654def"
+    },
+    {
+      "id": "empty-nested",
+      "note": null,
+      "input": {
+        "a": {},
+        "b": [],
+        "c": [
+          {}
+        ],
+        "d": [
+          []
+        ]
+      },
+      "canonical": {
+        "a": {},
+        "b": [],
+        "c": [
+          {}
+        ],
+        "d": [
+          []
+        ]
+      },
+      "sha256": "f9f9cf5643a2a3c4f70881160e391d99598bdbf9a1a1306960d36760bd1ec737"
+    },
+    {
+      "id": "transient-id",
+      "note": "uid()-minted ids collapse to their scheme.",
+      "input": {
+        "id": "cand:k3x9f2"
+      },
+      "canonical": {
+        "id": "cand:<id>"
+      },
+      "sha256": "488a19901de272c0e4f91d6c5c588b81cd5132ccd38fcab6027a3f9cc98ad098"
+    },
+    {
+      "id": "transient-prereg-id",
+      "note": null,
+      "input": {
+        "preregId": "prereg:abc123"
+      },
+      "canonical": {
+        "preregId": "prereg:<id>"
+      },
+      "sha256": "9595c8186e7b7a72d7c3687c117ff7885adcaee9a5ca635a2386e6945245c0fc"
+    },
+    {
+      "id": "deterministic-ruleid-preserved",
+      "note": "ruleId has no transient scheme and must survive verbatim.",
+      "input": {
+        "ruleId": "tensor>distribution:normalize"
+      },
+      "canonical": {
+        "ruleId": "tensor>distribution:normalize"
+      },
+      "sha256": "3ff1346e179d0e82b984572241b736627c652dcfa6ec725ac629ae755606f402"
+    },
+    {
+      "id": "mixed-ids",
+      "note": null,
+      "input": {
+        "id": "neg:xyz",
+        "ruleId": "bound>certificate:wrap",
+        "otherId": "note:q1"
+      },
+      "canonical": {
+        "id": "neg:<id>",
+        "otherId": "note:<id>",
+        "ruleId": "bound>certificate:wrap"
+      },
+      "sha256": "21426d16ce885ead966887338ca2960aaf8ed1cb0489992552cd5bb32c38fb35"
+    },
+    {
+      "id": "timestamp-excluded",
+      "note": "Wall-clock keys are dropped at any depth.",
+      "input": {
+        "a": 1,
+        "at": "2026-01-01T00:00:00Z",
+        "generatedAt": "x",
+        "nested": {
+          "evaluatedAt": "y",
+          "keep": 2
+        }
+      },
+      "canonical": {
+        "a": 1,
+        "nested": {
+          "keep": 2
+        }
+      },
+      "sha256": "09bf73aa908bff0843d359bf06ac9eb7e0cbbc167c229950589a334286887a4b"
+    },
+    {
+      "id": "string-escapes",
+      "note": null,
+      "input": {
+        "s": "quote \" backslash \\ newline \n tab \t"
+      },
+      "canonical": {
+        "s": "quote \" backslash \\ newline \n tab \t"
+      },
+      "sha256": "7a475e86b9a0007817692d7e8a99d392c802c5dc79e02aca62f655502e50ce14"
+    },
+    {
+      "id": "string-unicode",
+      "note": "Non-ASCII emitted raw, not escaped.",
+      "input": {
+        "s": "em—dash ⟶ arrow ≡ ≠ 日本語"
+      },
+      "canonical": {
+        "s": "em—dash ⟶ arrow ≡ ≠ 日本語"
+      },
+      "sha256": "a7e5ee3fc58886f017b0d2c60e499b6d443a9ad1268fc0d9be86c5d05f6e8c74"
+    },
+    {
+      "id": "string-control-chars",
+      "note": null,
+      "input": {
+        "s": "\u0000\u001f"
+      },
+      "canonical": {
+        "s": "\u0000\u001f"
+      },
+      "sha256": "d8dbe1215c1749cd671c4de71e81e9b33027dd0654683b17c5fca7a96f191fbb"
+    },
+    {
+      "id": "string-empty",
+      "note": null,
+      "input": {
+        "s": ""
+      },
+      "canonical": {
+        "s": ""
+      },
+      "sha256": "6f600f2520d1f84f59052fea1223d39ea8f79da21817fd1ca486770e17ddb1b8"
+    },
+    {
+      "id": "decision-shaped",
+      "note": null,
+      "input": {
+        "stage": "TYPE_COMPOSABLE",
+        "blockReason": "PRECONDITION_UNRESOLVED",
+        "impossibility": null,
+        "bridge": {
+          "adapters": [
+            {
+              "ruleId": "tensor>distribution:normalize",
+              "lossy": false,
+              "lose": [
+                "scale"
+              ]
+            }
+          ],
+          "riskCost": 3.5
+        },
+        "obligations": [
+          {
+            "id": "PO-1",
+            "status": "PROVED"
+          },
+          {
+            "id": "PO-5.1",
+            "status": "UNRESOLVED"
+          }
+        ],
+        "options": [
+          {
+            "risk": 3.5
+          },
+          {
+            "risk": 4
+          },
+          {
+            "risk": 5.5
+          }
+        ],
+        "missing": {
+          "$undefined": true
+        },
+        "at": "2026-01-01T00:00:00Z"
+      },
+      "canonical": {
+        "blockReason": "PRECONDITION_UNRESOLVED",
+        "bridge": {
+          "adapters": [
+            {
+              "lose": [
+                "scale"
+              ],
+              "lossy": false,
+              "ruleId": "tensor>distribution:normalize"
+            }
+          ],
+          "riskCost": 3.5
+        },
+        "impossibility": null,
+        "missing": "␀undefined",
+        "obligations": [
+          {
+            "id": "PO-1",
+            "status": "PROVED"
+          },
+          {
+            "id": "PO-5.1",
+            "status": "UNRESOLVED"
+          }
+        ],
+        "options": [
+          {
+            "risk": 3.5
+          },
+          {
+            "risk": 4
+          },
+          {
+            "risk": 5.5
+          }
+        ],
+        "stage": "TYPE_COMPOSABLE"
+      },
+      "sha256": "be06a896b8fbae5df3f35ca007f27517c26c3367da8724dd7021f9f409593810"
+    }
+  ]
+}

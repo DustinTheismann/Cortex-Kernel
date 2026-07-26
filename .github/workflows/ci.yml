@@ -95,3 +95,11 @@ jobs:
       # policy is changed in the same commit.
       - name: dependency-policy
         run: npm run deps:policy
+
+      # Gate 14: canonicalization is shared infrastructure across languages, so
+      # the encoding itself is pinned by adversarial vectors — absent vs null vs
+      # undefined, -0, Unicode key order, array-order preservation, transient-id
+      # replacement, timestamp exclusion. Drift here invalidates every hash in
+      # every implementation, so it is a canonicalizationVersion event.
+      - name: canonicalization-vectors
+        run: npm run vectors

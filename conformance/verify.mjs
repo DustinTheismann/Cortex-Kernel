@@ -22,13 +22,40 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 import { sha256 } from "../test/oracle/canonicalize.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(readFileSync(join(root, "test/golden/manifest.json"), "utf8"));
 const registry = JSON.parse(readFileSync(join(root, "conformance/implementations.json"), "utf8"));
+const baseline = JSON.parse(readFileSync(join(root, "conformance/baseline.json"), "utf8"));
 
 const byCase = new Map(manifest.cases.map((c) => [c.caseId, c]));
+
+const fileHash = (p) => createHash("sha256").update(readFileSync(join(root, p))).digest("hex");
+
+// Which semantic areas each corpus case exercises. Makes a low fixture count
+// legible: 8/41 that includes the whole planner surface is not the same as 8/41
+// scattered across trivia.
+const SEMANTIC_AREAS = {
+  "mech-kinds": ["types"],
+  "conv-rules": ["registry", "edge-cost"],
+  "multipath-kind-paths": ["registry", "multipath-planning", "path-enumeration", "ranking", "tie-breaking", "depth-cap", "impossibility"],
+  "pair-compat": ["registry", "multipath-planning", "ranking", "selected-path-ordering", "impossibility"],
+  "shape-compat": ["compatibility"],
+  "unit-compat": ["compatibility"],
+  "license-compat": ["compatibility", "license-screening"],
+  "classify-lit": ["literature-classification"],
+  "synth-test": ["property-test-skeleton"],
+  "norm-schema": ["schema-normalization"],
+  "compute-edges": ["edge-derivation", "serialization"],
+};
+const areasFor = (caseId, category) => SEMANTIC_AREAS[caseId] || {
+  compatibility: ["compatibility", "cascade"], planning: ["multipath-planning", "ranking", "cascade"],
+  preconditions: ["contract-instantiation", "obligations", "cascade"], obligations: ["obligations", "cascade"],
+  ladder: ["stage-advancement", "cascade"], literature: ["literature-assessment", "verdict-derivation", "cascade"],
+  serialization: ["serialization", "import-export"], malformed: ["serialization", "error-handling"],
+}[category] || ["unclassified"];
 
 const runImpl = (impl, args) => {
   const cmd = impl.command[0];
@@ -63,10 +90,39 @@ const verifyImplementation = (impl) => {
     else failed.push({ caseId, reason: `hash mismatch\n      expected ${entry.sha256}\n      got      ${got}` });
   }
 
+  // Monotonicity: declared support may only grow. Dropping a case would
+  // otherwise hide a regression behind a still-green 8/8.
+  const base = (baseline.implementations[impl.id] || {}).declared || [];
+  const dropped = base.filter((c) => !supported.includes(c));
+  const authorized = (baseline.implementations[impl.id] || {}).authorizedReduction || [];
+  const unauthorizedDrops = dropped.filter((c) => !authorized.includes(c));
+
+  // Per-fixture coverage map with an explicit status taxonomy, so a low count
+  // cannot conceal broad coverage and a high count cannot conceal shallow.
+  const declaredSet = new Set(supported);
+  const failedSet = new Set(failed.map((f) => f.caseId));
+  const matchedSet = new Set(matched);
+  const coverageMap = manifest.cases.map((c) => ({
+    fixture: c.caseId,
+    implementation: impl.id,
+    status: matchedSet.has(c.caseId) ? "supported"
+      : failedSet.has(c.caseId) ? "known_divergence"
+        : unauthorizedDrops.includes(c.caseId) ? "regressed_undeclared"
+          : declaredSet.has(c.caseId) ? "implemented_not_declared" : "not_implemented",
+    hashMatch: matchedSet.has(c.caseId),
+    semanticAreas: areasFor(c.caseId, c.category),
+  }));
+
+  const coveredAreas = [...new Set(coverageMap.filter((r) => r.hashMatch).flatMap((r) => r.semanticAreas))].sort();
+  const allAreas = [...new Set(coverageMap.flatMap((r) => r.semanticAreas))].sort();
+
   return {
-    id: impl.id, status: failed.length || unknown.length ? "fail" : "pass",
-    label, matched, failed, unknown,
+    id: impl.id,
+    status: failed.length || unknown.length || unauthorizedDrops.length ? "fail" : "pass",
+    label, matched, failed, unknown, unauthorizedDrops,
     coverage: `${matched.length}/${manifest.cases.length}`,
+    coverageMap, coveredAreas, uncoveredAreas: allAreas.filter((a) => !coveredAreas.includes(a)),
+    binarySha256: existsSync(binary) ? fileHash(impl.command[0].replace(/^\.\//, "")) : null,
   };
 };
 
@@ -87,8 +143,14 @@ for (const impl of targets) {
   const icon = r.status === "pass" ? "✔" : "✘";
   console.log(`  ${icon} ${r.label} — ${r.coverage} corpus cases reproduced`);
   console.log(`      cases: ${r.matched.join(", ") || "(none)"}`);
+  console.log(`      areas:  ${r.coveredAreas.join(", ")}`);
   for (const f of r.failed) { console.error(`      FAILED ${f.caseId}: ${f.reason}`); hardFailure = true; }
   for (const u of r.unknown) { console.error(`      claims unknown case: ${u}`); hardFailure = true; }
+  for (const d of r.unauthorizedDrops) {
+    console.error(`      REGRESSION ${d}: was in the conformance baseline but is no longer declared.`);
+    console.error("        Declared support is monotonic. Reducing it requires an authorized edit to conformance/baseline.json.");
+    hardFailure = true;
+  }
 }
 
 console.log("\nA conforming implementation is one whose declared cases all reproduce the corpus hash.");
@@ -108,11 +170,29 @@ if (!only) {
       canonicalHashesIdentical: r && r.matched ? r.matched.length : 0,
       declaredCasesFailing: r && r.failed ? r.failed.length : 0,
       cases: r && r.matched ? r.matched : [],
+      semanticAreasCovered: r ? r.coveredAreas : [],
+      semanticAreasUncovered: r ? r.uncoveredAreas : [],
+      coverageMap: r ? r.coverageMap : [],
+      binarySha256: r ? r.binarySha256 : null,
+      toolchain: impl.toolchain || null,
       notes: impl.notes || "",
     };
   });
   const report = {
     artifact: "conformance-report",
+    generatedAt: new Date().toISOString(),
+    ciRun: process.env.GITHUB_RUN_ID || null,
+    // Integrity: the report binds to the exact corpus, spec and verifier that
+    // produced it, so certification can bind to the report rather than merely
+    // asserting that conformance ran.
+    integrity: {
+      manifestSha256: fileHash("test/golden/manifest.json"),
+      canonicalizationSpecSha256: fileHash("conformance/CANONICALIZATION.md"),
+      canonicalizerSha256: fileHash("test/oracle/canonicalize.mjs"),
+      verifierSha256: fileHash("conformance/verify.mjs"),
+      baselineSha256: fileHash("conformance/baseline.json"),
+      referenceSourceSha256: fileHash("reference/src/cortex-v0.5.1.jsx"),
+    },
     corpus: { oracle: manifest.oracleVersion, schemaVersion: manifest.schemaVersion, canonicalizationVersion: manifest.canonicalizationVersion, fixtures: manifest.cases.length },
     reference: { source: "reference/src/cortex-v0.5.1.jsx", baseline: manifest.sourceBaseline },
     implementations: rows,
@@ -134,6 +214,10 @@ if (!only) {
     "| Implementation | Cases reproduced |",
     "|---|---|",
     ...rows.map((r) => `| \`${r.implementation}\` | ${r.cases.join(", ") || "—"} |`),
+    "",
+    "| Implementation | Semantic areas covered | Not yet covered |",
+    "|---|---|---|",
+    ...rows.map((r) => `| \`${r.implementation}\` | ${r.semanticAreasCovered.join(", ") || "—"} | ${r.semanticAreasUncovered.join(", ") || "—"} |`),
     "",
     "## How to read this",
     "",

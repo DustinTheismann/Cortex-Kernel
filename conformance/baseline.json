@@ -1,0 +1,27 @@
+{
+  "policy": "monotonic-declared-support",
+  "rationale": "An implementation's declared corpus may only grow. Without this, a regression can be hidden by silently dropping the failing case: 8/8 stays green while coverage quietly falls to 7. Reducing declared support is therefore a deliberate, reviewable act — it requires editing this file, which appears as a visible diff and demands a justification.",
+  "enforcement": "conformance/verify.mjs fails when an implementation declares fewer cases than its baseline, naming every dropped case. CI gate 14.",
+  "authorizedReductionRequires": [
+    "an explicit edit to this file recording the dropped cases and why",
+    "a justification naming the regression or protocol change",
+    "a ledger entry when the reduction accompanies a release"
+  ],
+  "implementations": {
+    "rust": {
+      "declared": [
+        "classify-lit",
+        "conv-rules",
+        "license-compat",
+        "mech-kinds",
+        "multipath-kind-paths",
+        "pair-compat",
+        "shape-compat",
+        "unit-compat"
+      ],
+      "recordedAt": "v0.5.1-kernel",
+      "authorizedReduction": null,
+      "justification": null
+    }
+  }
+}

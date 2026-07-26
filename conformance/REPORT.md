@@ -12,6 +12,10 @@ Corpus: oracle **v0.5.1**, schemaVersion **7**, canonicalization **v1**, **41** 
 |---|---|
 | `rust` | mech-kinds, conv-rules, multipath-kind-paths, pair-compat, shape-compat, unit-compat, license-compat, classify-lit |
 
+| Implementation | Semantic areas covered | Not yet covered |
+|---|---|---|
+| `rust` | compatibility, depth-cap, edge-cost, impossibility, license-screening, literature-classification, multipath-planning, path-enumeration, ranking, registry, selected-path-ordering, tie-breaking, types | cascade, contract-instantiation, edge-derivation, error-handling, import-export, literature-assessment, obligations, property-test-skeleton, schema-normalization, serialization, stage-advancement, verdict-derivation |
+
 ## How to read this
 
 An implementation conforms when every case it DECLARES reproduces the corpus hash byte-for-byte after canonicalization. Coverage is the fraction of the corpus it declares; partial coverage is legitimate, a failing declared case is not.
