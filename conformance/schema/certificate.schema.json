@@ -4,44 +4,124 @@
   "title": "Behavioral certificate",
   "description": "Binds a frozen reference, a corpus, and an implementation that reproduced it. `evidence` is re-derivable and verified by `certify --check`; `release` is historical and carried forward; `buildEnvironment` is recorded but never compared.",
   "type": "object",
-  "required": ["artifact", "subject", "releaseTag", "evidence"],
+  "required": [
+    "artifact",
+    "subject",
+    "releaseTag",
+    "evidence"
+  ],
   "properties": {
-    "artifact": { "const": "behavioral-certification" },
-    "subject": { "type": "string" },
-    "kernelVersion": { "type": "string" },
-    "releaseTag": { "type": "string" },
-    "acceptanceCommand": { "type": "string" },
-    "gates": { "type": "array", "items": { "type": "string" } },
+    "artifact": {
+      "const": "behavioral-certification"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "kernelVersion": {
+      "type": "string"
+    },
+    "releaseTag": {
+      "type": "string"
+    },
+    "acceptanceCommand": {
+      "type": "string"
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "evidence": {
       "type": "object",
-      "required": ["referenceCommitSha", "oracleVersion", "canonicalizationVersion", "fixtureCount", "manifest"],
+      "required": [
+        "referenceSource",
+        "oracleVersion",
+        "canonicalizationVersion",
+        "fixtureCount",
+        "manifest"
+      ],
       "properties": {
-        "referenceCommitSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
-        "oracleVersion": { "type": "string" },
-        "canonicalizationVersion": { "type": "integer" },
-        "schemaVersion": { "type": "integer" },
-        "fixtureCount": { "type": "integer", "minimum": 1 },
-        "manifest": { "$ref": "#/$defs/hashedFile" },
-        "invariantVersion": { "type": "object" },
-        "canonicalizer": { "$ref": "#/$defs/hashedFile" }
+        "oracleVersion": {
+          "type": "string"
+        },
+        "canonicalizationVersion": {
+          "type": "integer"
+        },
+        "schemaVersion": {
+          "type": "integer"
+        },
+        "fixtureCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "manifest": {
+          "$ref": "#/$defs/hashedFile"
+        },
+        "invariantVersion": {
+          "type": "object"
+        },
+        "canonicalizer": {
+          "$ref": "#/$defs/hashedFile"
+        },
+        "referenceSource": {
+          "$ref": "#/$defs/hashedFile",
+          "description": "Content hash of the frozen reference source \u2014 history-independent, so verification works in a shallow clone or with no git at all."
+        },
+        "referenceBaseline": {
+          "type": "string",
+          "description": "The reference baseline as recorded in the manifest (provenance; the resolved commit SHA lives under release)."
+        }
       }
     },
     "release": {
       "type": "object",
       "properties": {
-        "kernelMergeCommitSha": { "type": ["string", "null"] },
-        "certifiedAtCommit": { "type": "string" },
-        "workflow": { "type": "object" },
-        "releaseTimestamp": { "type": "string" }
+        "kernelMergeCommitSha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "certifiedAtCommit": {
+          "type": "string"
+        },
+        "workflow": {
+          "type": "object"
+        },
+        "releaseTimestamp": {
+          "type": "string"
+        },
+        "referenceCommitSha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       }
     },
-    "buildEnvironment": { "type": "object" }
+    "buildEnvironment": {
+      "type": "object"
+    }
   },
   "$defs": {
     "hashedFile": {
       "type": "object",
-      "required": ["sha256"],
-      "properties": { "path": { "type": "string" }, "set": { "type": "string" }, "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" } }
+      "required": [
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "set": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
     }
   }
 }

@@ -89,3 +89,9 @@ jobs:
       # must be a deliberate, regenerated decision rather than a silent drift.
       - name: frontier-map
         run: npm run frontier:check
+
+      # Gate 13: the dependency-free claim is an enforced invariant, not a
+      # lock-file convention. A new crate or npm package fails here unless the
+      # policy is changed in the same commit.
+      - name: dependency-policy
+        run: npm run deps:policy

@@ -1,0 +1,35 @@
+{
+  "artifact": "conformance-report",
+  "corpus": {
+    "oracle": "v0.5.1",
+    "schemaVersion": 7,
+    "canonicalizationVersion": 1,
+    "fixtures": 41
+  },
+  "reference": {
+    "source": "reference/src/cortex-v0.5.1.jsx",
+    "baseline": "804f767"
+  },
+  "implementations": [
+    {
+      "implementation": "rust",
+      "language": "Rust",
+      "status": "pass",
+      "fixtures": "8/41",
+      "canonicalHashesIdentical": 8,
+      "declaredCasesFailing": 0,
+      "cases": [
+        "mech-kinds",
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat",
+        "shape-compat",
+        "unit-compat",
+        "license-compat",
+        "classify-lit"
+      ],
+      "notes": "Dependency-free peer implementation of the deterministic core: registry, edge costs, min-risk multipath planner, and the shape/unit/license predicates. Written against the frozen semantics, certified by corpus reproduction — not a transliteration of the JavaScript."
+    }
+  ],
+  "interpretation": "An implementation conforms when every case it DECLARES reproduces the corpus hash byte-for-byte after canonicalization. Coverage is the fraction of the corpus it declares; partial coverage is legitimate, a failing declared case is not."
+}
