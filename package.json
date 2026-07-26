@@ -13,6 +13,7 @@
     "oracle:check": "node test/oracle/harness.mjs --check",
     "kernel:golden": "npm --prefix packages/cortex-kernel run kernel:golden -- --check",
     "kernel:test": "npm --prefix packages/cortex-kernel test",
-    "verify": "npm run oracle:check && npm run kernel:test && npm run kernel:golden && npm run certify:check"
+    "fuzz": "node test/differential/fuzz.mjs --cases=2000",
+    "verify": "npm run oracle:check && npm run kernel:test && npm run kernel:golden && npm run fuzz && npm run certify:check"
   }
 }

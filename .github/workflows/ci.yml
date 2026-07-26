@@ -62,3 +62,10 @@ jobs:
       # re-certified fails here rather than shipping a stale claim.
       - name: certification
         run: npm run certify:check
+
+      # Gate 9: generated inputs, not just the 41 pinned points. Runs the frozen
+      # oracle and the extracted kernel over a seeded sweep of the input space
+      # and compares canonical decision hashes. Divergence is reported as a
+      # field-level diff with a reproducing seed.
+      - name: differential-fuzz
+        run: npm run fuzz
