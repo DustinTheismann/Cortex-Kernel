@@ -59,13 +59,65 @@ This is a **semantic-planning kernel**, precisely scoped:
 
 When opened fully offline, the galaxy, fusion matrix, filters, Load/Export, the deterministic compiler, and the governance panels all work; synthesis, generation, live fetch, and literature probing go dark.
 
-## Files
+## Repository layout
+
+The frozen artifact is the specification; everything else exists to make
+equivalence to it a *checkable claim* rather than an assertion.
+
+```
+frozen reference ──▶ oracle ──▶ canonical fixtures ──▶ manifest hashes ──▶ certification ──▶ ledger
+                                        │
+                    ┌───────────────────┴───────────────────┐
+                    ▼                                       ▼
+          JS implementation                        Rust implementation
+                    └────── certified against the same hashes ──────┘
+```
 
 | Path | What it is |
 |------|-----------|
 | `index.html` | The application — single self-contained file (byte-identical to `reference/standalones/OpenSource_Cortex_v0.5.1_standalone.html`) |
+| `reference/` | The frozen standalone lineage — immutable; CI enforces byte identity |
+| `packages/cortex-kernel/` | `@opensource-cortex/kernel` — framework-independent ESM extraction, no React/DOM/network |
+| `impl/rust/` | Independent Rust implementation of the deterministic core, certified against the same corpus |
+| `conformance/` | The domain-neutral apparatus: canonicalization spec, schemas, and a verifier that certifies **any** implementation |
+| `test/oracle/` · `test/golden/` | The behavioral oracle and the 41-case hashed corpus |
+| `test/differential/` | Field-level comparator and the seeded oracle-vs-kernel fuzzer |
+| `research/` | Advisory frontier modules — read-only, never imported by the kernel |
+| `ledger/` | Certification chain: hash-linked semantic lineage across releases |
+| `docs/` | Extraction map, oracle limitations, frontier map, certification, versioning, releasing, roadmap |
 | `docs/backend-handoff.html` | Backend handoff specification: service boundaries, schemas, verifier & calibration protocols, proof-witness formats, provenance model |
 | `data/brain-index.schema` | Export format (`schemaVersion 7`): repos, edges, synthesis nodes, preregs, prize candidates, ledger, calibration, rule instantiations |
+
+## Verification
+
+```bash
+npm run verify        # the whole chain, in order
+```
+
+| Gate | Asserts |
+|---|---|
+| `reference-integrity` | The frozen artifact is byte-identical across every alias |
+| `oracle-check` | The corpus still matches the frozen source; deterministic double-build |
+| `kernel-unit` | Unit, metamorphic, witness and trace-invariance suites |
+| `kernel-golden` | The extraction reproduces **all 41** manifest hashes |
+| `kernel-differential` | Enabling the explainability trace never changes a decision hash |
+| `package-smoke` | The packed ESM artifact imports cleanly |
+| `determinism` | Repeated invocation is bit-stable |
+| `certification` | The committed certificate still describes this repository |
+| `differential-fuzz` | Oracle and kernel agree on generated inputs beyond the pinned points |
+| `conformance` | Every registered implementation reproduces its declared corpus hashes |
+| `ledger` | The certification chain is intact and describes the current corpus |
+| `frontier-map` | The unverified surface did not grow |
+
+What the evidence does **not** establish is stated by the repository itself:
+
+```bash
+node scripts/self-ladder.mjs    # → EPISTEMICALLY_SUPPORTED, blocked by NO_MECHANIZED_PROOF
+```
+
+The kernel stages its own correctness claim on its own epistemic ladder, and
+stops short of `VERIFIED` because no mechanized refinement proof exists. The
+open surface is enumerated in `docs/frontier-map.json`.
 
 ## Usage
 
