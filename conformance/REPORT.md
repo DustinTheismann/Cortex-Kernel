@@ -6,15 +6,15 @@ Corpus: oracle **v0.5.1**, schemaVersion **7**, canonicalization **v1**, **41** 
 
 | Implementation | Language | Fixtures | Canonical hashes identical | Declared failing | Status |
 |---|---|---|---|---|---|
-| `rust` | Rust | 9/41 | 9 | 0 | **PASS** |
+| `rust` | Rust | 10/41 | 10 | 0 | **PASS** |
 
 | Implementation | Cases reproduced |
 |---|---|
-| `rust` | mech-kinds, conv-rules, multipath-kind-paths, pair-compat, shape-compat, unit-compat, license-compat, classify-lit, synth-test |
+| `rust` | mech-kinds, conv-rules, multipath-kind-paths, pair-compat, shape-compat, unit-compat, license-compat, classify-lit, synth-test, norm-schema |
 
 | Implementation | Semantic areas covered | Not yet covered |
 |---|---|---|
-| `rust` | compatibility, depth-cap, edge-cost, impossibility, license-screening, literature-classification, multipath-planning, path-enumeration, property-test-skeleton, ranking, registry, selected-path-ordering, tie-breaking, types | cascade, contract-instantiation, edge-derivation, error-handling, import-export, literature-assessment, obligations, schema-normalization, serialization, stage-advancement, verdict-derivation |
+| `rust` | compatibility, depth-cap, edge-cost, impossibility, license-screening, literature-classification, multipath-planning, path-enumeration, property-test-skeleton, ranking, registry, schema-normalization, selected-path-ordering, tie-breaking, types | cascade, contract-instantiation, edge-derivation, error-handling, import-export, literature-assessment, obligations, serialization, stage-advancement, verdict-derivation |
 
 ## How to read this
 

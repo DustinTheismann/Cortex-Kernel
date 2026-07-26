@@ -67,9 +67,50 @@ the list above and is preserved verbatim.
 
 ### 2.3 Key ordering
 
-Sort by UTF-16 code unit ascending — the default of JavaScript's
-`Array.prototype.sort` on strings. Implementations in other languages must sort
-by code unit, not by locale or by byte, to agree on non-ASCII keys.
+Sort by **UTF-16 code-unit lexicographic order**, ascending — the default of
+JavaScript's `Array.prototype.sort` on strings.
+
+This is *not* code-point order and *not* byte order, and the difference is
+observable. A non-BMP character is a surrogate pair whose leading unit is in
+`U+D800..U+DBFF`, so it sorts **below** BMP characters above `U+DBFF`:
+
+```
+"z" (U+007A)  <  "𝄞" (U+1D11E → D834 DD1E)  <  "�" (U+FFFD)
+```
+
+In code-point order `U+1D11E` would sort *after* `U+FFFD`. Implementations that
+sort by code point, by UTF-8 bytes, or by locale collation will disagree with the
+reference on such keys. Pinned by the `unicode-bmp-vs-non-bmp` vector.
+
+**No Unicode normalization is applied.** `U+00E9` and `e` + `U+0301` render
+identically but are distinct keys and must remain distinct; the reference does
+not normalize, so neither may any implementation. Likewise Latin `A`, Cyrillic
+`А` and Greek `Α` are three different keys.
+
+### 2.4 Unsupported values
+
+Values JSON cannot represent are **rejected**, never silently encoded. Rejection
+raises `CANONICALIZATION_UNSUPPORTED_NUMBER` with a path to the offending value.
+
+| Value class | Behavior | Rationale |
+|---|---|---|
+| `NaN` | reject | `JSON.stringify` emits `null`, collapsing it into a state already used for explicit null |
+| `Infinity` / `-Infinity` | reject | same collapse |
+| BigInt | reject | no JSON representation; encode as a string if a schema needs it |
+| Integral value outside `\|n\| ≤ 2^53−1` | reject | cannot round-trip through a double, so two distinct inputs could canonicalize identically |
+| Non-integral finite double | accept | round-trips exactly under §3 |
+| `-0` | normalize to `0` | JavaScript serialization artifact |
+
+The safe-integer bound applies to **any** integral double, however large: `1e21`
+and `1.5e300` are integral and therefore rejected, while `1.5e-300` and
+`123456789.125` are accepted.
+
+Rejecting rather than sentinel-encoding is deliberate. A sentinel would widen
+the semantic domain, which is a `canonicalizationVersion` event; a schema that
+genuinely needs these values must encode them explicitly as strings. Because no
+value in the corpus is affected and every stored hash is unchanged, introducing
+this rule was a tightening of previously-undefined behavior and remains
+canonicalization **v1**.
 
 ## 3. Encoding
 

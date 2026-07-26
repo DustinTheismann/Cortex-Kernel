@@ -15,6 +15,7 @@
         "license-compat",
         "mech-kinds",
         "multipath-kind-paths",
+        "norm-schema",
         "pair-compat",
         "shape-compat",
         "synth-test",
@@ -24,14 +25,15 @@
       "authorizedReduction": null,
       "justification": null,
       "subsystemsComplete": [
-        "types",
-        "registry",
-        "edge-cost",
-        "multipath-planning",
         "compatibility",
+        "edge-cost",
         "license-screening",
         "literature-classification",
-        "property-test-skeleton"
+        "multipath-planning",
+        "property-test-skeleton",
+        "registry",
+        "schema-normalization",
+        "types"
       ]
     }
   }

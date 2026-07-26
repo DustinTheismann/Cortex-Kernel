@@ -1,13 +1,13 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-26T22:12:15.276Z",
+  "generatedAt": "2026-07-26T22:31:05.093Z",
   "ciRun": null,
   "integrity": {
     "manifestSha256": "08f6c59234f0a1304a5844f327cac3a365afd1a8c6ab00d12241d6a026d14646",
-    "canonicalizationSpecSha256": "b79a5b422ee6e183f52c650719c67df9380512837b784892b217ec609944bab0",
-    "canonicalizerSha256": "7126285d8516f07ee4a29f2547555f57d7fe9c32a785e528ec6cf4c7508e0141",
+    "canonicalizationSpecSha256": "5ed64bf745d2e41c8287052859200711f879ba605d8b5c3fa17ee9d91c267d1d",
+    "canonicalizerSha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8",
     "verifierSha256": "7988a2c66c7fe8d66a29b157d239332de612091b3cb116899b37c16f067d6305",
-    "baselineSha256": "09d675a3f8c8e623d20365302ebcf266dadd8584d3103aa0cfea8b6df76f6763",
+    "baselineSha256": "e5404eaf4781310349cd107610b9064aee08c6246a88ffb4957205bc2957277b",
     "referenceSourceSha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
   },
   "corpus": {
@@ -25,8 +25,8 @@
       "implementation": "rust",
       "language": "Rust",
       "status": "pass",
-      "fixtures": "9/41",
-      "canonicalHashesIdentical": 9,
+      "fixtures": "10/41",
+      "canonicalHashesIdentical": 10,
       "declaredCasesFailing": 0,
       "cases": [
         "mech-kinds",
@@ -37,7 +37,8 @@
         "unit-compat",
         "license-compat",
         "classify-lit",
-        "synth-test"
+        "synth-test",
+        "norm-schema"
       ],
       "semanticAreasCovered": [
         "compatibility",
@@ -51,6 +52,7 @@
         "property-test-skeleton",
         "ranking",
         "registry",
+        "schema-normalization",
         "selected-path-ordering",
         "tie-breaking",
         "types"
@@ -63,7 +65,6 @@
         "import-export",
         "literature-assessment",
         "obligations",
-        "schema-normalization",
         "serialization",
         "stage-advancement",
         "verdict-derivation"
@@ -156,8 +157,8 @@
         {
           "fixture": "norm-schema",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "schema-normalization"
           ]
@@ -492,7 +493,7 @@
           ]
         }
       ],
-      "binarySha256": "a2aac672771ecd9a0487aaae59eb847798899c02490ed77bba9b40fed0cdabb2",
+      "binarySha256": "1568e711cfa1d0e40b0ebc43c2b4cd1ca39f2c3900e02f87d4b9a0eeab6abf37",
       "toolchain": {
         "compiler": "rustc 1.94.1 (e408947bf 2026-03-25)",
         "targetTriple": "x86_64-unknown-linux-gnu",

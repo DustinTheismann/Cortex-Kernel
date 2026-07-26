@@ -9,7 +9,7 @@
 //
 //   node scripts/gate-inventory.mjs
 
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -31,7 +31,9 @@ if (missingFromReadme.length) problems.push(`README verification table is missin
 
 // 2. Any prose gate count must match. Catches "Thirteen CI gates" after a 14th lands.
 const WORDS = { seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16 };
-for (const file of ["README.md", "docs/roadmap.md", "docs/releasing.md", "docs/certification/v0.5.1-kernel.md", "conformance/README.md"]) {
+for (const file of ["README.md", "CHANGELOG.md", "docs/roadmap.md", "docs/releasing.md", "docs/versioning.md",
+  "docs/certification/v0.5.1-kernel.md", "conformance/README.md", "conformance/REPORT.md",
+  "conformance/CANONICALIZATION.md", "conformance/baseline.json", "packages/cortex-kernel/README.md"]) {
   let text;
   try { text = read(file); } catch { continue; }
   for (const m of text.matchAll(/\b([A-Za-z]+|\d+)[- ](?:CI )?gates?\b/gi)) {
@@ -55,6 +57,13 @@ try {
   if (missing.length) problems.push(`certificate gate list is missing: ${missing.join(", ")}`);
   if (extra.length) problems.push(`certificate lists gates the workflow does not define: ${extra.join(", ")}`);
 } catch { /* certificate absent — other gates cover that */ }
+
+writeFileSync(join(root, "docs/gate-inventory.json"), JSON.stringify({
+  artifact: "gate-inventory",
+  note: "Derived from .github/workflows/ci.yml, the source of truth. Human-readable projections should consume this rather than re-parsing the workflow.",
+  gateCount: gates.length,
+  gates,
+}, null, 2) + "\n");
 
 console.log(`gate inventory — workflow defines ${gates.length} gates\n  ${gates.join(", ")}`);
 if (problems.length) {

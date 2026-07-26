@@ -4,7 +4,8 @@
   "spec": "conformance/CANONICALIZATION.md",
   "encoding": {
     "$undefined": "An object {\"$undefined\": true} in `input` denotes the JavaScript value undefined, which JSON cannot express.",
-    "$negativeZero": "An object {\"$negativeZero\": true} denotes -0."
+    "$negativeZero": "An object {\"$negativeZero\": true} denotes -0.",
+    "$nan": "{\"$nan\": true} denotes NaN; $infinity denotes ±Infinity; $bigint denotes a BigInt. These appear only in rejectionPolicy — they are values canonicalization refuses, described rather than embedded because JSON cannot carry them."
   },
   "note": "Each vector's sha256 is over the canonical encoding of its value. An implementation agrees on canonicalization when it reproduces every hash.",
   "vectors": [
@@ -92,20 +93,22 @@
     },
     {
       "id": "numeric-precision",
-      "note": "Shortest round-trip form.",
+      "note": "Shortest round-trip form. d is MAX_SAFE_INTEGER, the largest accepted integral value; non-integral doubles of any magnitude are accepted.",
       "input": {
         "a": 0.1,
-        "b": 1e+21,
+        "b": 123456789.125,
         "c": 1e-7,
-        "d": 9007199254740991
+        "d": 9007199254740991,
+        "e": 1.5e-300
       },
       "canonical": {
         "a": 0.1,
-        "b": 1e+21,
+        "b": 123456789.125,
         "c": 1e-7,
-        "d": 9007199254740991
+        "d": 9007199254740991,
+        "e": 1.5e-300
       },
-      "sha256": "ff775421c93136336b7883eee28dfa2330c836b0e3b5cdb46bf0a78e7d296654"
+      "sha256": "06eaff9010be59aeecdf015bc6899e468166d355975675c15dabe90f06371019"
     },
     {
       "id": "numeric-negative",
@@ -529,6 +532,211 @@
         "stage": "TYPE_COMPOSABLE"
       },
       "sha256": "be06a896b8fbae5df3f35ca007f27517c26c3367da8724dd7021f9f409593810"
+    },
+    {
+      "id": "unicode-bmp-vs-non-bmp",
+      "note": "Non-BMP keys are surrogate pairs; 0xD834 sorts BELOW 0xFFFD, so the musical symbol precedes the replacement char.",
+      "input": {
+        "�": 1,
+        "𝄞": 2,
+        "z": 3
+      },
+      "canonical": {
+        "z": 3,
+        "𝄞": 2,
+        "�": 1
+      },
+      "sha256": "9ee8f444d6eb75ebab86b5eb9736ddfaffb98a57c27d1ff6a27286d9bb430525"
+    },
+    {
+      "id": "unicode-composed-vs-decomposed",
+      "note": "e+U+0301 and U+00E9 render identically but are DISTINCT keys. Canonicalization must not apply Unicode normalization — the reference does not.",
+      "input": {
+        "é": "precomposed",
+        "é": "decomposed"
+      },
+      "canonical": {
+        "é": "decomposed",
+        "é": "precomposed"
+      },
+      "sha256": "c57984b0473441c370eb2a4c714ab07e698c13c59a816c319f421fc3fe3de928"
+    },
+    {
+      "id": "unicode-visually-identical",
+      "note": "Latin A, Cyrillic А, Greek Α — visually identical, byte-distinct, must stay distinct.",
+      "input": {
+        "A": "latin",
+        "А": "cyrillic",
+        "Α": "greek"
+      },
+      "canonical": {
+        "A": "latin",
+        "Α": "greek",
+        "А": "cyrillic"
+      },
+      "sha256": "439f33594438f6c7a51fd4e7265903397b3ceee2de85b33eb93c282fbd9b6a79"
+    },
+    {
+      "id": "unicode-lone-surrogate",
+      "note": "An unpaired surrogate. JSON.stringify is well-formed (ES2019) and escapes it rather than emitting invalid UTF-8.",
+      "input": {
+        "s": "lone \ud834 end"
+      },
+      "canonical": {
+        "s": "lone \ud834 end"
+      },
+      "sha256": "5c4e65435a30ed263583d3b6e7648f3cd2ad54a8ee509dbefa5bb9d67e9d1de2"
+    },
+    {
+      "id": "unicode-key-vs-value",
+      "note": "The same string as key and as value.",
+      "input": {
+        "日本語": "日本語"
+      },
+      "canonical": {
+        "日本語": "日本語"
+      },
+      "sha256": "2b221b000ebe907259c37cd910c9d1509004d37987e56c8c385d5bac0455c1c4"
+    },
+    {
+      "id": "empty-object-vs-missing",
+      "note": "{} is not the same as an absent key.",
+      "input": {
+        "a": {},
+        "present": true
+      },
+      "canonical": {
+        "a": {},
+        "present": true
+      },
+      "sha256": "d20672d191f905ab969ae652086e19e3f9669983730632e4cc1ccc1c256151d6"
+    },
+    {
+      "id": "nested-transient-ids",
+      "note": "Transient replacement applies at any depth.",
+      "input": {
+        "outer": {
+          "id": "cand:deep1",
+          "inner": [
+            {
+              "id": "prereg:deep2"
+            }
+          ]
+        }
+      },
+      "canonical": {
+        "outer": {
+          "id": "cand:<id>",
+          "inner": [
+            {
+              "id": "prereg:<id>"
+            }
+          ]
+        }
+      },
+      "sha256": "901b99568add1da2e2f820c04875f6df05f1a7fb357ab5d9a02593f448e1289c"
+    },
+    {
+      "id": "timestamp-like-not-excluded",
+      "note": "Only the exact excluded key names are dropped; lookalikes such as createdAt, atRest and startedAt must survive.",
+      "input": {
+        "at": "DROPPED",
+        "createdAt": "kept",
+        "atRest": "kept",
+        "startedAt": "kept",
+        "generatedAtSource": "kept"
+      },
+      "canonical": {
+        "atRest": "kept",
+        "createdAt": "kept",
+        "generatedAtSource": "kept",
+        "startedAt": "kept"
+      },
+      "sha256": "e290aca26057753dbe8099ab857139be90bf06bfa13952bc883a5ceacea0e20d"
     }
-  ]
+  ],
+  "rejectionPolicy": {
+    "note": "JSON cannot represent these values. Silently encoding them (JSON.stringify turns NaN and Infinity into null) would collapse semantically distinct states, so canonicalization v1 rejects them with an explicit code and path.",
+    "rejected": [
+      {
+        "id": "reject-nan",
+        "input": {
+          "a": {
+            "$nan": true
+          }
+        },
+        "code": "CANONICALIZATION_UNSUPPORTED_NUMBER",
+        "path": "a"
+      },
+      {
+        "id": "reject-positive-infinity",
+        "input": {
+          "a": {
+            "$infinity": "+"
+          }
+        },
+        "code": "CANONICALIZATION_UNSUPPORTED_NUMBER",
+        "path": "a"
+      },
+      {
+        "id": "reject-negative-infinity",
+        "input": {
+          "deep": {
+            "b": {
+              "$infinity": "-"
+            }
+          }
+        },
+        "code": "CANONICALIZATION_UNSUPPORTED_NUMBER",
+        "path": "deep.b"
+      },
+      {
+        "id": "reject-unsafe-integer",
+        "input": {
+          "n": 1e+21
+        },
+        "code": "CANONICALIZATION_UNSUPPORTED_NUMBER",
+        "path": "n"
+      },
+      {
+        "id": "reject-large-integral-double",
+        "input": {
+          "n": 1.5e+300
+        },
+        "code": "CANONICALIZATION_UNSUPPORTED_NUMBER",
+        "path": "n"
+      },
+      {
+        "id": "reject-unsafe-integer-negative",
+        "input": {
+          "n": -9007199254740992
+        },
+        "code": "CANONICALIZATION_UNSUPPORTED_NUMBER",
+        "path": "n"
+      },
+      {
+        "id": "reject-bigint",
+        "input": {
+          "n": {
+            "$bigint": "10"
+          }
+        },
+        "code": "CANONICALIZATION_UNSUPPORTED_NUMBER",
+        "path": "n"
+      },
+      {
+        "id": "reject-in-array",
+        "input": {
+          "xs": [
+            1,
+            {
+              "$nan": true
+            }
+          ]
+        },
+        "code": "CANONICALIZATION_UNSUPPORTED_NUMBER",
+        "path": "xs[1]"
+      }
+    ]
+  }
 }

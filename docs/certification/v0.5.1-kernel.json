@@ -41,13 +41,13 @@
     },
     "canonicalizer": {
       "path": "test/oracle/canonicalize.mjs",
-      "sha256": "7126285d8516f07ee4a29f2547555f57d7fe9c32a785e528ec6cf4c7508e0141"
+      "sha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8"
     }
   },
   "release": {
     "kernelMergeCommitSha": "5777134ca3ae07620fb7d00b7653c094f01552a1",
     "referenceCommitSha": "804f767e2b9e9eb292c8368e60e9f3224a6a54f7",
-    "certifiedAtCommit": "35bcd79efb2bfa1577cccb4c7c6eaf2ad202155f",
+    "certifiedAtCommit": "3e1cbd07de7e5b5239bbbbd651951574ae25d890",
     "workflow": {
       "name": "kernel",
       "runId": "30141097317",

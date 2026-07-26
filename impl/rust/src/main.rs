@@ -391,6 +391,118 @@ const SHAPES: [&str; 11] = ["", "[batch,d]", "[BATCH,D]", "DAG", "dag", "scalar"
 const UNITS: [&str; 7] = ["", "probability", "Probability", "dimensionless", "logits", "L2-radius", "seconds"];
 const CLASSIFY_INPUTS: [Option<f64>; 9] = [None, Some(0.0), Some(24.0), Some(25.0), Some(26.0), Some(299.0), Some(300.0), Some(301.0), Some(5000.0)];
 
+// ------------------------------------------------------- schema normalization
+
+/// A raw, untrusted schema value as it arrives from extraction. Mirrors the
+/// JavaScript value domain closely enough to reproduce normSchema exactly —
+/// including that a JS array has `typeof === "object"` and so normalizes as an
+/// object with no ports rather than being rejected.
+#[derive(Clone)]
+enum Raw {
+    Null,
+    Num(f64),
+    Str(&'static str),
+    Arr(Vec<Raw>),
+    Obj(Vec<(&'static str, Raw)>),
+}
+
+impl Raw {
+    fn json(&self) -> J {
+        match self {
+            Raw::Null => J::Null,
+            Raw::Num(n) => J::N(*n),
+            Raw::Str(s) => J::s(s),
+            Raw::Arr(xs) => J::A(xs.iter().map(|x| x.json()).collect()),
+            Raw::Obj(kvs) => J::O(kvs.iter().map(|(k, v)| (k.to_string(), v.json())).collect()),
+        }
+    }
+    fn get(&self, key: &str) -> Option<&Raw> {
+        if let Raw::Obj(kvs) = self { kvs.iter().find(|(k, _)| *k == key).map(|(_, v)| v) } else { None }
+    }
+    /// JavaScript String(v) for the value classes the corpus exercises.
+    fn to_js_string(&self) -> String {
+        match self {
+            Raw::Null => "null".into(),
+            Raw::Num(n) => if n.fract() == 0.0 && n.abs() < 1e15 { format!("{}", *n as i64) } else { format!("{}", n) },
+            Raw::Str(s) => (*s).to_string(),
+            Raw::Arr(_) => String::new(),
+            Raw::Obj(_) => "[object Object]".into(),
+        }
+    }
+    fn as_str(&self) -> Option<&'static str> { if let Raw::Str(s) = self { Some(s) } else { None } }
+}
+
+/// normSchema, verbatim: non-objects become null; each port list is capped at
+/// four; an unknown kind fails closed to "claim"; "unspecified" shape/units
+/// collapse to ""; non-array metadata fields become empty arrays.
+fn norm_schema(s: &Raw) -> J {
+    let is_objectish = matches!(s, Raw::Obj(_) | Raw::Arr(_));
+    if !is_objectish { return J::Null; }
+
+    let norm_ports = |field: Option<&Raw>| -> J {
+        let items: Vec<Raw> = match field { Some(Raw::Arr(xs)) => xs.clone(), _ => vec![] };
+        J::A(items.iter().take(4).map(|p| {
+            let name = p.get("name").and_then(|v| v.as_str()).unwrap_or("");
+            let kind = match p.get("kind").and_then(|v| v.as_str()) {
+                Some(k) if MECH_KINDS.contains(&k) => k,
+                _ => "claim",
+            };
+            let collapse = |v: Option<&Raw>| -> String {
+                match v.and_then(|x| x.as_str()) {
+                    Some(x) if !x.is_empty() && x != "unspecified" => x.to_string(),
+                    _ => String::new(),
+                }
+            };
+            obj(vec![
+                ("name", J::s(name)), ("kind", J::s(kind)),
+                ("shape", J::S(collapse(p.get("shape")))), ("units", J::S(collapse(p.get("units")))),
+                ("semantics", J::s(p.get("semantics").and_then(|v| v.as_str()).unwrap_or(""))),
+            ])
+        }).collect())
+    };
+    let strs = |field: Option<&Raw>| -> J {
+        match field { Some(Raw::Arr(xs)) => J::A(xs.iter().map(|x| J::S(x.to_js_string())).collect()), _ => J::A(vec![]) }
+    };
+
+    obj(vec![
+        ("consumes", norm_ports(s.get("consumes"))),
+        ("produces", norm_ports(s.get("produces"))),
+        ("certifies", strs(s.get("certifies"))),
+        ("assumptions", strs(s.get("assumptions"))),
+        ("invariants", strs(s.get("invariants"))),
+    ])
+}
+
+/// The corpus normalization inputs, mirroring test/oracle/cases.mjs RAW_SCHEMAS.
+fn raw_schemas() -> Vec<Raw> {
+    vec![
+        Raw::Null,
+        Raw::Num(42.0),
+        Raw::Str("x"),
+        Raw::Arr(vec![]),
+        Raw::Obj(vec![]),
+        Raw::Obj(vec![
+            ("consumes", Raw::Str("nope")),
+            ("produces", Raw::Arr(vec![Raw::Obj(vec![
+                ("name", Raw::Str("p")), ("kind", Raw::Str("tensor")),
+                ("shape", Raw::Str("unspecified")), ("units", Raw::Str("unspecified")),
+                ("semantics", Raw::Str("s")),
+            ])])),
+        ]),
+        Raw::Obj(vec![
+            ("produces", Raw::Arr(vec![
+                Raw::Obj(vec![("kind", Raw::Str("not-a-kind"))]),
+                Raw::Obj(vec![("kind", Raw::Str("bound")), ("shape", Raw::Str("[n]")), ("units", Raw::Str("L2"))]),
+                Raw::Obj(vec![]),
+                Raw::Obj(vec![("kind", Raw::Str("trace"))]),
+                Raw::Obj(vec![("kind", Raw::Str("scalar"))]),
+            ])),
+            ("assumptions", Raw::Arr(vec![Raw::Num(1.0), Raw::Str("two")])),
+            ("invariants", Raw::Null),
+        ]),
+    ]
+}
+
 fn synth_cases() -> Vec<(SynthPort, SynthPort)> {
     vec![
         (SynthPort { kind: "tensor", name: None, semantics: Some("certified radius") },
@@ -484,6 +596,10 @@ fn build(case_id: &str) -> Option<J> {
             ])
         }).collect())),
 
+        "norm-schema" => Some(J::A(raw_schemas().iter().map(|r| obj(vec![
+            ("in", r.json()), ("out", norm_schema(r)),
+        ])).collect())),
+
         "classify-lit" => Some(J::A(CLASSIFY_INPUTS.iter().map(|c| obj(vec![
             ("in", match c { None => J::Null, Some(v) => J::N(*v) }),
             ("out", J::s(classify_lit(*c))),
@@ -502,7 +618,7 @@ fn main() {
     if args[1] == "--cases" {
         let supported = ["mech-kinds", "conv-rules", "multipath-kind-paths", "pair-compat",
                          "shape-compat", "unit-compat", "license-compat", "classify-lit",
-                         "synth-test"];
+                         "synth-test", "norm-schema"];
         println!("{}", J::A(supported.iter().map(|c| J::s(c)).collect()).to_json());
         return;
     }

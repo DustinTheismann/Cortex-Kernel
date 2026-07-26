@@ -4,7 +4,7 @@
     {
       "seq": 0,
       "releaseTag": "v0.5.1-kernel",
-      "certificateSha256": "1ea91c11f3940cb75a10db18b1095a6876aa07311203de54bdae953b6c0d9e6e",
+      "certificateSha256": "4ed8c034a3513f523f6a1eb585c769360e1925b9a0924b3992df0abdaac0b0f1",
       "fixtureCount": 41,
       "fixtureHashes": {
         "mech-kinds": "d8a99f3fd101bbc55a233bcc2a246dbdd2cc22439db7978bff9ef888c77d8ac6",
@@ -59,7 +59,7 @@
         "statement": "Genesis: the v0.5.1 behavioral baseline — 41 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation."
       },
       "previousEntrySha256": null,
-      "entrySha256": "a7855657179e860db4c124a26b3e6589f1e64ec915e34226b8be9e0dd72971f1"
+      "entrySha256": "16465d7902ee6ade178cc953879d89085b5ffe619d36896436bb8f1cc644c83a"
     }
   ]
 }
