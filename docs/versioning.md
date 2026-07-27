@@ -52,6 +52,23 @@ re-certification.
   `docs/backend-handoff.html`, are **immutable**. They are never edited; CI
   enforces byte identity.
 
+## Reference-compatible quirks
+
+Behaviors that are faithful to the frozen reference but arguably arise from a
+language artifact rather than an intended domain rule. They are **frozen for
+v0.5.1** and must be reproduced exactly by every conforming implementation. Each
+is a candidate for deliberate cleanup in a future version — never a bug to be
+quietly "fixed", because fixing one silently breaks conformance.
+
+| Quirk | Behavior | Why it exists | Candidate action |
+|---|---|---|---|
+| Array accepted as a schema | `normSchema([])` returns a fully-normalized schema with empty port lists, rather than `null` | JavaScript reports `typeof [] === "object"`, so the reference's `typeof s !== "object"` guard does not reject arrays | In a future version, reject non-plain-objects explicitly. Would change the `norm-schema` fixture and is therefore a MAJOR event. |
+| `String()` coercion of metadata | `assumptions: [1, "two"]` normalizes to `["1", "two"]` | The reference maps `String` over the array without type checking | Consider rejecting non-string metadata instead of coercing. |
+| Unknown kind fails closed to `claim` | Any unrecognized port kind becomes `claim` | Deliberate fail-closed default in the reference | Likely intended; document rather than change. |
+
+An implementation author who "corrects" any of these will fail conformance. That
+is the intended outcome: the corpus, not intuition, defines the behavior.
+
 ## Pre-1.0
 
 While below `1.0`, MINOR releases may adjust the public API with a documented
