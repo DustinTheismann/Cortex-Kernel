@@ -217,7 +217,19 @@ if (!only) {
     implementations: rows,
     interpretation: "An implementation conforms when every case it DECLARES reproduces the corpus hash byte-for-byte after canonicalization. Coverage is the fraction of the corpus it declares; partial coverage is legitimate, a failing declared case is not.",
   };
-  writeFileSync(join(root, "conformance/REPORT.json"), JSON.stringify(report, null, 2) + "\n");
+  // Environmental fields (when it ran, which CI job) are historical metadata,
+  // not evidence. Rewriting them on every invocation would dirty the working
+  // tree with timestamp-only diffs and make a real change indistinguishable
+  // from a re-run. So the report is written only when its SEMANTIC content
+  // changes; otherwise the existing environmental values are preserved.
+  const ENVIRONMENTAL = ["generatedAt", "ciRun"];
+  const semantic = (r) => { const c = { ...r }; for (const k of ENVIRONMENTAL) delete c[k]; return JSON.stringify(c); };
+  const reportPath = join(root, "conformance/REPORT.json");
+  let priorReport = null;
+  try { priorReport = JSON.parse(readFileSync(reportPath, "utf8")); } catch { /* first run */ }
+  const unchanged = priorReport && semantic(priorReport) === semantic(report);
+  if (unchanged) for (const k of ENVIRONMENTAL) report[k] = priorReport[k];
+  writeFileSync(reportPath, JSON.stringify(report, null, 2) + "\n");
 
   const md = [
     "# Conformance report",
