@@ -80,7 +80,7 @@ frozen reference ──▶ oracle ──▶ canonical fixtures ──▶ manifes
 | `packages/cortex-kernel/` | `@opensource-cortex/kernel` — framework-independent ESM extraction, no React/DOM/network |
 | `impl/rust/` | Independent Rust implementation of the deterministic core, certified against the same corpus |
 | `conformance/` | The domain-neutral apparatus: canonicalization spec, schemas, and a verifier that certifies **any** implementation |
-| `test/oracle/` · `test/golden/` | The behavioral oracle and the 41-case hashed corpus |
+| `test/oracle/` · `test/golden/` | The behavioral oracle and the 42-case hashed corpus |
 | `test/differential/` | Field-level comparator and the seeded oracle-vs-kernel fuzzer |
 | `research/` | Advisory frontier modules — read-only, never imported by the kernel |
 | `ledger/` | Certification chain: hash-linked semantic lineage across releases |
@@ -99,7 +99,7 @@ npm run verify        # the whole chain, in order
 | `reference-integrity` | The frozen artifact is byte-identical across every alias |
 | `oracle-check` | The corpus still matches the frozen source; deterministic double-build |
 | `kernel-unit` | Unit, metamorphic, witness and trace-invariance suites |
-| `kernel-golden` | The extraction reproduces **all 41** manifest hashes |
+| `kernel-golden` | The extraction reproduces **all 42** manifest hashes |
 | `kernel-differential` | Enabling the explainability trace never changes a decision hash |
 | `package-smoke` | The packed ESM artifact imports cleanly |
 | `determinism` | Repeated invocation is bit-stable |
@@ -111,6 +111,7 @@ npm run verify        # the whole chain, in order
 | `dependency-policy` | Both npm manifests and lock files remain dependency-free; the Rust package graph contains exactly the implementation crate itself. |
 | `canonicalization-vectors` | Adversarial language-neutral vectors pin absent/null/undefined distinctions, Unicode key ordering, array order, numeric edge cases, generated identifiers, and timestamp exclusion. |
 | `gate-inventory` | The workflow, README table, prose counts, and certificate describe the same gate set. |
+| `mutation-battery` | The corpus is discriminating: each semantic boundary in edge derivation, mutated one at a time, is caught by the corpus case that claims to pin it. |
 
 What the evidence does **not** establish is stated by the repository itself:
 

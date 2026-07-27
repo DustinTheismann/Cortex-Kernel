@@ -30,7 +30,7 @@ import { computeEdges, importBrainIndex, exportBrainIndex } from "../src/seriali
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const manifest = JSON.parse(readFileSync(join(root, "test/golden/manifest.json"), "utf8"));
 // Test inputs are shared with the oracle (they define the cases, not the behavior).
-const { SHAPES, UNITS, LICENSES, SYNTH_CASES, CLASSIFY_INPUTS, RAW_SCHEMAS, EDGE_CORPORA } = await import(join(root, "test/oracle/cases.mjs"));
+const { SHAPES, UNITS, LICENSES, SYNTH_CASES, CLASSIFY_INPUTS, RAW_SCHEMAS, EDGE_CORPORA, EDGE_CORPORA_BOUNDARIES } = await import(join(root, "test/oracle/cases.mjs"));
 const fixtureInput = (caseId) => JSON.parse(readFileSync(join(root, "test/golden/fixtures", caseId + ".json"), "utf8")).input;
 
 // Cascade categories run the full evaluateCascade over the fixture's input.
@@ -115,6 +115,11 @@ const PRODUCERS = {
   }),
   "classify-lit": () => ({ caseId: "classify-lit", category: "kernel", data: CLASSIFY_INPUTS.map((c) => ({ in: c, out: classifyLit(c) })) }),
   "norm-schema": () => ({ caseId: "norm-schema", category: "kernel", data: RAW_SCHEMAS.map((s) => ({ in: s, out: normSchema(s) })) }),
+  "compute-edges-boundaries": () => {
+    const corpora = {};
+    for (const [name, list] of Object.entries(EDGE_CORPORA_BOUNDARIES)) corpora[name] = computeEdges(list);
+    return { caseId: "compute-edges-boundaries", category: "kernel", data: corpora };
+  },
   "compute-edges": () => {
     const corpora = {};
     for (const [name, list] of Object.entries(EDGE_CORPORA)) corpora[name] = computeEdges(list);

@@ -106,6 +106,15 @@
       "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
+      "caseId": "compute-edges-boundaries",
+      "category": "kernel",
+      "fixture": "fixtures/compute-edges-boundaries.json",
+      "sha256": "8c584e224c954329d964519fe64bcc36fda79a8cb690587d30c65f4ff759a5b6",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
       "caseId": "directly-compatible",
       "category": "compatibility",
       "fixture": "fixtures/directly-compatible.json",

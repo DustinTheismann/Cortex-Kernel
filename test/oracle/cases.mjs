@@ -56,6 +56,49 @@ export const EDGE_CORPORA = {
   "empty": [],
 };
 
+/**
+ * Boundary corpora for edge derivation. The original EDGE_CORPORA exercise the
+ * happy path but are blind to several rules — mutation testing showed that
+ * disabling UBIQ filtering, permitting self-edges, widening the group-size
+ * bounds, or dropping the family-length guard all left the fixture green.
+ * These corpora make each of those rules observable.
+ */
+const rep = (id, extra = {}) => ({ id, name: id, topics: [], stars: 0, ...extra });
+const many = (n, f) => Array.from({ length: n }, (_, i) => f(i));
+
+export const EDGE_CORPORA_BOUNDARIES = {
+  // UBIQ: a pair sharing ONLY ubiquitous deps must produce no edge; a pair
+  // sharing two non-ubiquitous deps must. The original corpus never shared a
+  // ubiquitous dependency, so the filter was never exercised.
+  "ubiquitous-filter": [
+    rep("u1", { enriched: true, dependencies: ["react", "numpy", "lodash"] }),
+    rep("u2", { enriched: true, dependencies: ["react", "numpy", "ed25519"] }),
+    rep("u3", { enriched: true, dependencies: ["ed25519", "blake3"] }),
+    rep("u4", { enriched: true, dependencies: ["ed25519", "blake3", "react"] }),
+  ],
+  // A repo naming itself, and a dangling mention of a repo not in the corpus.
+  "self-and-dangling-mention": [
+    rep("s1", { name: "solo", mentionsRepos: ["solo", "ghost"] }),
+    rep("s2", { name: "other", mentionsRepos: ["solo"] }),
+  ],
+  // shared-language keeps groups of 2..14. Fifteen must be skipped entirely.
+  "language-group-over-bound": many(15, (i) => rep("L" + i, { language: "Go", stars: 15 - i })),
+  "language-group-at-bound": many(14, (i) => rep("K" + i, { language: "Zig", stars: 14 - i })),
+  // A one-character family token is rejected by the f.length < 2 guard.
+  "single-char-family": [rep("a-one", { name: "a-one" }), rep("a-two", { name: "a-two" }),
+                         rep("ab-one", { name: "ab-one" }), rep("ab-two", { name: "ab-two" })],
+  // naming-family keeps groups of 2..30. Thirty-one must be skipped.
+  "family-group-over-bound": many(31, (i) => rep("fam" + i, { name: "shared-" + i, stars: 31 - i })),
+  // shared-topic CAPS at 60 rather than skipping: 61 members yield 59 edges.
+  "topic-hub-cap": many(61, (i) => rep("t" + i, { topics: ["big"], stars: 61 - i })),
+  // Equal stars: the hub is decided by corpus order through a stable sort.
+  "star-ties": [rep("z1", { topics: ["tie"], stars: 5 }), rep("z2", { topics: ["tie"], stars: 5 }),
+                rep("z3", { topics: ["tie"], stars: 5 })],
+  // Two repos sharing a name: the later id wins in the name index.
+  "duplicate-names": [rep("dup-a", { name: "same" }), rep("dup-b", { name: "same" }),
+                      rep("dup-c", { name: "ref", mentionsRepos: ["same"] })],
+};
+
 // ---- (B) cascade cases (frozen verifyCascade steps 2-4) ------------------
 // expect: { stage, verdict, block, code } — asserted by the harness so the
 // frozen soft call's silent catch cannot yield a wrong fixture unnoticed.

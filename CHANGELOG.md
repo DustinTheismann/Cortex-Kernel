@@ -3,6 +3,33 @@
 All notable changes to this repository are documented here. Versioning follows
 [`docs/versioning.md`](docs/versioning.md).
 
+## [Unreleased]
+
+Corpus growth and cross-language coverage. No frozen behavior changed; every
+pre-existing fixture hash is untouched.
+
+### Added
+- `compute-edges-boundaries` corpus case (corpus 41 → 42): nine corpora that
+  reach the edge-derivation boundaries the happy-path case never touched —
+  ubiquitous-dependency filtering, self- and dangling mentions, language and
+  family group-size bounds at and over the limit, the single-character family
+  guard, the 60-member topic hub cap, star ties, and duplicate names.
+- Mutation battery (`conformance/mutants.mjs`, CI gate `mutation-battery`):
+  ten one-boundary-at-a-time mutations of the Rust peer, each required to be
+  caught by the corpus case that claims to pin it. Runs against a temp copy of
+  the crate; the working tree is never modified.
+- Rust peer: `compute-edges` and `compute-edges-boundaries`, completing the
+  `edge-derivation` subsystem (coverage 10/41 → 12/42).
+
+### Changed
+- `conformance/baseline.json` records what subsystem completion *means* —
+  declared cases plus zero surviving mutants — rather than a bare fraction.
+
+### Verified
+- The corpus is discriminating for edge derivation: 10/10 mutants killed.
+  Restricting the battery to the pre-existing `compute-edges` case alone leaves
+  8 of the 10 alive, which is the state that shipped before this change.
+
 ## [v0.5.1-kernel] — 2026-07-25
 
 The frozen v0.5.1 semantic kernel, extracted into a framework-independent

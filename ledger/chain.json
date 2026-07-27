@@ -4,8 +4,8 @@
     {
       "seq": 0,
       "releaseTag": "v0.5.1-kernel",
-      "certificateSha256": "4ed8c034a3513f523f6a1eb585c769360e1925b9a0924b3992df0abdaac0b0f1",
-      "fixtureCount": 41,
+      "certificateSha256": "2d04ae631bfb6bfc1e5676b3a9132d4e438a3ce87653d868e5ebf715aa9d3b9b",
+      "fixtureCount": 42,
       "fixtureHashes": {
         "mech-kinds": "d8a99f3fd101bbc55a233bcc2a246dbdd2cc22439db7978bff9ef888c77d8ac6",
         "conv-rules": "abd263247526102ae4b7e31a9b98d1a1b1fd8addd1130d33b2c5bc6172933ad5",
@@ -18,6 +18,7 @@
         "norm-schema": "101195e150988a3c8dd933d41dfe75f4a56bd36e10c478ef2f61dd385c3f3f02",
         "classify-lit": "2a5dd8caf3983fcb2db3ac57cb6b6f274691a3026c78d04f6cf42117fe17846f",
         "compute-edges": "ef1857656e7f67d90dd669f0d9737d3c96ab062138e80ea34a11f5f977e449a0",
+        "compute-edges-boundaries": "8c584e224c954329d964519fe64bcc36fda79a8cb690587d30c65f4ff759a5b6",
         "directly-compatible": "6d39c7a0e3a787b530488542944c3696e35d6d9ee09be3c83d531bc1fea3b309",
         "incompatible": "8171583e446191c4d856bff91743a4c43b1c664068655e73459ae7d5964ff9b2",
         "single-conversion-path": "ede6575f419ee6d61d586ef97bb06b573c9c7e3492efa157d9f9a80efe8a94b8",
@@ -55,11 +56,12 @@
         "removedFixtures": [],
         "changedFixtures": [],
         "unchangedFixtures": 0,
-        "baselineFixtures": 41,
-        "statement": "Genesis: the v0.5.1 behavioral baseline — 41 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation."
+        "baselineFixtures": 42,
+        "statement": "Genesis: the v0.5.1 behavioral baseline — 42 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation whose edge-derivation coverage is mutation-tested."
       },
       "previousEntrySha256": null,
-      "entrySha256": "16465d7902ee6ade178cc953879d89085b5ffe619d36896436bb8f1cc644c83a"
+      "restatements": 1,
+      "entrySha256": "4d21aa15d41e8d82c974e0d50f61aa33e10ac7ca62293984d56bec35a2f9ea08"
     }
   ]
 }

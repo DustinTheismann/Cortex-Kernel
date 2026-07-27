@@ -1,0 +1,575 @@
+{
+  "caseId": "compute-edges-boundaries",
+  "category": "kernel",
+  "data": {
+    "duplicate-names": [
+      {
+        "evidence": "ref's README mentions same",
+        "source": "dup-c",
+        "target": "dup-b",
+        "type": "readme-reference",
+        "weight": 3
+      },
+      {
+        "evidence": "naming family: same-*",
+        "source": "dup-a",
+        "target": "dup-b",
+        "type": "naming-family",
+        "weight": 2
+      }
+    ],
+    "family-group-over-bound": [],
+    "language-group-at-bound": [
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K1",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K2",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K3",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K4",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K5",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K6",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K7",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K8",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K9",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K10",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K11",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K12",
+        "type": "shared-language",
+        "weight": 1
+      },
+      {
+        "evidence": "both Zig",
+        "source": "K0",
+        "target": "K13",
+        "type": "shared-language",
+        "weight": 1
+      }
+    ],
+    "language-group-over-bound": [],
+    "self-and-dangling-mention": [
+      {
+        "evidence": "other's README mentions solo",
+        "source": "s2",
+        "target": "s1",
+        "type": "readme-reference",
+        "weight": 3
+      }
+    ],
+    "single-char-family": [
+      {
+        "evidence": "naming family: ab-*",
+        "source": "ab-one",
+        "target": "ab-two",
+        "type": "naming-family",
+        "weight": 2
+      }
+    ],
+    "star-ties": [
+      {
+        "evidence": "topic: tie",
+        "source": "z1",
+        "target": "z2",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: tie",
+        "source": "z1",
+        "target": "z3",
+        "type": "shared-topic",
+        "weight": 1
+      }
+    ],
+    "topic-hub-cap": [
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t1",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t2",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t3",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t4",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t5",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t6",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t7",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t8",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t9",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t10",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t11",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t12",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t13",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t14",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t15",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t16",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t17",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t18",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t19",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t20",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t21",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t22",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t23",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t24",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t25",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t26",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t27",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t28",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t29",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t30",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t31",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t32",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t33",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t34",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t35",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t36",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t37",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t38",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t39",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t40",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t41",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t42",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t43",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t44",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t45",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t46",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t47",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t48",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t49",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t50",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t51",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t52",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t53",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t54",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t55",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t56",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t57",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t58",
+        "type": "shared-topic",
+        "weight": 1
+      },
+      {
+        "evidence": "topic: big",
+        "source": "t0",
+        "target": "t59",
+        "type": "shared-topic",
+        "weight": 1
+      }
+    ],
+    "ubiquitous-filter": [
+      {
+        "evidence": "deps: ed25519, blake3",
+        "source": "u3",
+        "target": "u4",
+        "type": "shared-dependency",
+        "weight": 2
+      }
+    ]
+  }
+}

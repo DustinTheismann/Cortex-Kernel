@@ -49,6 +49,7 @@ const SEMANTIC_AREAS = {
   "synth-test": ["property-test-skeleton"],
   "norm-schema": ["schema-normalization"],
   "compute-edges": ["edge-derivation", "serialization"],
+  "compute-edges-boundaries": ["edge-derivation", "group-size-bounds", "tie-breaking", "serialization"],
 };
 const areasFor = (caseId, category) => SEMANTIC_AREAS[caseId] || {
   compatibility: ["compatibility", "cascade"], planning: ["multipath-planning", "ranking", "cascade"],

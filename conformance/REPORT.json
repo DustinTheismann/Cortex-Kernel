@@ -1,20 +1,20 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-27T03:02:01.669Z",
+  "generatedAt": "2026-07-27T12:39:13.226Z",
   "ciRun": null,
   "integrity": {
-    "manifestSha256": "08f6c59234f0a1304a5844f327cac3a365afd1a8c6ab00d12241d6a026d14646",
+    "manifestSha256": "9f1d8ffc34c71a1bef4c77465c09b3e3c25b7de3a331e9cc9d817577174c27cd",
     "canonicalizationSpecSha256": "5ed64bf745d2e41c8287052859200711f879ba605d8b5c3fa17ee9d91c267d1d",
     "canonicalizerSha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8",
-    "verifierSha256": "1f779c9667391b73ca1834a3ed62851c45fad73a16191e2d4605d6067c203625",
-    "baselineSha256": "e5404eaf4781310349cd107610b9064aee08c6246a88ffb4957205bc2957277b",
+    "verifierSha256": "6f01550b6e3692f2f0349a750dbd4fd338d0e6a7b1ae00c2021da789a9ef0342",
+    "baselineSha256": "7ee4cc5e2ff6e6e3f2f34f67cb9fae00202694d3e665c0cd31194e78e7e1eb2d",
     "referenceSourceSha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
   },
   "corpus": {
     "oracle": "v0.5.1",
     "schemaVersion": 7,
     "canonicalizationVersion": 1,
-    "fixtures": 41
+    "fixtures": 42
   },
   "reference": {
     "source": "reference/src/cortex-v0.5.1.jsx",
@@ -25,8 +25,8 @@
       "implementation": "rust",
       "language": "Rust",
       "status": "pass",
-      "fixtures": "10/41",
-      "canonicalHashesIdentical": 10,
+      "fixtures": "12/42",
+      "canonicalHashesIdentical": 12,
       "declaredCasesFailing": 0,
       "cases": [
         "mech-kinds",
@@ -38,12 +38,16 @@
         "license-compat",
         "classify-lit",
         "synth-test",
-        "norm-schema"
+        "norm-schema",
+        "compute-edges",
+        "compute-edges-boundaries"
       ],
       "semanticAreasCovered": [
         "compatibility",
         "depth-cap",
         "edge-cost",
+        "edge-derivation",
+        "group-size-bounds",
         "impossibility",
         "license-screening",
         "literature-classification",
@@ -54,18 +58,17 @@
         "registry",
         "schema-normalization",
         "selected-path-ordering",
+        "serialization",
         "tie-breaking",
         "types"
       ],
       "semanticAreasUncovered": [
         "cascade",
         "contract-instantiation",
-        "edge-derivation",
         "error-handling",
         "import-export",
         "literature-assessment",
         "obligations",
-        "serialization",
         "stage-advancement",
         "verdict-derivation"
       ],
@@ -175,10 +178,22 @@
         {
           "fixture": "compute-edges",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "edge-derivation",
+            "serialization"
+          ]
+        },
+        {
+          "fixture": "compute-edges-boundaries",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "edge-derivation",
+            "group-size-bounds",
+            "tie-breaking",
             "serialization"
           ]
         },
@@ -493,7 +508,7 @@
           ]
         }
       ],
-      "binarySha256": "1568e711cfa1d0e40b0ebc43c2b4cd1ca39f2c3900e02f87d4b9a0eeab6abf37",
+      "binarySha256": "ede78007f8fb2c99f37e7b55363b9a86c0d02cca89d848a0e5de72ad19d5c426",
       "toolchain": {
         "compiler": "rustc 1.94.1 (e408947bf 2026-03-25)",
         "targetTriple": "x86_64-unknown-linux-gnu",

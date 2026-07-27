@@ -9,7 +9,7 @@ and never modify parity work.
 - ✓ **Frozen reference** — the v0.5.1 standalone preserved as the executable
   specification, with its full lineage (`v0.5.1-reference`).
 - ✓ **Behavioral oracle** — the frozen source sliced verbatim and executed
-  headless; 41-case golden corpus with per-case hashes, coverage map, and
+  headless; 42-case golden corpus with per-case hashes, coverage map, and
   documented extraction blockers.
 - ✓ **Framework-independent extraction** — `@opensource-cortex/kernel`, pure
   ESM, no React/DOM/network, reproducing every fixture byte-for-byte
@@ -44,7 +44,9 @@ and never modify parity work.
 ## Medium term
 
 - ☐ **Rust coverage to parity** — extend the Rust implementation from the
-  deterministic core (8/41) through the cascade and serialization to 41/41.
+  deterministic core and edge derivation (12/42) through the cascade and
+  serialization to 42/42. Each increment closes a subsystem and must leave the
+  mutation battery at zero survivors, not merely raise the fraction.
 - ☐ **Further ports** — Python and Go against the *same* corpus. The corpus,
   not the JavaScript, is the specification.
 - ☐ **Close SO-8** — exhaustive symbolic execution or a machine-checked

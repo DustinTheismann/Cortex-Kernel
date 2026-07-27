@@ -19,7 +19,8 @@
     "frontier-map",
     "dependency-policy",
     "canonicalization-vectors",
-    "gate-inventory"
+    "gate-inventory",
+    "mutation-battery"
   ],
   "evidence": {
     "referenceSource": {
@@ -30,10 +31,10 @@
     "oracleVersion": "v0.5.1",
     "canonicalizationVersion": 1,
     "schemaVersion": 7,
-    "fixtureCount": 41,
+    "fixtureCount": 42,
     "manifest": {
       "path": "test/golden/manifest.json",
-      "sha256": "08f6c59234f0a1304a5844f327cac3a365afd1a8c6ab00d12241d6a026d14646"
+      "sha256": "9f1d8ffc34c71a1bef4c77465c09b3e3c25b7de3a331e9cc9d817577174c27cd"
     },
     "invariantVersion": {
       "set": "test/oracle/invariants.mjs",
@@ -47,7 +48,7 @@
   "release": {
     "kernelMergeCommitSha": "5777134ca3ae07620fb7d00b7653c094f01552a1",
     "referenceCommitSha": "804f767e2b9e9eb292c8368e60e9f3224a6a54f7",
-    "certifiedAtCommit": "3e1cbd07de7e5b5239bbbbd651951574ae25d890",
+    "certifiedAtCommit": "d0d060a3b9e489baedd5b00d65350a897e9ab19e",
     "workflow": {
       "name": "kernel",
       "runId": "30141097317",

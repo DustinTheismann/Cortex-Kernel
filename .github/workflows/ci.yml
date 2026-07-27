@@ -109,3 +109,14 @@ jobs:
       # workflow is the source of truth and every other inventory must match.
       - name: gate-inventory
         run: npm run gates
+
+      # Gate 16: the corpus must be DISCRIMINATING, not merely agreed-with. A
+      # green conformance run proves one implementation matches the fixtures;
+      # it says nothing about whether the fixtures reach the boundaries they
+      # claim to pin. This gate mutates one semantic boundary at a time in the
+      # Rust peer and requires the named corpus case to catch each. A surviving
+      # mutant is a corpus defect and fails here — which is how the original
+      # edge-derivation blind spot (four rules unpinned behind a green 11/41)
+      # would have been caught at the time rather than by hand afterwards.
+      - name: mutation-battery
+        run: npm run mutants

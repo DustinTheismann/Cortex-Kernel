@@ -48,6 +48,20 @@ const fuzz = tryRun("node", ["test/differential/fuzz.mjs", "--cases=500"]);
 const conformance = has("impl/rust/target/release/cortex-conformance")
   ? tryRun("node", ["conformance/verify.mjs"])
   : { ok: null };
+const mutants = has("impl/rust/target/release/cortex-conformance")
+  ? tryRun("node", ["conformance/mutants.mjs"])
+  : { ok: null };
+
+// Which subsystems the mutation battery actually covers. Everything the corpus
+// pins WITHOUT a mutation test is pinned only by assumption — the state edge
+// derivation was in when it reproduced its hash while four of its rules could
+// be violated freely.
+const mutationScope = ["edge-derivation"];
+const declaredSubsystems = (() => {
+  try { return readJson("conformance/baseline.json").implementations.rust.subsystemsComplete; }
+  catch { return []; }
+})();
+const unMutated = declaredSubsystems.filter((s) => !mutationScope.includes(s));
 
 const OBLIGATIONS = [
   { id: "SO-1", name: "Package exists and imports without side effects", method: "deterministic",
@@ -80,6 +94,22 @@ const OBLIGATIONS = [
       ? "conformance binary not built — run npm run conformance:build"
       : "a second, independently written implementation reproduces its declared subset; coverage is partial" },
 
+  // Every other obligation asks whether the implementations match the corpus.
+  // This one asks whether the CORPUS IS WORTH MATCHING. They are independent:
+  // edge derivation reproduced its hash for an entire release while four of its
+  // rules could be violated without any fixture noticing, because the corpus
+  // never reached those boundaries. A green corpus is only as strong as its
+  // discrimination, and until now nothing here measured that.
+  { id: "SO-9", name: "The corpus discriminates the semantics it claims to pin", method: "deterministic",
+    status: mutants.ok === null ? "UNRESOLVED" : (mutants.ok ? "CONDITIONALLY-SATISFIED" : "REFUTED"),
+    detail: mutants.ok === null
+      ? "conformance binary not built — run npm run conformance:build"
+      : `every seeded semantic mutation of ${mutationScope.join(", ")} is caught by the case that claims to pin it; `
+        + (unMutated.length
+          ? `${unMutated.length} declared subsystem(s) have no mutation coverage and are pinned by assumption: ${unMutated.join(", ")}`
+          : "every declared subsystem is mutation-covered"),
+    falsifier: "A semantic mutation of a declared subsystem that the corpus does not catch." },
+
   { id: "SO-8", name: "Mechanized refinement proof", method: "formal",
     status: "UNRESOLVED",
     detail: "no proof assistant, model checker, or exhaustive symbolic execution is present. The deterministic core is finite-state and tractable to verify formally; until that exists this obligation is open." },
@@ -94,7 +124,7 @@ const supported = (id) => ["PROVED", "CONDITIONALLY-SATISFIED"].includes(byId(id
 const pathFound = proved("SO-1");
 const typeComposable = pathFound && proved("SO-2");
 const contractAdmissible = typeComposable && proved("SO-3") && proved("SO-4") && proved("SO-5");
-const epistemicallySupported = contractAdmissible && supported("SO-6") && supported("SO-7");
+const epistemicallySupported = contractAdmissible && supported("SO-6") && supported("SO-7") && supported("SO-9");
 const verified = epistemicallySupported && proved("SO-8");
 
 const stage = verified ? "VERIFIED"

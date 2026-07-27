@@ -21,6 +21,7 @@ import { checkDecision, checkExport, checkImport } from "./invariants.mjs";
 import {
   SHAPES, UNITS, LICENSES, SYNTH_CASES, RAW_SCHEMAS, CLASSIFY_INPUTS, EDGE_CORPORA,
   CASCADE_CASES, CROSS_CASE_CLAIMS, IMPORT_CASES, MALFORMED_CASES, EXPORT_CASES, ROUNDTRIP_CASES,
+  EDGE_CORPORA_BOUNDARIES,
 } from "./cases.mjs";
 
 const ORACLE_VERSION = "v0.5.1";
@@ -65,6 +66,8 @@ const buildCorpus = async () => {
   add("classify-lit", "kernel", { data: CLASSIFY_INPUTS.map((c) => ({ in: c, out: K.classifyLit(c) })) });
   const corpora = {}; for (const [name, list] of Object.entries(EDGE_CORPORA)) corpora[name] = K.computeEdges(list);
   add("compute-edges", "kernel", { data: corpora });
+  const boundaries = {}; for (const [name, list] of Object.entries(EDGE_CORPORA_BOUNDARIES)) boundaries[name] = K.computeEdges(list);
+  add("compute-edges-boundaries", "kernel", { data: boundaries });
 
   // (B) cascade decisions
   for (const c of CASCADE_CASES) {

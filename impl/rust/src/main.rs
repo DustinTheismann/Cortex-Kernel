@@ -358,6 +358,215 @@ fn classify_lit(count: Option<f64>) -> &'static str {
     }
 }
 
+// ------------------------------------------------------------ edge derivation
+
+/// A repository as the edge-derivation corpora carry it. Only the fields
+/// computeEdges reads are modelled; absent metadata is an empty collection,
+/// matching the reference's `(x || [])` guards.
+struct Repo {
+    id: String,
+    name: String,
+    topics: Vec<String>,
+    stars: f64,
+    mentions: Vec<String>,
+    enriched: bool,
+    deps: Vec<String>,
+    language: Option<String>,
+}
+
+fn repo(
+    id: &str, name: &str, topics: &[&str], stars: f64,
+    mentions: &[&str], enriched: bool, deps: &[&str], language: Option<&str>,
+) -> Repo {
+    Repo {
+        id: id.into(), name: name.into(),
+        topics: topics.iter().map(|s| s.to_string()).collect(), stars,
+        mentions: mentions.iter().map(|s| s.to_string()).collect(), enriched,
+        deps: deps.iter().map(|s| s.to_string()).collect(),
+        language: language.map(|s| s.to_string()),
+    }
+}
+
+struct Edge { source: String, target: String, etype: &'static str, weight: f64, evidence: String }
+
+impl Edge {
+    fn json(&self) -> J {
+        obj(vec![
+            ("source", J::S(self.source.clone())), ("target", J::S(self.target.clone())),
+            ("type", J::s(self.etype)), ("weight", J::N(self.weight)),
+            ("evidence", J::S(self.evidence.clone())),
+        ])
+    }
+}
+
+/// Dependencies too common to carry signal — excluded from shared-dependency.
+const UBIQUITOUS: [&str; 15] = [
+    "react", "typescript", "numpy", "requests", "lodash", "express", "jest", "pytest",
+    "eslint", "prettier", "webpack", "vite", "axios", "scipy", "pandas",
+];
+
+/// The naming family of a repo: the first token before any of - _ . / or space.
+fn fam(name: &str) -> String {
+    let head = name.split(|c| c == '-' || c == '_' || c == '.' || c == '/' || c == ' ').next().unwrap_or("");
+    let head = if head.is_empty() { name } else { head };
+    head.to_lowercase()
+}
+
+/// Insertion-ordered grouping. JavaScript objects preserve string-key insertion
+/// order and the reference iterates them with Object.entries, so a hash map
+/// would produce a different edge order.
+fn group_by<'a, F: Fn(&'a Repo) -> Vec<String>>(list: &'a [Repo], key: F) -> Vec<(String, Vec<&'a Repo>)> {
+    let mut groups: Vec<(String, Vec<&Repo>)> = Vec::new();
+    for r in list {
+        for k in key(r) {
+            match groups.iter_mut().find(|(gk, _)| *gk == k) {
+                Some((_, v)) => v.push(r),
+                None => groups.push((k, vec![r])),
+            }
+        }
+    }
+    groups
+}
+
+/// Star-descending, STABLE — ties keep corpus order, which decides the hub.
+fn by_stars_desc<'a>(g: &[&'a Repo]) -> Vec<&'a Repo> {
+    let mut v: Vec<&Repo> = g.to_vec();
+    v.sort_by(|a, b| b.stars.partial_cmp(&a.stars).unwrap());
+    v
+}
+
+/// computeEdges, verbatim. Edge-type order is observable and fixed:
+/// readme-reference, shared-topic, shared-dependency, naming-family,
+/// shared-language. Every relation is hub-and-spoke rather than pairwise,
+/// except shared-dependency which is pairwise over the enriched subset.
+fn compute_edges(list: &[Repo]) -> Vec<Edge> {
+    let mut edges: Vec<Edge> = Vec::new();
+
+    // id by name; a later repo with the same name overwrites an earlier one.
+    let mut id_by_name: Vec<(&str, &str)> = Vec::new();
+    for r in list {
+        match id_by_name.iter_mut().find(|(n, _)| *n == r.name.as_str()) {
+            Some((_, id)) => *id = r.id.as_str(),
+            None => id_by_name.push((r.name.as_str(), r.id.as_str())),
+        }
+    }
+    let lookup = |n: &str| id_by_name.iter().find(|(k, _)| *k == n).map(|(_, v)| *v);
+
+    // readme-reference: directed, and never a self-reference by NAME.
+    for a in list {
+        for bn in &a.mentions {
+            if let Some(target) = lookup(bn) {
+                if *bn != a.name {
+                    edges.push(Edge { source: a.id.clone(), target: target.into(), etype: "readme-reference", weight: 3.0,
+                        evidence: format!("{}'s README mentions {}", a.name, bn) });
+                }
+            }
+        }
+    }
+
+    // shared-topic: each member linked to the topic's star-hub, capped at 60.
+    for (t, g) in group_by(list, |r| r.topics.clone()) {
+        if g.len() < 2 { continue; }
+        let grp: Vec<&Repo> = by_stars_desc(&g).into_iter().take(60).collect();
+        for m in grp.iter().skip(1) {
+            edges.push(Edge { source: grp[0].id.clone(), target: m.id.clone(), etype: "shared-topic", weight: 1.0,
+                evidence: format!("topic: {}", t) });
+        }
+    }
+
+    // shared-dependency: pairwise over the enriched subset, ubiquitous
+    // dependencies excluded, at least two shared to qualify.
+    let enr: Vec<&Repo> = list.iter().filter(|r| r.enriched && !r.deps.is_empty()).collect();
+    if enr.len() * enr.len().saturating_sub(1) / 2 <= 80000 {
+        for i in 0..enr.len() {
+            for j in (i + 1)..enr.len() {
+                let sd: Vec<&String> = enr[i].deps.iter()
+                    .filter(|d| enr[j].deps.contains(d) && !UBIQUITOUS.contains(&d.as_str())).collect();
+                if sd.len() >= 2 {
+                    edges.push(Edge { source: enr[i].id.clone(), target: enr[j].id.clone(), etype: "shared-dependency",
+                        weight: sd.len() as f64,
+                        evidence: format!("deps: {}", sd.iter().take(5).map(|s| s.as_str()).collect::<Vec<_>>().join(", ")) });
+                }
+            }
+        }
+    }
+
+    // naming-family: family token must itself be >= 2 chars; group 2..=30.
+    for (f, g) in group_by(list, |r| vec![fam(&r.name)]) {
+        if f.chars().count() < 2 || g.len() < 2 || g.len() > 30 { continue; }
+        let grp = by_stars_desc(&g);
+        for m in grp.iter().skip(1) {
+            edges.push(Edge { source: grp[0].id.clone(), target: m.id.clone(), etype: "naming-family", weight: 2.0,
+                evidence: format!("naming family: {}-*", f) });
+        }
+    }
+
+    // shared-language: weak signal, so only modest groups (2..=14).
+    for (l, g) in group_by(list, |r| r.language.clone().map(|x| vec![x]).unwrap_or_default()) {
+        if g.len() < 2 || g.len() > 14 { continue; }
+        let grp = by_stars_desc(&g);
+        for m in grp.iter().skip(1) {
+            edges.push(Edge { source: grp[0].id.clone(), target: m.id.clone(), etype: "shared-language", weight: 1.0,
+                evidence: format!("both {}", l) });
+        }
+    }
+
+    edges
+}
+
+/// The edge-derivation corpora, mirroring test/oracle/cases.mjs EDGE_CORPORA.
+fn edge_corpora() -> Vec<(&'static str, Vec<Repo>)> {
+    vec![
+        ("readme-and-topic", vec![
+            repo("r1", "alpha", &["opt"], 10.0, &["beta"], false, &[], None),
+            repo("r2", "beta", &["opt"], 5.0, &[], false, &[], None),
+            repo("r3", "gamma", &["opt"], 2.0, &[], false, &[], None),
+        ]),
+        ("shared-dependency", vec![
+            repo("d1", "one", &[], 0.0, &[], true, &["ed25519", "blake3", "numpy"], None),
+            repo("d2", "two", &[], 0.0, &[], true, &["ed25519", "blake3", "react"], None),
+            repo("d3", "three", &[], 0.0, &[], true, &["ed25519"], None),
+        ]),
+        ("naming-family-and-language", vec![
+            repo("f1", "core-engine", &[], 9.0, &[], false, &[], Some("Rust")),
+            repo("f2", "core-cli", &[], 4.0, &[], false, &[], Some("Rust")),
+            repo("f3", "core-docs", &[], 1.0, &[], false, &[], Some("Python")),
+            repo("f4", "unrelated", &[], 7.0, &[], false, &[], Some("Rust")),
+        ]),
+        ("empty", vec![]),
+    ]
+}
+
+/// Boundary corpora: each makes a rule observable that the happy-path corpora
+/// leave unexercised — UBIQ filtering, self-mention rejection, group-size
+/// bounds, the family-length guard, the topic hub cap, and tie-breaking.
+fn edge_corpora_boundaries() -> Vec<(&'static str, Vec<Repo>)> {
+    let plain = |id: &str| repo(id, id, &[], 0.0, &[], false, &[], None);
+    vec![
+        ("ubiquitous-filter", vec![
+            repo("u1", "u1", &[], 0.0, &[], true, &["react", "numpy", "lodash"], None),
+            repo("u2", "u2", &[], 0.0, &[], true, &["react", "numpy", "ed25519"], None),
+            repo("u3", "u3", &[], 0.0, &[], true, &["ed25519", "blake3"], None),
+            repo("u4", "u4", &[], 0.0, &[], true, &["ed25519", "blake3", "react"], None),
+        ]),
+        ("self-and-dangling-mention", vec![
+            repo("s1", "solo", &[], 0.0, &["solo", "ghost"], false, &[], None),
+            repo("s2", "other", &[], 0.0, &["solo"], false, &[], None),
+        ]),
+        ("language-group-over-bound", (0..15).map(|i| repo(&format!("L{}", i), &format!("L{}", i), &[], (15 - i) as f64, &[], false, &[], Some("Go"))).collect()),
+        ("language-group-at-bound", (0..14).map(|i| repo(&format!("K{}", i), &format!("K{}", i), &[], (14 - i) as f64, &[], false, &[], Some("Zig"))).collect()),
+        ("single-char-family", vec![plain("a-one"), plain("a-two"), plain("ab-one"), plain("ab-two")]),
+        ("family-group-over-bound", (0..31).map(|i| repo(&format!("fam{}", i), &format!("shared-{}", i), &[], (31 - i) as f64, &[], false, &[], None)).collect()),
+        ("topic-hub-cap", (0..61).map(|i| repo(&format!("t{}", i), &format!("t{}", i), &["big"], (61 - i) as f64, &[], false, &[], None)).collect()),
+        ("star-ties", (1..=3).map(|i| repo(&format!("z{}", i), &format!("z{}", i), &["tie"], 5.0, &[], false, &[], None)).collect()),
+        ("duplicate-names", vec![
+            repo("dup-a", "same", &[], 0.0, &[], false, &[], None),
+            repo("dup-b", "same", &[], 0.0, &[], false, &[], None),
+            repo("dup-c", "ref", &[], 0.0, &["same"], false, &[], None),
+        ]),
+    ]
+}
+
 // --------------------------------------------------------------- corpus cases
 
 /// A port as the synth-test fixture carries it: `kind` plus optionally a
@@ -600,6 +809,14 @@ fn build(case_id: &str) -> Option<J> {
             ("in", r.json()), ("out", norm_schema(r)),
         ])).collect())),
 
+        "compute-edges" => Some(J::O(edge_corpora().iter().map(|(name, list)| {
+            (name.to_string(), J::A(compute_edges(list).iter().map(|e| e.json()).collect()))
+        }).collect())),
+
+        "compute-edges-boundaries" => Some(J::O(edge_corpora_boundaries().iter().map(|(name, list)| {
+            (name.to_string(), J::A(compute_edges(list).iter().map(|e| e.json()).collect()))
+        }).collect())),
+
         "classify-lit" => Some(J::A(CLASSIFY_INPUTS.iter().map(|c| obj(vec![
             ("in", match c { None => J::Null, Some(v) => J::N(*v) }),
             ("out", J::s(classify_lit(*c))),
@@ -618,7 +835,8 @@ fn main() {
     if args[1] == "--cases" {
         let supported = ["mech-kinds", "conv-rules", "multipath-kind-paths", "pair-compat",
                          "shape-compat", "unit-compat", "license-compat", "classify-lit",
-                         "synth-test", "norm-schema"];
+                         "synth-test", "norm-schema", "compute-edges",
+                         "compute-edges-boundaries"];
         println!("{}", J::A(supported.iter().map(|c| J::s(c)).collect()).to_json());
         return;
     }

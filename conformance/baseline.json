@@ -1,7 +1,8 @@
 {
   "policy": "monotonic-declared-support",
   "rationale": "An implementation's declared corpus may only grow. Without this, a regression can be hidden by silently dropping the failing case: 8/8 stays green while coverage quietly falls to 7. Reducing declared support is therefore a deliberate, reviewable act \u2014 it requires editing this file, which appears as a visible diff and demands a justification.",
-  "enforcement": "conformance/verify.mjs fails when an implementation declares fewer cases than its baseline, naming every dropped case. CI gate 14.",
+  "enforcement": "conformance/verify.mjs fails when an implementation declares fewer cases than its baseline, naming every dropped case.",
+  "subsystemCompletionMeaning": "A subsystem is listed complete when every corpus case exercising it is declared AND the mutation battery (conformance/mutants.mjs) shows the corpus kills each semantic mutation of that subsystem's rules. Coverage counted only as a fraction is not evidence: before the boundary corpus landed, edge derivation reproduced its declared hash while eight of ten semantic mutations survived undetected.",
   "authorizedReductionRequires": [
     "an explicit edit to this file recording the dropped cases and why",
     "a justification naming the regression or protocol change",
@@ -11,6 +12,8 @@
     "rust": {
       "declared": [
         "classify-lit",
+        "compute-edges",
+        "compute-edges-boundaries",
         "conv-rules",
         "license-compat",
         "mech-kinds",
@@ -27,6 +30,7 @@
       "subsystemsComplete": [
         "compatibility",
         "edge-cost",
+        "edge-derivation",
         "license-screening",
         "literature-classification",
         "multipath-planning",
