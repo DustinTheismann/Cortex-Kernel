@@ -54,7 +54,7 @@ const SEMANTIC_AREAS = {
 // Cascade categories carry `cascade-`-prefixed area names. They previously
 // reused `compatibility` and `multipath-planning`, which made those areas mean
 // two different things — the deterministic predicate/planner surface, and the
-// cascade stage built on top of it. The collision let `subsystemsComplete`
+// cascade stage built on top of it. The collision let `fixtureCompleteSubsystems`
 // claim a subsystem the implementation had only half-covered, and the claim was
 // invisible until the subsystem table below started reporting fixture status.
 const areasFor = (caseId, category) => SEMANTIC_AREAS[caseId] || {
@@ -81,7 +81,7 @@ const mutationBinds = mutationReport
   && mutationReport.scope === "all";
 
 const subsystemReport = (impl, coverageMap) => {
-  const declared = ((baseline.implementations[impl.id] || {}).subsystemsComplete) || [];
+  const declared = ((baseline.implementations[impl.id] || {}).fixtureCompleteSubsystems) || [];
   const assessed = new Map((mutationReport ? mutationReport.subsystems : []).map((s) => [s.subsystem, s]));
   return declared.map((subsystem) => {
     const rows = coverageMap.filter((r) => r.semanticAreas.includes(subsystem));

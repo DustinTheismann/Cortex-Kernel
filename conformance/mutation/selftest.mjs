@@ -39,12 +39,13 @@ const ctx = (over = {}) => ({
   workDir: "/nonexistent",
   build: () => ({ binaryHash: "mutant" }),
   execute: () => CORRECT,
+  declared: () => [CASE],
   ...over,
 });
 
 const mutant = (over = {}) => ({
   id: "synthetic", subsystem: "synthetic", rule: "a synthetic rule",
-  find: "SITE_PRESENT", replace: "SITE_MUTATED",
+  find: "SITE_PRESENT", replace: "SITE_MUTATED", expectedOccurrences: 1,
   expectedKillers: [CASE], expectedFailure: "SYNTHETIC_VIOLATION",
   assert: () => true,
   ...over,
@@ -97,10 +98,46 @@ test("killed_incidentally: an assertion that throws is not a kill", () => {
   assert.match(problem, /assertion threw/);
 });
 
+test("killed_incidentally: the mutation escaped its subsystem and perturbed a control", () => {
+  // A declared case outside the scope stops reproducing: the divergence in
+  // scope is real, but the mutation was not confined to the named boundary.
+  const { record, problem } = runMutant(mutant(), ctx({
+    declared: () => [CASE, "compute-edges"],
+    execute: (b, id) => (id === CASE ? DIVERGENT : {}),
+  }));
+  assert.equal(record.outcome, "killed_incidentally");
+  assert.deepEqual(record.collateralDivergence, ["compute-edges"]);
+  assert.match(problem, /outside its subsystem/);
+});
+
+test("a control that still reproduces does not count as collateral damage", () => {
+  const CE = JSON.parse(readFileSync(join(root, "test/golden/fixtures/compute-edges.json"), "utf8")).data;
+  const { record } = runMutant(mutant(), ctx({
+    declared: () => [CASE, "compute-edges"],
+    execute: (b, id) => (id === CASE ? DIVERGENT : CE),
+  }));
+  assert.equal(record.outcome, "killed_correctly");
+  assert.deepEqual(record.collateralDivergence, []);
+});
+
 test("invalid_mutant: the mutation site no longer exists", () => {
   const { record, problem } = runMutant(mutant({ find: "SITE_REMOVED_IN_A_REFACTOR" }), ctx());
   assert.equal(record.outcome, "invalid_mutant");
   assert.match(problem, /expired/);
+});
+
+test("invalid_mutant: a refactor duplicated the mutation site", () => {
+  // Presence is not enough: applying `find` to two sites means the mutant no
+  // longer isolates the boundary it names, even though it would still "kill".
+  const { record, problem } = runMutant(mutant(), ctx({ source: SOURCE + " let other = SITE_PRESENT;" }));
+  assert.equal(record.outcome, "invalid_mutant");
+  assert.match(problem, /found 2 — the mutation no longer isolates one boundary/);
+});
+
+test("invalid_mutant: a mutant declaring the wrong occurrence count fails even when the site is unique", () => {
+  const { record, problem } = runMutant(mutant({ expectedOccurrences: 2 }), ctx());
+  assert.equal(record.outcome, "invalid_mutant");
+  assert.match(problem, /expected 2 mutation site\(s\).*found 1/);
 });
 
 test("invalid_mutant: the mutant binary is byte-identical to the baseline", () => {

@@ -134,11 +134,26 @@ outcome is known by construction, and asserts that each of the five states is
 reachable and correctly distinguished. It runs first, in milliseconds, without a
 Rust toolchain.
 
-### What subsystem completion means
+### Confinement, not just divergence
 
-`baseline.json` records that a subsystem is complete only when its cases are
-declared **and** the battery kills every mutation of its rules. `REPORT.json`
-carries this per subsystem:
+Divergence inside a mutant's subsystem scope proves the boundary is pinned. It
+does not prove the mutation was *confined* there. So every other case the
+implementation declares runs as a **control** and must keep reproducing; a
+mutation that also perturbs unrelated fixtures is `killed_incidentally`, because
+crediting it to one boundary would overstate what the corpus establishes.
+
+Mutation sites are also counted exactly, not merely found. `find` is applied to
+every match, so a refactor that duplicates the fragment would quietly turn a
+one-boundary mutant into a multi-site one — still "killed", but no longer by the
+boundary it names. Each entry declares `expectedOccurrences` and any other count
+is an `invalid_mutant`.
+
+### Fixture-complete is not complete
+
+`baseline.json`'s `fixtureCompleteSubsystems` makes exactly one claim: every
+corpus case exercising the subsystem is declared and reproduces. A subsystem is
+**complete** only when it is fixture-complete *and* mutation-qualified — those
+are separate claims and `REPORT.json` is the only place that states both:
 
 ```json
 { "subsystem": "edge-derivation", "fixtureStatus": "pass",

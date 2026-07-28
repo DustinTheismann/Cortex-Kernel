@@ -4,7 +4,7 @@
   "integrity": {
     "manifestSha256": "9f1d8ffc34c71a1bef4c77465c09b3e3c25b7de3a331e9cc9d817577174c27cd",
     "implementationSourceSha256": "2d9a0765e28af7276552b124ef62dc40c85e19f55c9ee556e15ff5730f471a5d",
-    "registrySha256": "095d3ce86bd4c629808abc4d21405192cfbd0e7d9651713e3f68df0aff11b6a4"
+    "registrySha256": "ebdb9c63d9ddf3705408bbcef31ee4a37887b3172a7fb29ca1338dbe837728db"
   },
   "scope": "all",
   "subsystems": [
@@ -33,6 +33,7 @@
       "actualKillers": [
         "compute-edges-boundaries"
       ],
+      "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "UBIQUITOUS_DEPENDENCY_COUNTED_AS_SHARED observed; killed by compute-edges-boundaries"
     },
@@ -47,6 +48,7 @@
       "actualKillers": [
         "compute-edges-boundaries"
       ],
+      "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "SELF_EDGE_EMITTED observed; killed by compute-edges-boundaries"
     },
@@ -63,6 +65,7 @@
         "compute-edges",
         "compute-edges-boundaries"
       ],
+      "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "GROUP_HUB_IS_NOT_TOP_STARRED observed; killed by compute-edges, compute-edges-boundaries"
     },
@@ -77,6 +80,7 @@
       "actualKillers": [
         "compute-edges-boundaries"
       ],
+      "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "TIED_MEMBERS_REORDERED observed; killed by compute-edges-boundaries"
     },
@@ -91,6 +95,7 @@
       "actualKillers": [
         "compute-edges-boundaries"
       ],
+      "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "OVERSIZED_LANGUAGE_GROUP_LINKED observed; killed by compute-edges-boundaries"
     },
@@ -105,6 +110,7 @@
       "actualKillers": [
         "compute-edges-boundaries"
       ],
+      "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "OVERSIZED_FAMILY_GROUP_LINKED observed; killed by compute-edges-boundaries"
     },
@@ -121,6 +127,7 @@
         "compute-edges",
         "compute-edges-boundaries"
       ],
+      "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "SINGLE_SHARED_DEPENDENCY_ACCEPTED observed; killed by compute-edges, compute-edges-boundaries"
     },
@@ -135,6 +142,7 @@
       "actualKillers": [
         "compute-edges-boundaries"
       ],
+      "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "SINGLE_CHARACTER_FAMILY_LINKED observed; killed by compute-edges-boundaries"
     },
@@ -149,6 +157,7 @@
       "actualKillers": [
         "compute-edges-boundaries"
       ],
+      "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "TOPIC_GROUP_EXCEEDS_HUB_CAP observed; killed by compute-edges-boundaries"
     },
@@ -163,6 +172,7 @@
       "actualKillers": [
         "compute-edges-boundaries"
       ],
+      "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "NAME_INDEX_RESOLVED_TO_WRONG_REPOSITORY observed; killed by compute-edges-boundaries"
     }

@@ -1,13 +1,13 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-28T01:19:58.112Z",
+  "generatedAt": "2026-07-28T17:07:06.664Z",
   "ciRun": null,
   "integrity": {
     "manifestSha256": "9f1d8ffc34c71a1bef4c77465c09b3e3c25b7de3a331e9cc9d817577174c27cd",
     "canonicalizationSpecSha256": "5ed64bf745d2e41c8287052859200711f879ba605d8b5c3fa17ee9d91c267d1d",
     "canonicalizerSha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8",
-    "verifierSha256": "2226a07df8d0d70c2402e4cb3ff8a84f84e249491ec4dbf5931f53a739403f5c",
-    "baselineSha256": "e2fae462f1f56f37c3b76ac50c83ad38afaec0ca11a0e46acc6feed1dd1b4cb3",
+    "verifierSha256": "8e9e9f9de79c326c5bea15370e554433f832088cbfcb00b675f0cbcff3857c24",
+    "baselineSha256": "afd2369ac03698e7dc7535223e7f8bc9e27be4e0bad835b2b78ae5eea3abd7a6",
     "referenceSourceSha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
   },
   "corpus": {

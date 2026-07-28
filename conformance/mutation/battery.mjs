@@ -57,11 +57,11 @@ const bytesHash = (p) => createHash("sha256").update(readFileSync(p)).digest("he
  * test is exactly the kind of instrument this repository refuses to trust.
  */
 export const runMutant = (m, ctx) => {
-  const { manifest, subsystemScope, corpusInputs, source, baselineBinaryHash, build, execute, workDir } = ctx;
+  const { manifest, subsystemScope, corpusInputs, source, baselineBinaryHash, build, execute, declared, workDir } = ctx;
   const byCase = new Map(manifest.cases.map((c) => [c.caseId, c]));
   const record = {
     id: m.id, subsystem: m.subsystem, rule: m.rule, expectedFailure: m.expectedFailure,
-    expectedKillers: m.expectedKillers, actualKillers: [], outcome: null, detail: "",
+    expectedKillers: m.expectedKillers, actualKillers: [], collateralDivergence: [], outcome: null, detail: "",
   };
   const fail = (outcome, detail, advice) => {
     record.outcome = outcome; record.detail = detail;
@@ -78,9 +78,20 @@ export const runMutant = (m, ctx) => {
       "A mutant whose pinning fixture was removed is unprotected, not passing.");
   }
 
-  if (!source.includes(m.find)) {
+  // Exact cardinality, not mere presence. `find` is applied to every match, so
+  // a refactor that duplicates the fragment would silently turn a
+  // one-boundary mutant into a multi-site one — it would still be "killed",
+  // but no longer by the boundary it names. Zero occurrences is the expired
+  // case; any other count is a mutation that no longer means what it says.
+  const occurrences = source.split(m.find).length - 1;
+  if (occurrences === 0) {
     return fail("invalid_mutant", `mutation site absent from ${SRC} — the mutation has expired and proves nothing`,
       "Re-target it at the current source, or remove it and record why the boundary is gone.");
+  }
+  if (occurrences !== m.expectedOccurrences) {
+    return fail("invalid_mutant",
+      `expected ${m.expectedOccurrences} mutation site(s) in ${SRC}, found ${occurrences} — the mutation no longer isolates one boundary`,
+      "Narrow `find` until it matches only the intended site, or update expectedOccurrences deliberately.");
   }
 
   const mutatedSource = source.split(m.find).join(m.replace);
@@ -113,6 +124,31 @@ export const runMutant = (m, ctx) => {
   if (!record.actualKillers.length) {
     return fail("survived", `"${m.rule}" can be violated without any corpus case in scope noticing`,
       "This is a CORPUS defect: add a case that reaches the boundary.");
+  }
+
+  // Collateral controls. Divergence inside the scope proves the boundary is
+  // pinned; it does not prove the mutation was CONFINED to that boundary. Every
+  // other case the implementation declares is a control that must stay
+  // reproducing. A mutant that also perturbs unrelated fixtures has not
+  // demonstrated a localized rule — the subsystem boundary is not where the
+  // registry says it is, and crediting it as a clean kill would overstate what
+  // the corpus establishes.
+  const scopeSet = new Set(scope);
+  const collateral = [];
+  for (const caseId of declared(built).filter((c) => !scopeSet.has(c) && byCase.has(c))) {
+    const entry = byCase.get(caseId);
+    let payload;
+    try { payload = execute(built, caseId); }
+    catch { collateral.push(`${caseId} (failed to execute)`); continue; }
+    const fixture = JSON.parse(readFileSync(join(root, "test/golden", entry.fixture), "utf8"));
+    const wrapped = { caseId, category: entry.category, ...(fixture.data !== undefined ? { data: payload } : payload) };
+    if (sha256(wrapped) !== entry.sha256) collateral.push(caseId);
+  }
+  record.collateralDivergence = collateral;
+  if (collateral.length) {
+    return fail("killed_incidentally",
+      `the mutation also perturbed declared case(s) outside its subsystem: ${collateral.join(", ")}`,
+      "A mutation credited to one boundary must be confined to it. Narrow the mutation, or correct the subsystem scope.");
   }
 
   let observed = false, threw = null;
@@ -149,6 +185,12 @@ export const cargoRunner = {
   },
   execute: (built, caseId) =>
     JSON.parse(execFileSync(built.binary, [caseId], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })),
+  // The conformance protocol's own `--cases` call, so the control set is what
+  // the MUTANT declares rather than a list maintained beside it.
+  declared: (built) => {
+    try { return JSON.parse(execFileSync(built.binary, ["--cases"], { encoding: "utf8" })); }
+    catch { return []; }
+  },
 };
 
 /** Aggregate a classified run into the per-subsystem report. */

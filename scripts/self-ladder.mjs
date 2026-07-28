@@ -65,7 +65,7 @@ const mutationScope = (() => {
   } catch { return []; }
 })();
 const declaredSubsystems = (() => {
-  try { return readJson("conformance/baseline.json").implementations.rust.subsystemsComplete; }
+  try { return readJson("conformance/baseline.json").implementations.rust.fixtureCompleteSubsystems; }
   catch { return []; }
 })();
 const unMutated = declaredSubsystems.filter((s) => !mutationScope.includes(s));
