@@ -4,14 +4,15 @@
     {
       "seq": 0,
       "releaseTag": "v0.5.1-kernel",
-      "certificateSha256": "f80f070779d86d1bb405f7db21a36c5afc59481ac1e2642786cbea7fc1e39a37",
-      "fixtureCount": 42,
+      "certificateSha256": "509129b583cc064bf5b632630618a31e074f0275671128f23431fc1d42f2acd7",
+      "fixtureCount": 43,
       "fixtureHashes": {
         "mech-kinds": "d8a99f3fd101bbc55a233bcc2a246dbdd2cc22439db7978bff9ef888c77d8ac6",
         "conv-rules": "abd263247526102ae4b7e31a9b98d1a1b1fd8addd1130d33b2c5bc6172933ad5",
         "multipath-kind-paths": "00c5866afed64b1b11505aeb62e3cf98fccad7184488858ba1ebb21c912a37d8",
         "pair-compat": "1d0d308d5d2668b052a966226310407a057a5a8f87047bd5880422c5ff669f26",
         "shape-compat": "562dc915d980d18a3ce676e1fa95956592d6b229ee01a0b2a491c9d42697dfeb",
+        "shape-compat-boundaries": "6c43cd83a9a446aae82276d53e390cd34a4316eddcf4a1eddb8dcbf72df6b223",
         "unit-compat": "4cc92bc710ba58c53c080f0ac9315ec7f324548564de450b15a14e7acb81db72",
         "license-compat": "e9018744d4ee923a11232ce31806657b1478494625fae10b3a694584952de1a2",
         "synth-test": "c3273a08565e3675be798a19e4ba18d95578baf784011ce30a7ce75996a2df3c",
@@ -56,12 +57,12 @@
         "removedFixtures": [],
         "changedFixtures": [],
         "unchangedFixtures": 0,
-        "baselineFixtures": 42,
-        "statement": "Genesis: the v0.5.1 behavioral baseline — 42 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation whose edge-derivation subsystem is mutation-qualified."
+        "baselineFixtures": 43,
+        "statement": "Genesis: the v0.5.1 behavioral baseline — 43 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation whose edge-derivation, compatibility and license-screening subsystems are mutation-qualified."
       },
       "previousEntrySha256": null,
-      "restatements": 3,
-      "entrySha256": "6d6ef491ce92a8348da0dc0dce8a1b469aec4acdcf5f202de35783efa348982c"
+      "restatements": 4,
+      "entrySha256": "33513520cee8f646cfd83ff63571a0169ce6da2c20279cfe7d6c4d83c9edda6b"
     }
   ]
 }

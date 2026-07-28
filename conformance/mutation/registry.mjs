@@ -21,6 +21,8 @@ import { EDGE_CORPORA, EDGE_CORPORA_BOUNDARIES } from "../../test/oracle/cases.m
  *  its scope means the subsystem boundary is not where we think it is. */
 export const SUBSYSTEM_SCOPE = {
   "edge-derivation": ["compute-edges", "compute-edges-boundaries"],
+  "compatibility": ["shape-compat", "shape-compat-boundaries", "unit-compat"],
+  "license-screening": ["license-compat"],
 };
 
 /** Corpus inputs, so an assertion can reason about what the output SHOULD have
@@ -29,6 +31,19 @@ export const CORPUS_INPUTS = {
   "compute-edges": EDGE_CORPORA,
   "compute-edges-boundaries": EDGE_CORPORA_BOUNDARIES,
 };
+
+// ---- compatibility helpers -------------------------------------------------
+// shape-compat and unit-compat payloads are flat maps keyed "<a>|<b>" over the
+// SHAPES / UNITS matrices, so an assertion can name a cell exactly.
+
+const cell = (out, caseId, a, b) => (out[caseId] || {})[`${a}|${b}`];
+/** Every ordered pair in a matrix payload, as [a, b, verdict]. */
+const cells = (out, caseId) => Object.entries(out[caseId] || {})
+  .map(([k, v]) => [...k.split("|"), v]);
+/** license-compat payloads are a list of { a, b, out: { status, detail } }. */
+const licRows = (out) => out["license-compat"] || [];
+const licKey = (l) => (l == null ? null : String(typeof l === "object" ? (l.spdx_id || l.key || l.name) : l).toLowerCase());
+const isCopyleft = (k) => k != null && ["gpl", "agpl", "lgpl"].some((c) => k.includes(c));
 
 const UBIQUITOUS = new Set(["react", "typescript", "numpy", "requests", "lodash", "express",
   "jest", "pytest", "eslint", "prettier", "webpack", "vite", "axios", "scipy", "pandas"]);
@@ -50,6 +65,184 @@ const hubIsTopStarred = (edges, repos) => {
 };
 
 export const MUTATIONS = [
+  // ---- compatibility: shape ------------------------------------------------
+  {
+    id: "shape-fail-open-on-absent",
+    subsystem: "compatibility",
+    scope: ["shape-compat", "shape-compat-boundaries"],
+    rule: "an absent shape is unresolved — never proved. The predicate fails closed",
+    find: 'fn shape_compat(a: &str, b: &str) -> &\'static str {\n    if a.is_empty() || b.is_empty() { return "unresolved"; }',
+    replace: 'fn shape_compat(a: &str, b: &str) -> &\'static str {\n    if a.is_empty() || b.is_empty() { return "proved"; }',
+    expectedOccurrences: 1,
+    expectedKillers: ["shape-compat"],
+    expectedFailure: "ABSENT_SHAPE_PROVED",
+    assert: (out) => cells(out, "shape-compat").some(([a, b, v]) => (a === "" || b === "") && v === "proved"),
+  },
+  {
+    id: "shape-invert-predicate",
+    subsystem: "compatibility",
+    scope: ["shape-compat", "shape-compat-boundaries"],
+    rule: "matching or wildcard shapes are proved; anything else is unresolved",
+    find: 'if x == y || wild(&x) || wild(&y) { "proved" } else { "unresolved" }',
+    replace: 'if x == y || wild(&x) || wild(&y) { "unresolved" } else { "proved" }',
+    expectedOccurrences: 1,
+    expectedKillers: ["shape-compat"],
+    expectedFailure: "SHAPE_VERDICT_INVERTED",
+    assert: (out) => cell(out, "shape-compat", "scalar", "scalar") !== "proved",
+  },
+  {
+    id: "shape-require-both-wildcards",
+    subsystem: "compatibility",
+    scope: ["shape-compat", "shape-compat-boundaries"],
+    rule: "a wildcard on EITHER side is enough to prove shape compatibility",
+    find: "if x == y || wild(&x) || wild(&y)",
+    replace: "if x == y || (wild(&x) && wild(&y))",
+    expectedOccurrences: 1,
+    expectedKillers: ["shape-compat"],
+    expectedFailure: "ONE_SIDED_WILDCARD_REJECTED",
+    // "any" is a wildcard, "3x3" is not: the pair must still be proved.
+    assert: (out) => cell(out, "shape-compat", "any", "3x3") !== "proved",
+  },
+  {
+    id: "shape-drop-batch-wildcard-token",
+    subsystem: "compatibility",
+    scope: ["shape-compat"],
+    rule: "`batch` is one of the underspecified shape tokens that count as a wildcard",
+    find: 'for p in ["any", "var", "dynamic", "batch", "unspecified"]',
+    replace: 'for p in ["any", "var", "dynamic", "unspecified"]',
+    expectedOccurrences: 1,
+    expectedKillers: ["shape-compat"],
+    expectedFailure: "BATCH_NO_LONGER_WILDCARD",
+    assert: (out) => cell(out, "shape-compat", "[batch,d]", "3x3") !== "proved",
+  },
+  {
+    id: "shape-n-ignores-word-boundary",
+    subsystem: "compatibility",
+    scope: ["shape-compat-boundaries"],
+    rule: "a standalone `n` is a wildcard; an `n` inside a longer word is not",
+    find: "let before_ok = i == 0 || !is_word(chars[i - 1]);",
+    replace: "let before_ok = true;",
+    expectedOccurrences: 1,
+    expectedKillers: ["shape-compat-boundaries"],
+    expectedFailure: "EMBEDDED_N_TREATED_AS_WILDCARD",
+    // "3n" ends in `n` preceded by a digit: the trailing edge is a boundary but the
+    // leading one is not, so only the BEFORE half of the rule can reject it.
+    assert: (out) => cell(out, "shape-compat-boundaries", "3n", "3x3") === "proved",
+  },
+
+  {
+    id: "shape-drop-question-wildcard",
+    subsystem: "compatibility",
+    scope: ["shape-compat-boundaries"],
+    rule: "`?` is a wildcard character, exactly as `*` is",
+    find: "if l.contains('*') || l.contains('?') { return true; }",
+    replace: "if l.contains('*') { return true; }",
+    expectedOccurrences: 1,
+    expectedKillers: ["shape-compat-boundaries"],
+    expectedFailure: "QUESTION_MARK_NOT_A_WILDCARD",
+    assert: (out) => cell(out, "shape-compat-boundaries", "?", "3x3") !== "proved",
+  },
+  {
+    id: "shape-drop-trim",
+    subsystem: "compatibility",
+    scope: ["shape-compat-boundaries"],
+    rule: "surrounding whitespace is trimmed before shapes are compared",
+    find: "let x = a.trim().to_lowercase();\n    let y = b.trim().to_lowercase();\n    if x == y || wild",
+    replace: "let x = a.to_lowercase();\n    let y = b.to_lowercase();\n    if x == y || wild",
+    expectedOccurrences: 1,
+    expectedKillers: ["shape-compat-boundaries"],
+    expectedFailure: "UNTRIMMED_SHAPE_NOT_MATCHED",
+    assert: (out) => cell(out, "shape-compat-boundaries", " dag ", "dag") !== "proved",
+  },
+
+  // ---- compatibility: units ------------------------------------------------
+  {
+    id: "unit-fail-open-on-absent",
+    subsystem: "compatibility",
+    scope: ["unit-compat"],
+    rule: "an absent unit is unresolved — never proved",
+    find: 'fn unit_compat(a: &str, b: &str) -> &\'static str {\n    if a.is_empty() || b.is_empty() { return "unresolved"; }',
+    replace: 'fn unit_compat(a: &str, b: &str) -> &\'static str {\n    if a.is_empty() || b.is_empty() { return "proved"; }',
+    expectedOccurrences: 1,
+    expectedKillers: ["unit-compat"],
+    expectedFailure: "ABSENT_UNIT_PROVED",
+    assert: (out) => cells(out, "unit-compat").some(([a, b, v]) => (a === "" || b === "") && v === "proved"),
+  },
+  {
+    id: "unit-drop-contradiction",
+    subsystem: "compatibility",
+    scope: ["unit-compat"],
+    rule: "two different, non-dimensionless units are REFUTED — a contradiction, not merely unproven",
+    find: 'if x == "dimensionless" || y == "dimensionless" { return "unresolved"; }\n    "refuted"',
+    replace: 'if x == "dimensionless" || y == "dimensionless" { return "unresolved"; }\n    "unresolved"',
+    expectedOccurrences: 1,
+    expectedKillers: ["unit-compat"],
+    expectedFailure: "UNIT_CONTRADICTION_DOWNGRADED",
+    assert: (out) => !cells(out, "unit-compat").some(([, , v]) => v === "refuted"),
+  },
+  {
+    id: "unit-dimensionless-proves",
+    subsystem: "compatibility",
+    scope: ["unit-compat"],
+    rule: "dimensionless against a real unit is unresolved, not proved — it carries no dimensional claim",
+    find: 'if x == "dimensionless" || y == "dimensionless" { return "unresolved"; }',
+    replace: 'if x == "dimensionless" || y == "dimensionless" { return "proved"; }',
+    expectedOccurrences: 1,
+    expectedKillers: ["unit-compat"],
+    expectedFailure: "DIMENSIONLESS_TREATED_AS_MATCH",
+    assert: (out) => cell(out, "unit-compat", "dimensionless", "logits") === "proved",
+  },
+  {
+    id: "unit-case-sensitive",
+    subsystem: "compatibility",
+    scope: ["unit-compat"],
+    rule: "unit comparison is case-insensitive: `Probability` and `probability` are the same unit",
+    find: 'let y = b.trim().to_lowercase();\n    if x == y { return "proved"; }',
+    replace: 'let y = b.trim().to_string();\n    if x == y { return "proved"; }',
+    expectedOccurrences: 1,
+    expectedKillers: ["unit-compat"],
+    expectedFailure: "UNIT_CASE_DISTINGUISHED",
+    assert: (out) => cell(out, "unit-compat", "probability", "Probability") !== "proved",
+  },
+
+  // ---- license screening ---------------------------------------------------
+  {
+    id: "license-fail-open-on-absent",
+    subsystem: "license-screening",
+    rule: "absent license metadata is UNRESOLVED — screening never proves what it cannot see",
+    find: '_ => obj(vec![\n            ("status", J::s("UNRESOLVED")),',
+    replace: '_ => obj(vec![\n            ("status", J::s("PROVED")),',
+    expectedOccurrences: 1,
+    expectedKillers: ["license-compat"],
+    expectedFailure: "ABSENT_LICENSE_PROVED",
+    assert: (out) => licRows(out).some((r) => (licKey(r.a) === null || licKey(r.b) === null) && r.out.status === "PROVED"),
+  },
+  {
+    id: "license-flag-identical-copyleft",
+    subsystem: "license-screening",
+    rule: "only DISTINCT copyleft licenses need review; the same licence on both sides combines freely",
+    find: "if copyleft(x) && copyleft(y) && x != y",
+    replace: "if copyleft(x) && copyleft(y)",
+    expectedOccurrences: 1,
+    expectedKillers: ["license-compat"],
+    expectedFailure: "IDENTICAL_COPYLEFT_FLAGGED",
+    assert: (out) => licRows(out).some((r) => licKey(r.a) && licKey(r.a) === licKey(r.b)
+      && isCopyleft(licKey(r.a)) && r.out.status !== "PROVED"),
+  },
+  {
+    id: "license-copyleft-exact-match",
+    subsystem: "license-screening",
+    rule: "copyleft is detected by SUBSTRING, so `gpl-3.0` and `agpl-3.0` are both copyleft",
+    find: '["gpl", "agpl", "lgpl"].iter().any(|c| s.contains(c))',
+    replace: '["gpl", "agpl", "lgpl"].iter().any(|c| s == *c)',
+    expectedOccurrences: 1,
+    expectedKillers: ["license-compat"],
+    expectedFailure: "VERSIONED_COPYLEFT_UNDETECTED",
+    assert: (out) => licRows(out).some((r) => isCopyleft(licKey(r.a)) && isCopyleft(licKey(r.b))
+      && licKey(r.a) !== licKey(r.b) && r.out.status === "PROVED"),
+  },
+
+  // ---- edge derivation -----------------------------------------------------
   {
     id: "disable-ubiquitous-filter",
     subsystem: "edge-derivation",

@@ -52,6 +52,15 @@
       "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
+      "caseId": "shape-compat-boundaries",
+      "category": "kernel",
+      "fixture": "fixtures/shape-compat-boundaries.json",
+      "sha256": "6c43cd83a9a446aae82276d53e390cd34a4316eddcf4a1eddb8dcbf72df6b223",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
       "caseId": "unit-compat",
       "category": "kernel",
       "fixture": "fixtures/unit-compat.json",

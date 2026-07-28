@@ -9,26 +9,55 @@ Corpus growth and cross-language coverage. No frozen behavior changed; every
 pre-existing fixture hash is untouched.
 
 ### Added
+- `shape-compat-boundaries` corpus case (corpus 42 → 43): a 14×14 shape matrix
+  reaching what the original 11×11 never did — the `?` wildcard character, the
+  `var` and `dynamic` tokens, whitespace trimming, and both sides of the
+  standalone-`n` rule. `any` and `unspecified` do contain a non-standalone `n`,
+  but both are wildcards for another reason, so the word-boundary test was
+  unobservable and could have been deleted unnoticed.
 - `compute-edges-boundaries` corpus case (corpus 41 → 42): nine corpora that
   reach the edge-derivation boundaries the happy-path case never touched —
   ubiquitous-dependency filtering, self- and dangling mentions, language and
   family group-size bounds at and over the limit, the single-character family
   guard, the 60-member topic hub cap, star ties, and duplicate names.
-- Mutation battery (`conformance/mutants.mjs`, CI gate `mutation-battery`):
-  ten one-boundary-at-a-time mutations of the Rust peer, each required to be
-  caught by the corpus case that claims to pin it. Runs against a temp copy of
-  the crate; the working tree is never modified.
-- Rust peer: `compute-edges` and `compute-edges-boundaries`, completing the
-  `edge-derivation` subsystem (coverage 10/41 → 12/42).
+- Mutation battery (`conformance/mutants.mjs` + `mutation/`, CI gate
+  `mutation-battery`): one-boundary-at-a-time mutations of the Rust peer, each
+  required to be killed by the corpus case that claims to pin it, with the
+  predicted violation observable in the mutant's own output and every other
+  declared case unperturbed. Runs against a temp copy of the crate; the working
+  tree is never modified. The classifier is itself tested against synthetic
+  mutants of all five outcomes (`mutation/selftest.mjs`, 17 assertions).
+- Rust peer: `compute-edges`, `compute-edges-boundaries` and
+  `shape-compat-boundaries`, mutation-qualifying `edge-derivation`,
+  `compatibility` and `license-screening` (coverage 10/41 → 13/43).
+- 24 declared mutants across three subsystems, each carrying a semantic rule, a
+  pinning fixture, a symbolic violation name, an exact site count, and an
+  assertion over the mutant's own output.
 
 ### Changed
-- `conformance/baseline.json` records what subsystem completion *means* —
-  declared cases plus zero surviving mutants — rather than a bare fraction.
+- `conformance/baseline.json`: `subsystemsComplete` renamed to
+  `fixtureCompleteSubsystems`. The old name asserted a completeness the field
+  cannot support; fixture parity and mutation adequacy are separate claims and
+  `conformance/REPORT.json` is the only place that states both, per subsystem.
+- Cascade categories carry `cascade-`-prefixed semantic-area names. `compatibility`
+  and `multipath-planning` previously meant both the deterministic predicate and
+  planner surface and the cascade stage above it, which let the baseline claim a
+  subsystem the implementation had only half-covered.
+- `scripts/certify.mjs` generates the Markdown certificate from the JSON and
+  fails `--check` on drift; `release.certifiedAtCommit` is carried forward
+  rather than recomputed from HEAD.
+- `scripts/ledger.mjs`: entries carry `provisional`/`released` status.
+  `--release` refuses unless the tree is clean, HEAD is on `main`, an annotated
+  tag exists at HEAD, and `npm run verify` passes.
 
 ### Verified
-- The corpus is discriminating for edge derivation: 10/10 mutants killed.
-  Restricting the battery to the pre-existing `compute-edges` case alone leaves
-  8 of the 10 alive, which is the state that shipped before this change.
+- The corpus is discriminating for edge derivation, the compatibility
+  predicates and license screening: 24/24 mutants killed correctly, zero
+  surviving, zero collateral divergence.
+- Restricting the battery to the pre-existing `compute-edges` case alone leaves
+  8 of its 10 mutants alive, which is the state that shipped before this change.
+- Eleven of the twelve compatibility and license mutants were killed by the
+  corpus as it already stood; only the standalone-`n` rule was unpinned.
 
 ## [v0.5.1-kernel] — 2026-07-25
 

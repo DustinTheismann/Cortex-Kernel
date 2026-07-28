@@ -20,6 +20,21 @@ const evidencePending = { pre: "satisfied", invariant: "unknown", metric: "unkno
 // ---- (A) pure kernel matrices --------------------------------------------
 
 export const SHAPES = ["", "[batch,d]", "[BATCH,D]", "DAG", "dag", "scalar", "[n]", "any", "unspecified", "3x3", "*"];
+// Shape boundaries the matrix above never reaches. Every rule in the wildcard
+// predicate is exercised there EXCEPT: the `?` character, the `var` and
+// `dynamic` tokens, whitespace trimming, and — most consequentially — the
+// negative side of the standalone-`n` rule. `any` and `unspecified` do contain
+// a non-standalone `n`, but both are wildcards for another reason, so the word
+// boundary logic contributes nothing observable and could be deleted unnoticed.
+export const SHAPES_BOUNDARY = [
+  "",                        // absent
+  "n", "[n]", "x n y",       // standalone `n` — a wildcard
+  "int8", "3n", "n3", "n_x", // `n` adjacent to a word character — NOT a wildcard
+  " dag ", "dag",            // whitespace trimming
+  "?",                       // the second wildcard character
+  "var", "dynamic",          // the two wildcard tokens no existing shape reaches
+  "3x3",                     // a concrete non-wildcard control
+];
 export const UNITS = ["", "probability", "Probability", "dimensionless", "logits", "L2-radius", "seconds"];
 export const LICENSES = [
   null, "MIT", "mit", "GPL-3.0", "AGPL-3.0", "LGPL-2.1", "Apache-2.0",

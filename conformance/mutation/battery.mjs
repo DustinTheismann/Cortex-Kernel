@@ -68,8 +68,15 @@ export const runMutant = (m, ctx) => {
     return { record, problem: `${m.id}: ${detail}${advice ? ". " + advice : ""}` };
   };
 
-  const scope = subsystemScope[m.subsystem];
+  // A mutant may narrow its scope below the subsystem's. Everything outside it
+  // becomes a control, so the tighter the declared scope the stronger the
+  // confinement claim: a shape-predicate mutation that names only
+  // `shape-compat` is asserting the other eleven declared cases are untouched.
+  const scope = m.scope || subsystemScope[m.subsystem];
   if (!scope) return fail("not_executed", `no corpus scope declared for subsystem ${m.subsystem}`);
+  if (m.scope && subsystemScope[m.subsystem] && m.scope.some((c) => !subsystemScope[m.subsystem].includes(c))) {
+    return fail("not_executed", `mutant scope ${m.scope.join(", ")} is not within its subsystem's scope ${subsystemScope[m.subsystem].join(", ")}`);
+  }
 
   // A mutant whose pinning fixture was deleted is unprotected, not passing.
   const missing = [...new Set([...scope, ...m.expectedKillers])].filter((c) => !byCase.has(c));

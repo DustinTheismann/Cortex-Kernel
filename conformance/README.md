@@ -26,7 +26,7 @@ frozen reference ──▶ oracle ──▶ canonical fixtures ──▶ manifes
 | `mutants.mjs` · `mutation/` | The mutation battery: certifies that the *corpus* discriminates |
 | `REPORT.json` · `REPORT.md` | Generated conformance report (normative / projection) |
 | `MUTATION-REPORT.json` | Generated per-subsystem mutation adequacy |
-| `baseline.json` | Monotonic declared-support floor and what subsystem completion means |
+| `baseline.json` | Monotonic declared-support floor and fixture-completeness per subsystem |
 | `implementations.json` | Registry of implementations and how to build/run them |
 
 ## Protocol
@@ -69,8 +69,8 @@ that fails is not legitimate, and fails the run.
 
 | Implementation | Language | Coverage | Notes |
 |---|---|---|---|
-| `packages/cortex-kernel` | JavaScript | 42/42 | Full corpus, including cascade and serialization |
-| `impl/rust` | Rust | 12/42 | Deterministic core plus schema normalization and edge derivation: registry, edge costs, min-risk multipath planner, shape/unit/license predicates. Dependency-free. |
+| `packages/cortex-kernel` | JavaScript | 43/43 | Full corpus, including cascade and serialization |
+| `impl/rust` | Rust | 13/43 | Deterministic core plus schema normalization, edge derivation and the compatibility predicates: registry, edge costs, min-risk multipath planner, shape/unit/license predicates. Dependency-free. |
 
 The Rust implementation was written independently against the frozen semantics
 and reproduced its declared hashes — including the full 16×16 multipath
@@ -97,9 +97,8 @@ node conformance/mutants.mjs --subsystem=edge-derivation
 
 The battery copies the Rust crate to a temp directory, changes exactly one
 semantic boundary — disable ubiquitous-dependency filtering, permit self-edges,
-reverse hub selection, destabilize tie ordering, widen a group bound, lower the
-shared-dependency floor, drop the family-token length guard, raise the topic
-hub cap, key the name index on the wrong field — and requires the named corpus
+widen a group bound, fail open on an absent shape or unit, downgrade a unit
+contradiction, prove a versioned copyleft pair — and requires the named corpus
 case to catch it. The working tree is never modified.
 
 ### A hash mismatch is not a kill
@@ -128,7 +127,7 @@ came to exist.
 ### The classifier is itself tested
 
 If the classifier silently degraded to "the hash changed", every score would
-still read 10/10 and nothing would notice — the same failure mode, one level up.
+still read 24/24 and nothing would notice — the same failure mode, one level up.
 So `mutation/selftest.mjs` drives the engine with synthetic mutants whose correct
 outcome is known by construction, and asserts that each of the five states is
 reachable and correctly distinguished. It runs first, in milliseconds, without a

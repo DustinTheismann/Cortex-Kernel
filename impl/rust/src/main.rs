@@ -597,6 +597,14 @@ fn synth_test(po: &SynthPort, ci: &SynthPort, adapter: &[Step]) -> String {
 }
 
 const SHAPES: [&str; 11] = ["", "[batch,d]", "[BATCH,D]", "DAG", "dag", "scalar", "[n]", "any", "unspecified", "3x3", "*"];
+/// Shape boundaries the matrix above never reaches: the `?` character, the
+/// `var` and `dynamic` tokens, whitespace trimming, and both sides of the
+/// standalone-`n` rule. `any` and `unspecified` contain a non-standalone `n`
+/// but are wildcards for another reason, so the word-boundary test was
+/// unobservable until these.
+const SHAPES_BOUNDARY: [&str; 14] = [
+    "", "n", "[n]", "x n y", "int8", "3n", "n3", "n_x", " dag ", "dag", "?", "var", "dynamic", "3x3",
+];
 const UNITS: [&str; 7] = ["", "probability", "Probability", "dimensionless", "logits", "L2-radius", "seconds"];
 const CLASSIFY_INPUTS: [Option<f64>; 9] = [None, Some(0.0), Some(24.0), Some(25.0), Some(26.0), Some(299.0), Some(300.0), Some(301.0), Some(5000.0)];
 
@@ -780,6 +788,12 @@ fn build(case_id: &str) -> Option<J> {
             Some(J::O(out))
         }
 
+        "shape-compat-boundaries" => {
+            let mut out: Vec<(String, J)> = vec![];
+            for x in SHAPES_BOUNDARY { for y in SHAPES_BOUNDARY { out.push((format!("{}|{}", x, y), J::s(shape_compat(x, y)))); }}
+            Some(J::O(out))
+        }
+
         "unit-compat" => {
             let mut out: Vec<(String, J)> = vec![];
             for x in UNITS { for y in UNITS { out.push((format!("{}|{}", x, y), J::s(unit_compat(x, y)))); }}
@@ -834,7 +848,7 @@ fn main() {
     }
     if args[1] == "--cases" {
         let supported = ["mech-kinds", "conv-rules", "multipath-kind-paths", "pair-compat",
-                         "shape-compat", "unit-compat", "license-compat", "classify-lit",
+                         "shape-compat", "shape-compat-boundaries", "unit-compat", "license-compat", "classify-lit",
                          "synth-test", "norm-schema", "compute-edges",
                          "compute-edges-boundaries"];
         println!("{}", J::A(supported.iter().map(|c| J::s(c)).collect()).to_json());

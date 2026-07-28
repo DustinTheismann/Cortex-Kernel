@@ -1,20 +1,20 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-28T17:07:06.664Z",
+  "generatedAt": "2026-07-28T17:23:26.092Z",
   "ciRun": null,
   "integrity": {
-    "manifestSha256": "9f1d8ffc34c71a1bef4c77465c09b3e3c25b7de3a331e9cc9d817577174c27cd",
+    "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
     "canonicalizationSpecSha256": "5ed64bf745d2e41c8287052859200711f879ba605d8b5c3fa17ee9d91c267d1d",
     "canonicalizerSha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8",
     "verifierSha256": "8e9e9f9de79c326c5bea15370e554433f832088cbfcb00b675f0cbcff3857c24",
-    "baselineSha256": "afd2369ac03698e7dc7535223e7f8bc9e27be4e0bad835b2b78ae5eea3abd7a6",
+    "baselineSha256": "2de515620e528167593009be1486cb9fe50ed6f18a6a2747827637f59e00ab58",
     "referenceSourceSha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
   },
   "corpus": {
     "oracle": "v0.5.1",
     "schemaVersion": 7,
     "canonicalizationVersion": 1,
-    "fixtures": 42
+    "fixtures": 43
   },
   "reference": {
     "source": "reference/src/cortex-v0.5.1.jsx",
@@ -25,8 +25,8 @@
       "implementation": "rust",
       "language": "Rust",
       "status": "pass",
-      "fixtures": "12/42",
-      "canonicalHashesIdentical": 12,
+      "fixtures": "13/43",
+      "canonicalHashesIdentical": 13,
       "declaredCasesFailing": 0,
       "cases": [
         "mech-kinds",
@@ -34,6 +34,7 @@
         "multipath-kind-paths",
         "pair-compat",
         "shape-compat",
+        "shape-compat-boundaries",
         "unit-compat",
         "license-compat",
         "classify-lit",
@@ -59,7 +60,8 @@
         "schema-normalization",
         "selected-path-ordering",
         "tie-breaking",
-        "types"
+        "types",
+        "unclassified"
       ],
       "semanticAreasUncovered": [
         "cascade",
@@ -129,6 +131,15 @@
           "hashMatch": true,
           "semanticAreas": [
             "compatibility"
+          ]
+        },
+        {
+          "fixture": "shape-compat-boundaries",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "unclassified"
           ]
         },
         {
@@ -512,7 +523,11 @@
         {
           "subsystem": "compatibility",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 11,
+          "killedMutants": 11,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "edge-cost",
@@ -531,7 +546,11 @@
         {
           "subsystem": "license-screening",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 3,
+          "killedMutants": 3,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "literature-classification",
@@ -564,7 +583,7 @@
           "mutationStatus": "not-assessed"
         }
       ],
-      "binarySha256": "ede78007f8fb2c99f37e7b55363b9a86c0d02cca89d848a0e5de72ad19d5c426",
+      "binarySha256": "b41b66ae437d9c638619880772039257a53ac40ff4b30c46631f73c9fec9b0db",
       "toolchain": {
         "compiler": "rustc 1.94.1 (e408947bf 2026-03-25)",
         "targetTriple": "x86_64-unknown-linux-gnu",

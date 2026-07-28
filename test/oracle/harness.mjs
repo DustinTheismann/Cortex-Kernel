@@ -19,7 +19,7 @@ import { frozen, runCascade, runImport, runExport, projectDecision, ORACLE_SOURC
 import { sha256, canonicalPretty, stableStringify, CANONICALIZATION_VERSION } from "./canonicalize.mjs";
 import { checkDecision, checkExport, checkImport } from "./invariants.mjs";
 import {
-  SHAPES, UNITS, LICENSES, SYNTH_CASES, RAW_SCHEMAS, CLASSIFY_INPUTS, EDGE_CORPORA,
+  SHAPES, SHAPES_BOUNDARY, UNITS, LICENSES, SYNTH_CASES, RAW_SCHEMAS, CLASSIFY_INPUTS, EDGE_CORPORA,
   CASCADE_CASES, CROSS_CASE_CLAIMS, IMPORT_CASES, MALFORMED_CASES, EXPORT_CASES, ROUNDTRIP_CASES,
   EDGE_CORPORA_BOUNDARIES,
 } from "./cases.mjs";
@@ -57,6 +57,9 @@ const buildCorpus = async () => {
   for (const x of SHAPES) for (const y of SHAPES) shapeTable[x + "|" + y] = K.shapeCompat({ shape: x }, { shape: y });
   for (const x of UNITS) for (const y of UNITS) unitTable[x + "|" + y] = K.unitCompat({ units: x }, { units: y });
   add("shape-compat", "kernel", { data: shapeTable });
+  const shapeBoundaryTable = {};
+  for (const x of SHAPES_BOUNDARY) for (const y of SHAPES_BOUNDARY) shapeBoundaryTable[x + "|" + y] = K.shapeCompat({ shape: x }, { shape: y });
+  add("shape-compat-boundaries", "kernel", { data: shapeBoundaryTable });
   add("unit-compat", "kernel", { data: unitTable });
   const licTable = [];
   for (const a of LICENSES) for (const b of LICENSES) licTable.push({ a, b, out: K.licenseCompat(a == null ? {} : { license: a }, b == null ? {} : { license: b }) });

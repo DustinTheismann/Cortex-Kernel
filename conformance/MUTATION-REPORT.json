@@ -2,12 +2,25 @@
   "artifact": "mutation-report",
   "interpretation": "A subsystem is mutation-qualified when every declared semantic mutation of its rules is killed by the corpus case that claims to pin it, with the predicted violation observable in the mutant's own output. A hash mismatch alone is not a kill. Subsystems absent from this report have NOT been assessed, which is a different epistemic state from having zero surviving mutants.",
   "integrity": {
-    "manifestSha256": "9f1d8ffc34c71a1bef4c77465c09b3e3c25b7de3a331e9cc9d817577174c27cd",
-    "implementationSourceSha256": "2d9a0765e28af7276552b124ef62dc40c85e19f55c9ee556e15ff5730f471a5d",
-    "registrySha256": "ebdb9c63d9ddf3705408bbcef31ee4a37887b3172a7fb29ca1338dbe837728db"
+    "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
+    "implementationSourceSha256": "6d10510e85c4ae18038ce545fc502710a17f91a7656824f097f7a8bbc266e117",
+    "registrySha256": "5dcac37435b2ae88b1fa69180d150177a982428b59abd722b23647e2fcb69aa5"
   },
   "scope": "all",
   "subsystems": [
+    {
+      "subsystem": "compatibility",
+      "corpusScope": [
+        "shape-compat",
+        "shape-compat-boundaries",
+        "unit-compat"
+      ],
+      "declaredMutants": 11,
+      "killedMutants": 11,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
+    },
     {
       "subsystem": "edge-derivation",
       "corpusScope": [
@@ -19,9 +32,233 @@
       "survivingMutants": 0,
       "inconclusiveMutants": 0,
       "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "license-screening",
+      "corpusScope": [
+        "license-compat"
+      ],
+      "declaredMutants": 3,
+      "killedMutants": 3,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
     }
   ],
   "mutants": [
+    {
+      "id": "shape-fail-open-on-absent",
+      "subsystem": "compatibility",
+      "rule": "an absent shape is unresolved — never proved. The predicate fails closed",
+      "expectedFailure": "ABSENT_SHAPE_PROVED",
+      "expectedKillers": [
+        "shape-compat"
+      ],
+      "actualKillers": [
+        "shape-compat",
+        "shape-compat-boundaries"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "ABSENT_SHAPE_PROVED observed; killed by shape-compat, shape-compat-boundaries"
+    },
+    {
+      "id": "shape-invert-predicate",
+      "subsystem": "compatibility",
+      "rule": "matching or wildcard shapes are proved; anything else is unresolved",
+      "expectedFailure": "SHAPE_VERDICT_INVERTED",
+      "expectedKillers": [
+        "shape-compat"
+      ],
+      "actualKillers": [
+        "shape-compat",
+        "shape-compat-boundaries"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "SHAPE_VERDICT_INVERTED observed; killed by shape-compat, shape-compat-boundaries"
+    },
+    {
+      "id": "shape-require-both-wildcards",
+      "subsystem": "compatibility",
+      "rule": "a wildcard on EITHER side is enough to prove shape compatibility",
+      "expectedFailure": "ONE_SIDED_WILDCARD_REJECTED",
+      "expectedKillers": [
+        "shape-compat"
+      ],
+      "actualKillers": [
+        "shape-compat",
+        "shape-compat-boundaries"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "ONE_SIDED_WILDCARD_REJECTED observed; killed by shape-compat, shape-compat-boundaries"
+    },
+    {
+      "id": "shape-drop-batch-wildcard-token",
+      "subsystem": "compatibility",
+      "rule": "`batch` is one of the underspecified shape tokens that count as a wildcard",
+      "expectedFailure": "BATCH_NO_LONGER_WILDCARD",
+      "expectedKillers": [
+        "shape-compat"
+      ],
+      "actualKillers": [
+        "shape-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "BATCH_NO_LONGER_WILDCARD observed; killed by shape-compat"
+    },
+    {
+      "id": "shape-n-ignores-word-boundary",
+      "subsystem": "compatibility",
+      "rule": "a standalone `n` is a wildcard; an `n` inside a longer word is not",
+      "expectedFailure": "EMBEDDED_N_TREATED_AS_WILDCARD",
+      "expectedKillers": [
+        "shape-compat-boundaries"
+      ],
+      "actualKillers": [
+        "shape-compat-boundaries"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "EMBEDDED_N_TREATED_AS_WILDCARD observed; killed by shape-compat-boundaries"
+    },
+    {
+      "id": "shape-drop-question-wildcard",
+      "subsystem": "compatibility",
+      "rule": "`?` is a wildcard character, exactly as `*` is",
+      "expectedFailure": "QUESTION_MARK_NOT_A_WILDCARD",
+      "expectedKillers": [
+        "shape-compat-boundaries"
+      ],
+      "actualKillers": [
+        "shape-compat-boundaries"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "QUESTION_MARK_NOT_A_WILDCARD observed; killed by shape-compat-boundaries"
+    },
+    {
+      "id": "shape-drop-trim",
+      "subsystem": "compatibility",
+      "rule": "surrounding whitespace is trimmed before shapes are compared",
+      "expectedFailure": "UNTRIMMED_SHAPE_NOT_MATCHED",
+      "expectedKillers": [
+        "shape-compat-boundaries"
+      ],
+      "actualKillers": [
+        "shape-compat-boundaries"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNTRIMMED_SHAPE_NOT_MATCHED observed; killed by shape-compat-boundaries"
+    },
+    {
+      "id": "unit-fail-open-on-absent",
+      "subsystem": "compatibility",
+      "rule": "an absent unit is unresolved — never proved",
+      "expectedFailure": "ABSENT_UNIT_PROVED",
+      "expectedKillers": [
+        "unit-compat"
+      ],
+      "actualKillers": [
+        "unit-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "ABSENT_UNIT_PROVED observed; killed by unit-compat"
+    },
+    {
+      "id": "unit-drop-contradiction",
+      "subsystem": "compatibility",
+      "rule": "two different, non-dimensionless units are REFUTED — a contradiction, not merely unproven",
+      "expectedFailure": "UNIT_CONTRADICTION_DOWNGRADED",
+      "expectedKillers": [
+        "unit-compat"
+      ],
+      "actualKillers": [
+        "unit-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNIT_CONTRADICTION_DOWNGRADED observed; killed by unit-compat"
+    },
+    {
+      "id": "unit-dimensionless-proves",
+      "subsystem": "compatibility",
+      "rule": "dimensionless against a real unit is unresolved, not proved — it carries no dimensional claim",
+      "expectedFailure": "DIMENSIONLESS_TREATED_AS_MATCH",
+      "expectedKillers": [
+        "unit-compat"
+      ],
+      "actualKillers": [
+        "unit-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "DIMENSIONLESS_TREATED_AS_MATCH observed; killed by unit-compat"
+    },
+    {
+      "id": "unit-case-sensitive",
+      "subsystem": "compatibility",
+      "rule": "unit comparison is case-insensitive: `Probability` and `probability` are the same unit",
+      "expectedFailure": "UNIT_CASE_DISTINGUISHED",
+      "expectedKillers": [
+        "unit-compat"
+      ],
+      "actualKillers": [
+        "unit-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNIT_CASE_DISTINGUISHED observed; killed by unit-compat"
+    },
+    {
+      "id": "license-fail-open-on-absent",
+      "subsystem": "license-screening",
+      "rule": "absent license metadata is UNRESOLVED — screening never proves what it cannot see",
+      "expectedFailure": "ABSENT_LICENSE_PROVED",
+      "expectedKillers": [
+        "license-compat"
+      ],
+      "actualKillers": [
+        "license-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "ABSENT_LICENSE_PROVED observed; killed by license-compat"
+    },
+    {
+      "id": "license-flag-identical-copyleft",
+      "subsystem": "license-screening",
+      "rule": "only DISTINCT copyleft licenses need review; the same licence on both sides combines freely",
+      "expectedFailure": "IDENTICAL_COPYLEFT_FLAGGED",
+      "expectedKillers": [
+        "license-compat"
+      ],
+      "actualKillers": [
+        "license-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "IDENTICAL_COPYLEFT_FLAGGED observed; killed by license-compat"
+    },
+    {
+      "id": "license-copyleft-exact-match",
+      "subsystem": "license-screening",
+      "rule": "copyleft is detected by SUBSTRING, so `gpl-3.0` and `agpl-3.0` are both copyleft",
+      "expectedFailure": "VERSIONED_COPYLEFT_UNDETECTED",
+      "expectedKillers": [
+        "license-compat"
+      ],
+      "actualKillers": [
+        "license-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "VERSIONED_COPYLEFT_UNDETECTED observed; killed by license-compat"
+    },
     {
       "id": "disable-ubiquitous-filter",
       "subsystem": "edge-derivation",

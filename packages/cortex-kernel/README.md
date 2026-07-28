@@ -7,7 +7,7 @@ Phase 1 golden corpus (`test/golden/` at the repo root); the frozen standalone
 (`reference/src/cortex-v0.5.1.jsx`) remains the sole authority.
 
 > Status: **Full golden-oracle parity achieved.** The extracted kernel
-> reproduces all 42 oracle fixtures byte-for-byte after canonicalization
+> reproduces all 43 oracle fixtures byte-for-byte after canonicalization
 > (`npm run kernel:golden -- --check`). Not published yet.
 
 ## Design rules

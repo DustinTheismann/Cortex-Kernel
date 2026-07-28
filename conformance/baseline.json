@@ -2,8 +2,8 @@
   "policy": "monotonic-declared-support",
   "rationale": "An implementation's declared corpus may only grow. Without this, a regression can be hidden by silently dropping the failing case: 8/8 stays green while coverage quietly falls to 7. Reducing declared support is therefore a deliberate, reviewable act \u2014 it requires editing this file, which appears as a visible diff and demands a justification.",
   "enforcement": "conformance/verify.mjs fails when an implementation declares fewer cases than its baseline, naming every dropped case.",
-  "fixtureCompleteSubsystemsMeaning": "This list is exactly one claim: every corpus case exercising the subsystem is declared and reproduces. It is NOT a completeness claim. A subsystem can be fixture-complete while its rules remain unpinned — edge derivation was, for an entire release, reproducing its declared hash while eight of ten semantic mutations survived undetected. The field was previously named 'subsystemsComplete', which invited exactly that misreading.",
-  "mutationAdequacyIsSeparate": "Mutation adequacy is a second, independent claim, and only conformance/REPORT.json states it. Per subsystem it reports fixtureStatus and mutationStatus side by side; a subsystem with no declared mutants is 'not-assessed' and carries no mutant counts, because 'we looked and found no survivors' and 'we never looked' are different epistemic states. A subsystem is complete only when it is BOTH fixture-complete and mutation-qualified. Only 'edge-derivation' currently is; the other nine are pinned by assumption.",
+  "fixtureCompleteSubsystemsMeaning": "This list is exactly one claim: every corpus case exercising the subsystem is declared and reproduces. It is NOT a completeness claim. A subsystem can be fixture-complete while its rules remain unpinned \u2014 edge derivation was, for an entire release, reproducing its declared hash while eight of ten semantic mutations survived undetected. The field was previously named 'subsystemsComplete', which invited exactly that misreading.",
+  "mutationAdequacyIsSeparate": "Mutation adequacy is a second, independent claim, and only conformance/REPORT.json states it. Per subsystem it reports fixtureStatus and mutationStatus side by side; a subsystem with no declared mutants is 'not-assessed' and carries no mutant counts, because 'we looked and found no survivors' and 'we never looked' are different epistemic states. A subsystem is complete only when it is BOTH fixture-complete and mutation-qualified.",
   "authorizedReductionRequires": [
     "an explicit edit to this file recording the dropped cases and why",
     "a justification naming the regression or protocol change",
@@ -22,6 +22,7 @@
         "norm-schema",
         "pair-compat",
         "shape-compat",
+        "shape-compat-boundaries",
         "synth-test",
         "unit-compat"
       ],
