@@ -84,7 +84,11 @@
           ]
         },
         "certifiedAtCommit": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The commit at which this certificate was deliberately issued. Carried forward across regeneration and never recomputed from HEAD: a certificate generated before the commit that contains it can only name that commit's parent, and recomputing it broke the ledger's certificate binding on every commit. The commit a release shipped from is bound by the ledger entry's releaseCommitSha at sealing."
         },
         "workflow": {
           "type": "object"

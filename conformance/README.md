@@ -23,7 +23,9 @@ frozen reference ──▶ oracle ──▶ canonical fixtures ──▶ manifes
 | `CANONICALIZATION.md` | Language-neutral encoding spec (version 1) — the normative contract for hashing |
 | `schema/` | JSON Schemas for the manifest, fixtures, and certificates |
 | `verify.mjs` | The verifier: certifies any implementation against the corpus |
-| `mutants.mjs` | The mutation battery: certifies that the *corpus* discriminates |
+| `mutants.mjs` · `mutation/` | The mutation battery: certifies that the *corpus* discriminates |
+| `REPORT.json` · `REPORT.md` | Generated conformance report (normative / projection) |
+| `MUTATION-REPORT.json` | Generated per-subsystem mutation adequacy |
 | `baseline.json` | Monotonic declared-support floor and what subsystem completion means |
 | `implementations.json` | Registry of implementations and how to build/run them |
 
@@ -87,8 +89,10 @@ itself, and no group large enough to reach a size bound. Coverage read 11/41
 and was green.
 
 ```bash
-node conformance/mutants.mjs           # run the battery
-node conformance/mutants.mjs --list    # the mutation table and what pins each
+npm run mutants                                    # classify and write the report
+npm run mutants:check                              # also require the committed report to be current
+npm run mutants:list                               # the table: rule, pinning fixture, violation
+node conformance/mutants.mjs --subsystem=edge-derivation
 ```
 
 The battery copies the Rust crate to a temp directory, changes exactly one
@@ -98,16 +102,55 @@ shared-dependency floor, drop the family-token length guard, raise the topic
 hub cap, key the name index on the wrong field — and requires the named corpus
 case to catch it. The working tree is never modified.
 
-A **surviving mutant is a corpus defect**, not an implementation defect, and the
-remedy is additive: a new case that reaches the boundary, leaving every existing
-hash untouched. That is how `compute-edges-boundaries` came to exist. A mutation
-whose site has disappeared from the source is reported as `EXPIRED` and also
-fails, because a mutation that no longer describes real code supplies no
-evidence while continuing to look like it does.
+### A hash mismatch is not a kill
 
-This is what `baseline.json` means by subsystem completion: a subsystem is
-complete when its cases are declared *and* the battery kills every mutation of
-its rules. A fraction alone is not evidence.
+Counting "the hash changed" as a kill makes the score decorative: a mutant that
+crashes, or that perturbs output for a reason unrelated to the rule it was meant
+to violate, would score exactly like one that demonstrates the rule is enforced.
+So every mutant carries a **semantic assertion** — a predicate over its own
+output that detects the specific predicted violation (a self-edge exists; a
+ubiquitous dependency appears in shared-dependency evidence; a group hub is not
+the highest-starred member). Five outcomes are distinguished, and only the first
+counts:
+
+| Outcome | Meaning |
+|---|---|
+| `killed_correctly` | The expected fixture diverged **and** the predicted violation is observable |
+| `killed_incidentally` | Output changed, but not in the predicted way, not via the fixture that claims to pin the rule, or the mutant merely crashed |
+| `survived` | The corpus accepted incorrect behavior — a **corpus** defect, not an implementation defect |
+| `invalid_mutant` | The mutation changed no behavior (site gone, or the built binary is byte-identical) — it proves nothing while still looking like evidence |
+| `not_executed` | Harness defect: the mutant never ran, or its pinning fixture was deleted |
+
+The remedy for a survivor is additive: a new case that reaches the boundary,
+leaving every existing hash untouched. That is how `compute-edges-boundaries`
+came to exist.
+
+### The classifier is itself tested
+
+If the classifier silently degraded to "the hash changed", every score would
+still read 10/10 and nothing would notice — the same failure mode, one level up.
+So `mutation/selftest.mjs` drives the engine with synthetic mutants whose correct
+outcome is known by construction, and asserts that each of the five states is
+reachable and correctly distinguished. It runs first, in milliseconds, without a
+Rust toolchain.
+
+### What subsystem completion means
+
+`baseline.json` records that a subsystem is complete only when its cases are
+declared **and** the battery kills every mutation of its rules. `REPORT.json`
+carries this per subsystem:
+
+```json
+{ "subsystem": "edge-derivation", "fixtureStatus": "pass",
+  "mutationStatus": "qualified", "declaredMutants": 10,
+  "killedMutants": 10, "survivingMutants": 0 }
+```
+
+A subsystem with no declared mutants reports `"mutationStatus": "not-assessed"`
+and **no counts at all**. "We looked and found none" and "we never looked" are
+different epistemic states and must never render the same way. A report that no
+longer binds to the current corpus and implementation reports `"stale"`, not
+`"qualified"`.
 
 ## Why this exists
 

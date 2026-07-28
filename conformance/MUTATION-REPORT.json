@@ -1,0 +1,170 @@
+{
+  "artifact": "mutation-report",
+  "interpretation": "A subsystem is mutation-qualified when every declared semantic mutation of its rules is killed by the corpus case that claims to pin it, with the predicted violation observable in the mutant's own output. A hash mismatch alone is not a kill. Subsystems absent from this report have NOT been assessed, which is a different epistemic state from having zero surviving mutants.",
+  "integrity": {
+    "manifestSha256": "9f1d8ffc34c71a1bef4c77465c09b3e3c25b7de3a331e9cc9d817577174c27cd",
+    "implementationSourceSha256": "2d9a0765e28af7276552b124ef62dc40c85e19f55c9ee556e15ff5730f471a5d",
+    "registrySha256": "095d3ce86bd4c629808abc4d21405192cfbd0e7d9651713e3f68df0aff11b6a4"
+  },
+  "scope": "all",
+  "subsystems": [
+    {
+      "subsystem": "edge-derivation",
+      "corpusScope": [
+        "compute-edges",
+        "compute-edges-boundaries"
+      ],
+      "declaredMutants": 10,
+      "killedMutants": 10,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
+    }
+  ],
+  "mutants": [
+    {
+      "id": "disable-ubiquitous-filter",
+      "subsystem": "edge-derivation",
+      "rule": "shared-dependency ignores dependencies too common to carry signal",
+      "expectedFailure": "UBIQUITOUS_DEPENDENCY_COUNTED_AS_SHARED",
+      "expectedKillers": [
+        "compute-edges-boundaries"
+      ],
+      "actualKillers": [
+        "compute-edges-boundaries"
+      ],
+      "outcome": "killed_correctly",
+      "detail": "UBIQUITOUS_DEPENDENCY_COUNTED_AS_SHARED observed; killed by compute-edges-boundaries"
+    },
+    {
+      "id": "permit-self-edges",
+      "subsystem": "edge-derivation",
+      "rule": "readme-reference never links a repository to itself by name",
+      "expectedFailure": "SELF_EDGE_EMITTED",
+      "expectedKillers": [
+        "compute-edges-boundaries"
+      ],
+      "actualKillers": [
+        "compute-edges-boundaries"
+      ],
+      "outcome": "killed_correctly",
+      "detail": "SELF_EDGE_EMITTED observed; killed by compute-edges-boundaries"
+    },
+    {
+      "id": "ascending-star-order",
+      "subsystem": "edge-derivation",
+      "rule": "a group hub is its highest-starred member",
+      "expectedFailure": "GROUP_HUB_IS_NOT_TOP_STARRED",
+      "expectedKillers": [
+        "compute-edges",
+        "compute-edges-boundaries"
+      ],
+      "actualKillers": [
+        "compute-edges",
+        "compute-edges-boundaries"
+      ],
+      "outcome": "killed_correctly",
+      "detail": "GROUP_HUB_IS_NOT_TOP_STARRED observed; killed by compute-edges, compute-edges-boundaries"
+    },
+    {
+      "id": "unstable-tie-ordering",
+      "subsystem": "edge-derivation",
+      "rule": "equal-star members keep corpus order — the sort must be stable",
+      "expectedFailure": "TIED_MEMBERS_REORDERED",
+      "expectedKillers": [
+        "compute-edges-boundaries"
+      ],
+      "actualKillers": [
+        "compute-edges-boundaries"
+      ],
+      "outcome": "killed_correctly",
+      "detail": "TIED_MEMBERS_REORDERED observed; killed by compute-edges-boundaries"
+    },
+    {
+      "id": "widen-language-bound",
+      "subsystem": "edge-derivation",
+      "rule": "shared-language is a weak signal, so groups above 14 members are skipped entirely",
+      "expectedFailure": "OVERSIZED_LANGUAGE_GROUP_LINKED",
+      "expectedKillers": [
+        "compute-edges-boundaries"
+      ],
+      "actualKillers": [
+        "compute-edges-boundaries"
+      ],
+      "outcome": "killed_correctly",
+      "detail": "OVERSIZED_LANGUAGE_GROUP_LINKED observed; killed by compute-edges-boundaries"
+    },
+    {
+      "id": "widen-family-bound",
+      "subsystem": "edge-derivation",
+      "rule": "naming-family groups above 30 members are skipped entirely",
+      "expectedFailure": "OVERSIZED_FAMILY_GROUP_LINKED",
+      "expectedKillers": [
+        "compute-edges-boundaries"
+      ],
+      "actualKillers": [
+        "compute-edges-boundaries"
+      ],
+      "outcome": "killed_correctly",
+      "detail": "OVERSIZED_FAMILY_GROUP_LINKED observed; killed by compute-edges-boundaries"
+    },
+    {
+      "id": "lower-shared-dep-floor",
+      "subsystem": "edge-derivation",
+      "rule": "shared-dependency requires at least two shared non-ubiquitous dependencies",
+      "expectedFailure": "SINGLE_SHARED_DEPENDENCY_ACCEPTED",
+      "expectedKillers": [
+        "compute-edges",
+        "compute-edges-boundaries"
+      ],
+      "actualKillers": [
+        "compute-edges",
+        "compute-edges-boundaries"
+      ],
+      "outcome": "killed_correctly",
+      "detail": "SINGLE_SHARED_DEPENDENCY_ACCEPTED observed; killed by compute-edges, compute-edges-boundaries"
+    },
+    {
+      "id": "drop-family-length-guard",
+      "subsystem": "edge-derivation",
+      "rule": "a family token shorter than two characters forms no family",
+      "expectedFailure": "SINGLE_CHARACTER_FAMILY_LINKED",
+      "expectedKillers": [
+        "compute-edges-boundaries"
+      ],
+      "actualKillers": [
+        "compute-edges-boundaries"
+      ],
+      "outcome": "killed_correctly",
+      "detail": "SINGLE_CHARACTER_FAMILY_LINKED observed; killed by compute-edges-boundaries"
+    },
+    {
+      "id": "raise-topic-hub-cap",
+      "subsystem": "edge-derivation",
+      "rule": "a shared-topic group is truncated to its top 60 members — 61 members yield 59 edges",
+      "expectedFailure": "TOPIC_GROUP_EXCEEDS_HUB_CAP",
+      "expectedKillers": [
+        "compute-edges-boundaries"
+      ],
+      "actualKillers": [
+        "compute-edges-boundaries"
+      ],
+      "outcome": "killed_correctly",
+      "detail": "TOPIC_GROUP_EXCEEDS_HUB_CAP observed; killed by compute-edges-boundaries"
+    },
+    {
+      "id": "dedup-on-wrong-key",
+      "subsystem": "edge-derivation",
+      "rule": "the name→id index is keyed by name, and a later repository wins",
+      "expectedFailure": "NAME_INDEX_RESOLVED_TO_WRONG_REPOSITORY",
+      "expectedKillers": [
+        "compute-edges-boundaries"
+      ],
+      "actualKillers": [
+        "compute-edges-boundaries"
+      ],
+      "outcome": "killed_correctly",
+      "detail": "NAME_INDEX_RESOLVED_TO_WRONG_REPOSITORY observed; killed by compute-edges-boundaries"
+    }
+  ]
+}

@@ -49,14 +49,21 @@ const conformance = has("impl/rust/target/release/cortex-conformance")
   ? tryRun("node", ["conformance/verify.mjs"])
   : { ok: null };
 const mutants = has("impl/rust/target/release/cortex-conformance")
-  ? tryRun("node", ["conformance/mutants.mjs"])
+  ? tryRun("node", ["conformance/mutants.mjs", "--check"])
   : { ok: null };
 
-// Which subsystems the mutation battery actually covers. Everything the corpus
-// pins WITHOUT a mutation test is pinned only by assumption — the state edge
-// derivation was in when it reproduced its hash while four of its rules could
-// be violated freely.
-const mutationScope = ["edge-derivation"];
+// Which subsystems the mutation battery actually qualifies. Read from the
+// generated report rather than restated here — a hand-kept list of "what we
+// have tested" is the duplicated state this repository keeps eliminating.
+// Everything declared complete WITHOUT a qualifying mutation run is pinned only
+// by assumption: the state edge derivation was in when it reproduced its hash
+// while four of its rules could be violated freely.
+const mutationScope = (() => {
+  try {
+    return readJson("conformance/MUTATION-REPORT.json").subsystems
+      .filter((s) => s.mutationStatus === "qualified").map((s) => s.subsystem);
+  } catch { return []; }
+})();
 const declaredSubsystems = (() => {
   try { return readJson("conformance/baseline.json").implementations.rust.subsystemsComplete; }
   catch { return []; }
@@ -104,7 +111,7 @@ const OBLIGATIONS = [
     status: mutants.ok === null ? "UNRESOLVED" : (mutants.ok ? "CONDITIONALLY-SATISFIED" : "REFUTED"),
     detail: mutants.ok === null
       ? "conformance binary not built — run npm run conformance:build"
-      : `every seeded semantic mutation of ${mutationScope.join(", ")} is caught by the case that claims to pin it; `
+      : `every declared semantic mutation of ${mutationScope.join(", ") || "(nothing)"} is killed by the case that claims to pin it, with the predicted violation observable; `
         + (unMutated.length
           ? `${unMutated.length} declared subsystem(s) have no mutation coverage and are pinned by assumption: ${unMutated.join(", ")}`
           : "every declared subsystem is mutation-covered"),

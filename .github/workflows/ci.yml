@@ -114,9 +114,13 @@ jobs:
       # green conformance run proves one implementation matches the fixtures;
       # it says nothing about whether the fixtures reach the boundaries they
       # claim to pin. This gate mutates one semantic boundary at a time in the
-      # Rust peer and requires the named corpus case to catch each. A surviving
-      # mutant is a corpus defect and fails here — which is how the original
-      # edge-derivation blind spot (four rules unpinned behind a green 11/41)
-      # would have been caught at the time rather than by hand afterwards.
+      # Rust peer and requires the named corpus case to catch each, with the
+      # predicted violation observable in the mutant's own output — a hash
+      # mismatch alone is not a kill. It fails when a mutant survives (a corpus
+      # defect), is killed incidentally, becomes equivalent or expires, is
+      # never executed, loses its pinning fixture, or when the committed
+      # MUTATION-REPORT.json is stale. The classifier is itself tested first,
+      # against synthetic mutants of every outcome, so it cannot silently
+      # degrade to "the hash changed" while still reporting 10/10.
       - name: mutation-battery
-        run: npm run mutants
+        run: npm run mutants:check

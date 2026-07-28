@@ -48,7 +48,7 @@
   "release": {
     "kernelMergeCommitSha": "5777134ca3ae07620fb7d00b7653c094f01552a1",
     "referenceCommitSha": "804f767e2b9e9eb292c8368e60e9f3224a6a54f7",
-    "certifiedAtCommit": "d0d060a3b9e489baedd5b00d65350a897e9ab19e",
+    "certifiedAtCommit": "d12e11e7fc156c04a0baef2f5cf49cb33bdb03c6",
     "workflow": {
       "name": "kernel",
       "runId": "30141097317",

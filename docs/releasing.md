@@ -69,6 +69,28 @@ available — it adds cryptographic provenance to the release.
 Tag the commit that contains the certification artifact and the CI configuration
 the release was verified under.
 
+## 5a. Seal the ledger entry
+
+```bash
+node scripts/ledger.mjs --release --tag=v<version>-kernel
+```
+
+Until this runs, the head entry is **provisional**: it may be restated as the
+corpus moves, and each restatement is counted on the entry. Sealing is the
+moment the chain's integrity claim starts being load-bearing, so it is anchored
+rather than asserted — the command refuses unless every one of these holds:
+
+- the working tree is clean (a release describes committed state, not a workspace);
+- `HEAD` is on `main` (override deliberately with `--branch=`);
+- the tag already exists and is **annotated** — a lightweight tag carries no
+  tagger, date or message, so it cannot witness a release;
+- the tag points at `HEAD`, so the sealed commit is unambiguous;
+- `npm run verify` passes, run then and there rather than remembered.
+
+The sealed entry binds `releaseCommitSha` into its hash and records whether the
+tag was signed. After sealing, the entry can never be rewritten — a later corpus
+change is a **new** entry (`--append`), not a restatement.
+
 ## 6. GitHub Release
 
 Create a Release from the tag containing:

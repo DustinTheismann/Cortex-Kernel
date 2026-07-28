@@ -26,6 +26,7 @@
 // visible rather than looking pristine.
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -42,6 +43,7 @@ const entryHash = (e) => sha(JSON.stringify({
   fixtureHashes: e.fixtureHashes, behavioralDelta: e.behavioralDelta,
   previousEntrySha256: e.previousEntrySha256,
   status: e.status, restatements: e.restatements,
+  releaseCommitSha: e.releaseCommitSha, tagSignature: e.tagSignature,
 }));
 
 const loadChain = () => (existsSync(CHAIN) ? readJson(CHAIN) : { chainVersion: 1, entries: [] });
@@ -154,22 +156,73 @@ const restate = () => {
   console.log(`ledger: restated ${entry.releaseTag} (seq ${entry.seq}, provisional, restatement ${entry.restatements}) — ${entry.fixtureCount} fixtures`);
 };
 
-/** Seal the head: its tag now exists, so the entry becomes immutable. */
+/**
+ * Seal the head: its tag now exists, so the entry becomes immutable.
+ *
+ * Sealing is the moment the chain's integrity claim starts being load-bearing,
+ * so it is the one operation that must be externally anchored rather than
+ * locally asserted. A "released" entry produced from a dirty tree, a failing
+ * gate set, a side branch, or a tag that does not exist would make the whole
+ * lineage decorative. Every precondition below is therefore checked, not
+ * trusted, and the commit that was released is bound into the entry hash.
+ */
 const release = () => {
-  const tagArg = process.argv.find((a) => a.startsWith("--tag="));
+  const arg = (n, d) => { const h = process.argv.find((a) => a.startsWith(`--${n}=`)); return h ? h.slice(n.length + 3) : d; };
   const chain = loadChain();
   const head = chain.entries[chain.entries.length - 1];
   if (!head) { console.error("ledger is empty"); process.exit(1); }
-  if (!tagArg || tagArg.slice(6) !== head.releaseTag) {
+  if (arg("tag") !== head.releaseTag) {
     console.error(`--release requires --tag=${head.releaseTag} (the head entry), so sealing is deliberate`);
     process.exit(2);
   }
   if (head.status === "released") { console.log(`${head.releaseTag} is already released`); return; }
+
+  const expectedBranch = arg("branch", "main");
+  const git = (args) => { try { return execFileSync("git", args, { cwd: root, encoding: "utf8" }).trim(); } catch { return null; } };
+  const blockers = [];
+
+  // 1. Clean tree: a release must describe committed state, not a workspace.
+  const dirty = git(["status", "--porcelain"]);
+  if (dirty === null) blockers.push("git is unavailable — a release cannot be anchored without it");
+  else if (dirty) blockers.push(`the working tree is dirty:\n      ${dirty.split("\n").join("\n      ")}`);
+
+  // 2. Expected branch: releases do not come off side branches.
+  const branch = git(["rev-parse", "--abbrev-ref", "HEAD"]);
+  if (branch !== expectedBranch) blockers.push(`HEAD is on '${branch}', not '${expectedBranch}' (override deliberately with --branch=)`);
+
+  // 3. The tag must already exist and be annotated — a lightweight tag carries
+  //    no tagger, date, or message, so it cannot witness a release.
+  const tagType = git(["cat-file", "-t", head.releaseTag]);
+  if (tagType === null) blockers.push(`tag ${head.releaseTag} does not exist — create and push it before sealing`);
+  else if (tagType !== "tag") blockers.push(`tag ${head.releaseTag} is lightweight (${tagType}); an annotated tag is required: git tag -a ${head.releaseTag}`);
+
+  // 4. The tag must point at HEAD, so the sealed commit is unambiguous.
+  const headSha = git(["rev-parse", "HEAD"]);
+  const tagSha = git(["rev-list", "-n", "1", head.releaseTag]);
+  if (tagType === "tag" && tagSha !== headSha) blockers.push(`tag ${head.releaseTag} points at ${tagSha}, but HEAD is ${headSha}`);
+
+  // 5. Every gate green, run now rather than remembered.
+  if (!process.argv.includes("--skip-gates")) {
+    process.stdout.write("verifying every gate before sealing… ");
+    try { execFileSync("npm", ["run", "verify"], { cwd: root, stdio: "pipe" }); console.log("green"); }
+    catch (e) { console.log("FAILED"); blockers.push("`npm run verify` did not pass — a release cannot be sealed over a failing gate set"); }
+  } else {
+    blockers.push("--skip-gates is not permitted when sealing a release");
+  }
+
+  if (blockers.length) {
+    console.error(`\ncannot seal ${head.releaseTag}:\n  - ` + blockers.join("\n  - "));
+    console.error("\nSealing makes the entry immutable and starts the chain's integrity claim. It must be anchored, not asserted.");
+    process.exit(1);
+  }
+
   head.status = "released";
+  head.releaseCommitSha = headSha;                       // bound into the entry hash
+  head.tagSignature = git(["for-each-ref", `refs/tags/${head.releaseTag}`, "--format=%(contents:signature)"]) ? "signed" : "unsigned";
   delete head.entrySha256;
   head.entrySha256 = entryHash(head);
   writeChain(chain);
-  console.log(`ledger: sealed ${head.releaseTag} (seq ${head.seq}) — the entry is now immutable`);
+  console.log(`ledger: sealed ${head.releaseTag} (seq ${head.seq}) at ${headSha.slice(0, 12)} — annotated tag, ${head.tagSignature}, all gates green. The entry is now immutable.`);
 };
 
 const verify = () => {

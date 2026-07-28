@@ -4,7 +4,7 @@
     {
       "seq": 0,
       "releaseTag": "v0.5.1-kernel",
-      "certificateSha256": "2d04ae631bfb6bfc1e5676b3a9132d4e438a3ce87653d868e5ebf715aa9d3b9b",
+      "certificateSha256": "f80f070779d86d1bb405f7db21a36c5afc59481ac1e2642786cbea7fc1e39a37",
       "fixtureCount": 42,
       "fixtureHashes": {
         "mech-kinds": "d8a99f3fd101bbc55a233bcc2a246dbdd2cc22439db7978bff9ef888c77d8ac6",
@@ -57,11 +57,11 @@
         "changedFixtures": [],
         "unchangedFixtures": 0,
         "baselineFixtures": 42,
-        "statement": "Genesis: the v0.5.1 behavioral baseline — 42 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation whose edge-derivation coverage is mutation-tested."
+        "statement": "Genesis: the v0.5.1 behavioral baseline — 42 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation whose edge-derivation subsystem is mutation-qualified."
       },
       "previousEntrySha256": null,
-      "restatements": 1,
-      "entrySha256": "4d21aa15d41e8d82c974e0d50f61aa33e10ac7ca62293984d56bec35a2f9ea08"
+      "restatements": 2,
+      "entrySha256": "0ae0ffed3fd70ac7f573c585a5cc7940022a91b9b5856ba893a5475bdce30de6"
     }
   ]
 }

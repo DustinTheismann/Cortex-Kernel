@@ -1,13 +1,13 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-27T12:39:13.226Z",
+  "generatedAt": "2026-07-28T01:19:58.112Z",
   "ciRun": null,
   "integrity": {
     "manifestSha256": "9f1d8ffc34c71a1bef4c77465c09b3e3c25b7de3a331e9cc9d817577174c27cd",
     "canonicalizationSpecSha256": "5ed64bf745d2e41c8287052859200711f879ba605d8b5c3fa17ee9d91c267d1d",
     "canonicalizerSha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8",
-    "verifierSha256": "6f01550b6e3692f2f0349a750dbd4fd338d0e6a7b1ae00c2021da789a9ef0342",
-    "baselineSha256": "7ee4cc5e2ff6e6e3f2f34f67cb9fae00202694d3e665c0cd31194e78e7e1eb2d",
+    "verifierSha256": "2226a07df8d0d70c2402e4cb3ff8a84f84e249491ec4dbf5931f53a739403f5c",
+    "baselineSha256": "e2fae462f1f56f37c3b76ac50c83ad38afaec0ca11a0e46acc6feed1dd1b4cb3",
     "referenceSourceSha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
   },
   "corpus": {
@@ -58,17 +58,19 @@
         "registry",
         "schema-normalization",
         "selected-path-ordering",
-        "serialization",
         "tie-breaking",
         "types"
       ],
       "semanticAreasUncovered": [
         "cascade",
+        "cascade-compatibility",
+        "cascade-planning",
         "contract-instantiation",
         "error-handling",
         "import-export",
         "literature-assessment",
         "obligations",
+        "serialization",
         "stage-advancement",
         "verdict-derivation"
       ],
@@ -181,8 +183,7 @@
           "status": "supported",
           "hashMatch": true,
           "semanticAreas": [
-            "edge-derivation",
-            "serialization"
+            "edge-derivation"
           ]
         },
         {
@@ -193,8 +194,7 @@
           "semanticAreas": [
             "edge-derivation",
             "group-size-bounds",
-            "tie-breaking",
-            "serialization"
+            "tie-breaking"
           ]
         },
         {
@@ -203,7 +203,7 @@
           "status": "not_implemented",
           "hashMatch": false,
           "semanticAreas": [
-            "compatibility",
+            "cascade-compatibility",
             "cascade"
           ]
         },
@@ -213,7 +213,7 @@
           "status": "not_implemented",
           "hashMatch": false,
           "semanticAreas": [
-            "compatibility",
+            "cascade-compatibility",
             "cascade"
           ]
         },
@@ -223,7 +223,7 @@
           "status": "not_implemented",
           "hashMatch": false,
           "semanticAreas": [
-            "multipath-planning",
+            "cascade-planning",
             "ranking",
             "cascade"
           ]
@@ -234,7 +234,7 @@
           "status": "not_implemented",
           "hashMatch": false,
           "semanticAreas": [
-            "multipath-planning",
+            "cascade-planning",
             "ranking",
             "cascade"
           ]
@@ -245,7 +245,7 @@
           "status": "not_implemented",
           "hashMatch": false,
           "semanticAreas": [
-            "multipath-planning",
+            "cascade-planning",
             "ranking",
             "cascade"
           ]
@@ -289,7 +289,7 @@
           "status": "not_implemented",
           "hashMatch": false,
           "semanticAreas": [
-            "compatibility",
+            "cascade-compatibility",
             "cascade"
           ]
         },
@@ -299,7 +299,7 @@
           "status": "not_implemented",
           "hashMatch": false,
           "semanticAreas": [
-            "compatibility",
+            "cascade-compatibility",
             "cascade"
           ]
         },
@@ -309,7 +309,7 @@
           "status": "not_implemented",
           "hashMatch": false,
           "semanticAreas": [
-            "compatibility",
+            "cascade-compatibility",
             "cascade"
           ]
         },
@@ -506,6 +506,62 @@
             "serialization",
             "import-export"
           ]
+        }
+      ],
+      "subsystems": [
+        {
+          "subsystem": "compatibility",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
+          "subsystem": "edge-cost",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
+          "subsystem": "edge-derivation",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 10,
+          "killedMutants": 10,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "license-screening",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
+          "subsystem": "literature-classification",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
+          "subsystem": "multipath-planning",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
+          "subsystem": "property-test-skeleton",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
+          "subsystem": "registry",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
+          "subsystem": "schema-normalization",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
+          "subsystem": "types",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
         }
       ],
       "binarySha256": "ede78007f8fb2c99f37e7b55363b9a86c0d02cca89d848a0e5de72ad19d5c426",

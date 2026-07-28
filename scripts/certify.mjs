@@ -95,7 +95,16 @@ const releaseMetadata = (existing) => {
     // Provenance, not compared evidence: resolving a short SHA needs history a
     // shallow clone does not have, so this is best-effort and carried forward.
     referenceCommitSha: arg("reference-commit") || shSafe("git", ["rev-parse", manifest.sourceBaseline]) || prior.referenceCommitSha || null,
-    certifiedAtCommit: arg("head") || shSafe("git", ["rev-parse", "HEAD"]),
+    // Carried forward, never recomputed. Recomputing it from HEAD made the
+    // certificate churn on every commit, and because the ledger binds the
+    // certificate's hash, every churn broke the chain until the entry was
+    // restated. It was also structurally unable to be right: generated BEFORE
+    // the commit that contains it, it could only ever name that commit's
+    // parent. The commit a release actually shipped from is bound by
+    // `scripts/ledger.mjs --release`, which sets it at sealing time against an
+    // existing annotated tag. Set here only when deliberately re-issuing:
+    // `npm run certify -- --head=<sha>`.
+    certifiedAtCommit: arg("head") || prior.certifiedAtCommit || null,
     workflow: {
       name: prior.workflow?.name || "kernel",
       runId,
@@ -178,7 +187,7 @@ const renderMarkdown = (cert) => {
     `| Canonicalizer hash (sha256 of \`${e.canonicalizer.path}\`) | \`${e.canonicalizer.sha256}\` |`,
     `| Workflow run ID | \`${r.workflow.runId || "—"}\` |`,
     `| Workflow conclusion | \`${r.workflow.conclusion || "—"}\` |`,
-    "| Certified at commit | see JSON `release.certifiedAtCommit` |",
+    `| Certified at commit | \`${r.certifiedAtCommit || "—"}\` (carried forward; the released commit is bound by the ledger at sealing) |`,
     "| Build environment | see JSON `buildEnvironment` (Node, npm, platform, arch) |",
     "| Release timestamp | see JSON `release.releaseTimestamp` |",
     "",

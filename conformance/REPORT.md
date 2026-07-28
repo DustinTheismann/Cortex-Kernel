@@ -14,7 +14,27 @@ Corpus: oracle **v0.5.1**, schemaVersion **7**, canonicalization **v1**, **42** 
 
 | Implementation | Semantic areas covered | Not yet covered |
 |---|---|---|
-| `rust` | compatibility, depth-cap, edge-cost, edge-derivation, group-size-bounds, impossibility, license-screening, literature-classification, multipath-planning, path-enumeration, property-test-skeleton, ranking, registry, schema-normalization, selected-path-ordering, serialization, tie-breaking, types | cascade, contract-instantiation, error-handling, import-export, literature-assessment, obligations, stage-advancement, verdict-derivation |
+| `rust` | compatibility, depth-cap, edge-cost, edge-derivation, group-size-bounds, impossibility, license-screening, literature-classification, multipath-planning, path-enumeration, property-test-skeleton, ranking, registry, schema-normalization, selected-path-ordering, tie-breaking, types | cascade, cascade-compatibility, cascade-planning, contract-instantiation, error-handling, import-export, literature-assessment, obligations, serialization, stage-advancement, verdict-derivation |
+
+## Subsystem completion
+
+Matching fixtures and being **mutation-qualified** are different claims. A
+subsystem is qualified only when every declared semantic mutation of its rules
+is killed by the corpus case that claims to pin it. `not-assessed` means no
+mutants have been declared for it — which is *not* the same as zero survivors.
+
+| Implementation | Subsystem | Fixtures | Mutation adequacy | Killed / declared | Surviving |
+|---|---|---|---|---|---|
+| `rust` | compatibility | pass | not-assessed | — | — |
+| `rust` | edge-cost | pass | not-assessed | — | — |
+| `rust` | edge-derivation | pass | **qualified** | 10/10 | 0 |
+| `rust` | license-screening | pass | not-assessed | — | — |
+| `rust` | literature-classification | pass | not-assessed | — | — |
+| `rust` | multipath-planning | pass | not-assessed | — | — |
+| `rust` | property-test-skeleton | pass | not-assessed | — | — |
+| `rust` | registry | pass | not-assessed | — | — |
+| `rust` | schema-normalization | pass | not-assessed | — | — |
+| `rust` | types | pass | not-assessed | — | — |
 
 ## How to read this
 

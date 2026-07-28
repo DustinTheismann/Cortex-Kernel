@@ -48,15 +48,55 @@ const SEMANTIC_AREAS = {
   "classify-lit": ["literature-classification"],
   "synth-test": ["property-test-skeleton"],
   "norm-schema": ["schema-normalization"],
-  "compute-edges": ["edge-derivation", "serialization"],
-  "compute-edges-boundaries": ["edge-derivation", "group-size-bounds", "tie-breaking", "serialization"],
+  "compute-edges": ["edge-derivation"],
+  "compute-edges-boundaries": ["edge-derivation", "group-size-bounds", "tie-breaking"],
 };
+// Cascade categories carry `cascade-`-prefixed area names. They previously
+// reused `compatibility` and `multipath-planning`, which made those areas mean
+// two different things — the deterministic predicate/planner surface, and the
+// cascade stage built on top of it. The collision let `subsystemsComplete`
+// claim a subsystem the implementation had only half-covered, and the claim was
+// invisible until the subsystem table below started reporting fixture status.
 const areasFor = (caseId, category) => SEMANTIC_AREAS[caseId] || {
-  compatibility: ["compatibility", "cascade"], planning: ["multipath-planning", "ranking", "cascade"],
+  compatibility: ["cascade-compatibility", "cascade"], planning: ["cascade-planning", "ranking", "cascade"],
   preconditions: ["contract-instantiation", "obligations", "cascade"], obligations: ["obligations", "cascade"],
   ladder: ["stage-advancement", "cascade"], literature: ["literature-assessment", "verdict-derivation", "cascade"],
   serialization: ["serialization", "import-export"], malformed: ["serialization", "error-handling"],
 }[category] || ["unclassified"];
+
+// ---- mutation adequacy -----------------------------------------------------
+// Matching fixtures and being mutation-qualified are DIFFERENT claims, and the
+// report must never let one stand in for the other. A subsystem with no
+// declared mutants is `not-assessed`; it does not report zero survivors,
+// because "we looked and found none" and "we never looked" are not the same
+// epistemic state. A report that no longer binds to the current corpus or
+// implementation is `stale`, not `qualified`.
+const mutationReport = (() => {
+  try { return JSON.parse(readFileSync(join(root, "conformance/MUTATION-REPORT.json"), "utf8")); }
+  catch { return null; }
+})();
+const mutationBinds = mutationReport
+  && mutationReport.integrity.manifestSha256 === fileHash("test/golden/manifest.json")
+  && mutationReport.integrity.implementationSourceSha256 === fileHash("impl/rust/src/main.rs")
+  && mutationReport.scope === "all";
+
+const subsystemReport = (impl, coverageMap) => {
+  const declared = ((baseline.implementations[impl.id] || {}).subsystemsComplete) || [];
+  const assessed = new Map((mutationReport ? mutationReport.subsystems : []).map((s) => [s.subsystem, s]));
+  return declared.map((subsystem) => {
+    const rows = coverageMap.filter((r) => r.semanticAreas.includes(subsystem));
+    const fixtureStatus = rows.length === 0 ? "no-fixtures"
+      : rows.every((r) => r.status === "supported") ? "pass" : "incomplete";
+    const m = assessed.get(subsystem);
+    if (!m) return { subsystem, fixtureStatus, mutationStatus: "not-assessed" };
+    if (!mutationBinds) return { subsystem, fixtureStatus, mutationStatus: "stale", note: "the mutation report does not bind to the current corpus and implementation — re-run npm run mutants" };
+    return {
+      subsystem, fixtureStatus, mutationStatus: m.mutationStatus,
+      declaredMutants: m.declaredMutants, killedMutants: m.killedMutants,
+      survivingMutants: m.survivingMutants, inconclusiveMutants: m.inconclusiveMutants,
+    };
+  });
+};
 
 const runImpl = (impl, args) => {
   const cmd = impl.command[0];
@@ -137,6 +177,7 @@ const verifyImplementation = (impl) => {
     label, matched, failed, unknown, unauthorizedDrops, undeclaredPassing,
     coverage: `${matched.length}/${manifest.cases.length}`,
     coverageMap, coveredAreas, uncoveredAreas: allAreas.filter((a) => !coveredAreas.includes(a)),
+    subsystems: subsystemReport(impl, coverageMap),
     binarySha256: existsSync(binary) ? fileHash(impl.command[0].replace(/^\.\//, "")) : null,
   };
 };
@@ -159,6 +200,10 @@ for (const impl of targets) {
   console.log(`  ${icon} ${r.label} — ${r.coverage} corpus cases reproduced`);
   console.log(`      cases: ${r.matched.join(", ") || "(none)"}`);
   console.log(`      areas:  ${r.coveredAreas.join(", ")}`);
+  const qualified = (r.subsystems || []).filter((s) => s.mutationStatus === "qualified").map((s) => s.subsystem);
+  const unassessed = (r.subsystems || []).filter((s) => s.mutationStatus !== "qualified");
+  console.log(`      mutation-qualified: ${qualified.join(", ") || "(none)"}`);
+  if (unassessed.length) console.log(`      pinned by assumption: ${unassessed.map((s) => `${s.subsystem} (${s.mutationStatus})`).join(", ")}`);
   for (const f of r.failed) { console.error(`      FAILED ${f.caseId}: ${f.reason}`); hardFailure = true; }
   for (const u of r.unknown) { console.error(`      claims unknown case: ${u}`); hardFailure = true; }
   for (const u of r.undeclaredPassing) {
@@ -193,6 +238,7 @@ if (!only) {
       semanticAreasCovered: r ? r.coveredAreas : [],
       semanticAreasUncovered: r ? r.uncoveredAreas : [],
       coverageMap: r ? r.coverageMap : [],
+      subsystems: r ? r.subsystems || [] : [],
       binarySha256: r ? r.binarySha256 : null,
       toolchain: impl.toolchain || null,
       notes: impl.notes || "",
@@ -250,6 +296,18 @@ if (!only) {
     "| Implementation | Semantic areas covered | Not yet covered |",
     "|---|---|---|",
     ...rows.map((r) => `| \`${r.implementation}\` | ${r.semanticAreasCovered.join(", ") || "—"} | ${r.semanticAreasUncovered.join(", ") || "—"} |`),
+    "",
+    "## Subsystem completion",
+    "",
+    "Matching fixtures and being **mutation-qualified** are different claims. A",
+    "subsystem is qualified only when every declared semantic mutation of its rules",
+    "is killed by the corpus case that claims to pin it. `not-assessed` means no",
+    "mutants have been declared for it — which is *not* the same as zero survivors.",
+    "",
+    "| Implementation | Subsystem | Fixtures | Mutation adequacy | Killed / declared | Surviving |",
+    "|---|---|---|---|---|---|",
+    ...rows.flatMap((r) => (r.subsystems || []).map((s) =>
+      `| \`${r.implementation}\` | ${s.subsystem} | ${s.fixtureStatus} | ${s.mutationStatus === "qualified" ? "**qualified**" : s.mutationStatus} | ${s.declaredMutants === undefined ? "—" : `${s.killedMutants}/${s.declaredMutants}`} | ${s.survivingMutants === undefined ? "—" : s.survivingMutants} |`)),
     "",
     "## How to read this",
     "",

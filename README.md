@@ -111,7 +111,7 @@ npm run verify        # the whole chain, in order
 | `dependency-policy` | Both npm manifests and lock files remain dependency-free; the Rust package graph contains exactly the implementation crate itself. |
 | `canonicalization-vectors` | Adversarial language-neutral vectors pin absent/null/undefined distinctions, Unicode key ordering, array order, numeric edge cases, generated identifiers, and timestamp exclusion. |
 | `gate-inventory` | The workflow, README table, prose counts, and certificate describe the same gate set. |
-| `mutation-battery` | The corpus is discriminating: each semantic boundary in edge derivation, mutated one at a time, is caught by the corpus case that claims to pin it. |
+| `mutation-battery` | The corpus is discriminating: each semantic boundary in edge derivation, mutated one at a time, is caught by the corpus case that claims to pin it — with the predicted violation observable, since a hash mismatch alone is not a kill. The classifier is itself tested against synthetic mutants of every outcome. |
 
 What the evidence does **not** establish is stated by the repository itself:
 
