@@ -50,14 +50,18 @@ const sandbox = (mutate) => {
   const g = (...a) => execFileSync("git", ["-c", "user.email=t@t", "-c", "user.name=t", ...a], { cwd: dir, stdio: "pipe" });
   g("checkout", "-q", "-B", "main");
   g("add", "-A");
-  g("commit", "-qm", "sandbox base");
+  // --allow-empty: in a clean checkout the copy above is a no-op, and a commit
+  // with no changes exits non-zero. Without this the sandbox only works when the
+  // working tree happens to be dirty — which is how it passed locally and failed
+  // in CI.
+  g("commit", "-q", "--allow-empty", "-m", "sandbox base");
   g("tag", "-a", TAG, "-m", "sandbox release");
   // --skip-gates is refused by design, so the gate run is neutralised instead:
   // the sandbox has no Rust toolchain and the point here is release identity.
   const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
   pkg.scripts.verify = "node -e 0";
   writeFileSync(join(dir, "package.json"), JSON.stringify(pkg, null, 2) + "\n");
-  g("add", "-A"); g("commit", "-qm", "neutralise gates"); g("tag", "-f", "-a", TAG, "-m", "sandbox release");
+  g("add", "-A"); g("commit", "-q", "--allow-empty", "-m", "neutralise gates"); g("tag", "-f", "-a", TAG, "-m", "sandbox release");
   execFileSync("node", [join(dir, "scripts/ledger.mjs"), "--release", `--tag=${TAG}`], { cwd: dir, stdio: "pipe" });
   mutate(dir);
   return dir;
