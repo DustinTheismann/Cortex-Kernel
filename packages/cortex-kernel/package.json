@@ -1,6 +1,6 @@
 {
   "name": "@opensource-cortex/kernel",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Framework-independent extraction of the frozen OpenSource Cortex v0.5.1 semantic kernel: deterministic mechanism compatibility, min-risk multipath bridge planning, per-edge contract instantiation, proof-obligation vectors, the five-stage epistemic ladder, and schemaVersion 7 serialization. Pure ESM, no React/DOM/network. Golden-tested byte-for-byte against the frozen standalone.",
   "license": "MIT",
   "type": "module",

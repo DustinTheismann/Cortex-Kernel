@@ -115,7 +115,13 @@ const buildCandidate = (prior) => {
   return {
     artifact: "behavioral-certification-candidate",
     subject: "@opensource-cortex/kernel",
-    kernelVersion: "0.5.1",
+    // Two dimensions, never one. The kernel has its own SemVer line; the
+    // reference it certifies against has another, and they move independently:
+    // a PATCH to tooling bumps the kernel while the reference stays put. Both
+    // are DERIVED — the package manifest and the oracle are the sources of
+    // truth, so neither can drift from a hardcoded literal here.
+    kernelVersion: JSON.parse(readFileSync(join(root, "packages/cortex-kernel/package.json"), "utf8")).version,
+    referenceVersion: JSON.parse(readFileSync(join(root, HASHED_FILES.manifest), "utf8")).oracleVersion.replace(/^v/, ""),
     // Deliberately NOT a release tag. This candidate has not shipped, and
     // borrowing a shipped tag's name is the defect this split exists to fix.
     identity: "candidate",
@@ -167,6 +173,8 @@ const renderCandidateMarkdown = (c) => {
     "",
     "| Field | Value |",
     "|---|---|",
+    `| Kernel version | \`${c.kernelVersion}\` |`,
+    `| Certifies against reference | \`${c.referenceVersion}\` |`,
     `| Reference source hash (sha256 of \`${e.referenceSource.path}\`) | \`${e.referenceSource.sha256}\` |`,
     `| Reference baseline (provenance) | \`${p.referenceCommitSha || "—"}\` |`,
     `| Oracle version | \`${e.oracleVersion}\` |`,
