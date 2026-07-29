@@ -4,9 +4,16 @@
   "integrity": {
     "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
     "implementationSourceSha256": "6d10510e85c4ae18038ce545fc502710a17f91a7656824f097f7a8bbc266e117",
-    "registrySha256": "5dcac37435b2ae88b1fa69180d150177a982428b59abd722b23647e2fcb69aa5"
+    "registrySha256": "4d5f4dd647e6cf063eb19981b40ef5cf1b56c18f226cfd761920c786d05b4714"
   },
   "scope": "all",
+  "unpinnable": [
+    {
+      "rule": "the 4000-iteration guard bounds uniform-cost search",
+      "subsystem": "multipath-planning",
+      "reason": "the frozen registry's worst pair reaches 272 iterations, so the guard is never reached. Exercising it would require adding conversion rules, which the frozen artifact forbids."
+    }
+  ],
   "subsystems": [
     {
       "subsystem": "compatibility",
@@ -17,6 +24,20 @@
       ],
       "declaredMutants": 11,
       "killedMutants": 11,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "edge-cost",
+      "corpusScope": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat",
+        "synth-test"
+      ],
+      "declaredMutants": 3,
+      "killedMutants": 3,
       "survivingMutants": 0,
       "inconclusiveMutants": 0,
       "mutationStatus": "qualified"
@@ -43,9 +64,197 @@
       "survivingMutants": 0,
       "inconclusiveMutants": 0,
       "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "multipath-planning",
+      "corpusScope": [
+        "multipath-kind-paths",
+        "pair-compat",
+        "synth-test"
+      ],
+      "declaredMutants": 7,
+      "killedMutants": 7,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
     }
   ],
   "mutants": [
+    {
+      "id": "planner-descending-cost-order",
+      "subsystem": "multipath-planning",
+      "rule": "retained paths are ordered by ascending cumulative risk — the cheapest is selected",
+      "expectedFailure": "PATHS_NOT_RISK_ASCENDING",
+      "expectedKillers": [
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "multipath-kind-paths",
+        "pair-compat",
+        "synth-test"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "PATHS_NOT_RISK_ASCENDING observed; killed by multipath-kind-paths, pair-compat, synth-test"
+    },
+    {
+      "id": "planner-unstable-tie-order",
+      "subsystem": "multipath-planning",
+      "rule": "equal-cost candidates keep insertion order — the sort must be stable",
+      "expectedFailure": "TIED_PATHS_REORDERED",
+      "expectedKillers": [
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "TIED_PATHS_REORDERED observed; killed by multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "planner-widen-depth-cap",
+      "subsystem": "multipath-planning",
+      "rule": "search abandons a partial path once it exceeds four steps",
+      "expectedFailure": "PATH_LONGER_THAN_DEPTH_CAP_RETAINED",
+      "expectedKillers": [
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "PATH_LONGER_THAN_DEPTH_CAP_RETAINED observed; killed by multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "planner-cap-before-goal",
+      "subsystem": "multipath-planning",
+      "rule": "a node is accepted as the goal BEFORE the depth cap is applied, so a five-step path is reachable",
+      "expectedFailure": "FIVE_STEP_PATHS_ELIMINATED",
+      "expectedKillers": [
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "FIVE_STEP_PATHS_ELIMINATED observed; killed by multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "planner-retain-four-paths",
+      "subsystem": "multipath-planning",
+      "rule": "search retains the top three lowest-risk paths, not more",
+      "expectedFailure": "MORE_THAN_THREE_PATHS_RETAINED",
+      "expectedKillers": [
+        "multipath-kind-paths"
+      ],
+      "actualKillers": [
+        "multipath-kind-paths"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "MORE_THAN_THREE_PATHS_RETAINED observed; killed by multipath-kind-paths"
+    },
+    {
+      "id": "planner-impossibility-not-preserved",
+      "subsystem": "multipath-planning",
+      "rule": "a pair with no path is `incompatible` with sentinel cost 99 — impossibility is retained as data",
+      "expectedFailure": "IMPOSSIBILITY_SENTINEL_LOST",
+      "expectedKillers": [
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "IMPOSSIBILITY_SENTINEL_LOST observed; killed by pair-compat"
+    },
+    {
+      "id": "planner-goal-marked-exact",
+      "subsystem": "multipath-planning",
+      "rule": "only the identity pair is `exact`; a converted pair is `convertible`",
+      "expectedFailure": "CONVERTED_PAIR_REPORTED_EXACT",
+      "expectedKillers": [
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "CONVERTED_PAIR_REPORTED_EXACT observed; killed by multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "cost-remove-lossy-penalty",
+      "subsystem": "edge-cost",
+      "rule": "a lossy conversion costs two more than a lossless one",
+      "expectedFailure": "LOSSY_PENALTY_REMOVED",
+      "expectedKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat",
+        "synth-test"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "LOSSY_PENALTY_REMOVED observed; killed by conv-rules, multipath-kind-paths, pair-compat, synth-test"
+    },
+    {
+      "id": "cost-remove-curated-penalty",
+      "subsystem": "edge-cost",
+      "rule": "a curated rule costs one more than an axiomatic one — authority is priced",
+      "expectedFailure": "CURATED_AUTHORITY_UNPRICED",
+      "expectedKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "CURATED_AUTHORITY_UNPRICED observed; killed by conv-rules, multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "cost-remove-destroyed-penalty",
+      "subsystem": "edge-cost",
+      "rule": "each destroyed property adds half a unit of risk",
+      "expectedFailure": "DESTROYED_PROPERTIES_UNPRICED",
+      "expectedKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat",
+        "synth-test"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "DESTROYED_PROPERTIES_UNPRICED observed; killed by conv-rules, multipath-kind-paths, pair-compat, synth-test"
+    },
     {
       "id": "shape-fail-open-on-absent",
       "subsystem": "compatibility",

@@ -111,7 +111,11 @@ export const runMutant = (m, ctx) => {
       "It contributes no evidence; replace it with a mutation that reaches the rule.");
   }
 
-  const outputs = {}, inputs = {};
+  // `refs` is the corpus-correct payload for each in-scope case. Some rules are
+  // only violable RELATIVE to the right answer — "the tie was broken the other
+  // way" has no absolute form — so an assertion may compare against it. It is
+  // read from the committed fixture, never from the mutant.
+  const outputs = {}, inputs = {}, refs = {};
   for (const caseId of scope) {
     const entry = byCase.get(caseId);
     let payload;
@@ -124,6 +128,7 @@ export const runMutant = (m, ctx) => {
     outputs[caseId] = payload;
     inputs[caseId] = corpusInputs[caseId] || {};
     const fixture = JSON.parse(readFileSync(join(root, "test/golden", entry.fixture), "utf8"));
+    refs[caseId] = fixture.data !== undefined ? fixture.data : fixture;
     const wrapped = { caseId, category: entry.category, ...(fixture.data !== undefined ? { data: payload } : payload) };
     if (sha256(wrapped) !== entry.sha256) record.actualKillers.push(caseId);
   }
@@ -159,7 +164,7 @@ export const runMutant = (m, ctx) => {
   }
 
   let observed = false, threw = null;
-  try { observed = m.assert(outputs, inputs) === true; }
+  try { observed = m.assert(outputs, inputs, refs) === true; }
   catch (e) { threw = e.message; }
 
   if (threw) return fail("killed_incidentally", `the semantic assertion threw: ${threw}`, "The assertion must be decidable on mutant output.");
@@ -201,7 +206,7 @@ export const cargoRunner = {
 };
 
 /** Aggregate a classified run into the per-subsystem report. */
-export const summarize = (mutations, results, subsystemScope, scopeLabel, extraIntegrity = {}) => {
+export const summarize = (mutations, results, subsystemScope, scopeLabel, extraIntegrity = {}, unpinnable = []) => {
   const subsystems = {};
   for (const m of mutations) {
     const s = subsystems[m.subsystem] || (subsystems[m.subsystem] = {
@@ -228,6 +233,10 @@ export const summarize = (mutations, results, subsystemScope, scopeLabel, extraI
       ...extraIntegrity,
     },
     scope: scopeLabel,
+    // Rules no corpus over the frozen artifact can pin, recorded rather than
+    // quietly omitted. Unpinned-by-construction and unpinned-by-neglect look
+    // identical in a coverage number and are not the same finding.
+    unpinnable,
     subsystems: Object.values(subsystems).sort((a, b) => (a.subsystem < b.subsystem ? -1 : 1)),
     mutants: results,
   };

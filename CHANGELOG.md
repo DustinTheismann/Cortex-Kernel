@@ -29,10 +29,18 @@ pre-existing fixture hash is untouched.
   mutants of all five outcomes (`mutation/selftest.mjs`, 17 assertions).
 - Rust peer: `compute-edges`, `compute-edges-boundaries` and
   `shape-compat-boundaries`, mutation-qualifying `edge-derivation`,
-  `compatibility` and `license-screening` (coverage 10/41 → 13/43).
-- 24 declared mutants across three subsystems, each carrying a semantic rule, a
-  pinning fixture, a symbolic violation name, an exact site count, and an
-  assertion over the mutant's own output.
+  `compatibility` and `license-screening`; the planner and edge-cost surfaces
+  qualified against the corpus unchanged (coverage 10/41 → 13/43).
+- 34 declared mutants across five subsystems — edge derivation, the
+  compatibility predicates, license screening, multipath planning and edge cost
+  — each carrying a semantic rule, a pinning fixture, a symbolic violation name,
+  an exact site count, a confinement scope, and an assertion over the mutant's
+  own output.
+- `unpinnable`: rules no corpus over the frozen artifact can reach, recorded
+  rather than omitted. The 4000-iteration search guard is the first — the
+  registry's most expensive ordered pair takes 272 iterations, so raising the
+  limit is an equivalent mutation and reaching it would require adding
+  conversion rules the frozen artifact forbids.
 
 ### Changed
 - `conformance/baseline.json`: `subsystemsComplete` renamed to
@@ -51,13 +59,18 @@ pre-existing fixture hash is untouched.
   tag exists at HEAD, and `npm run verify` passes.
 
 ### Verified
-- The corpus is discriminating for edge derivation, the compatibility
-  predicates and license screening: 24/24 mutants killed correctly, zero
-  surviving, zero collateral divergence.
+- The corpus is discriminating for all five assessed subsystems: 34/34 mutants
+  killed correctly, zero surviving, zero killed incidentally, zero collateral
+  divergence.
 - Restricting the battery to the pre-existing `compute-edges` case alone leaves
   8 of its 10 mutants alive, which is the state that shipped before this change.
 - Eleven of the twelve compatibility and license mutants were killed by the
   corpus as it already stood; only the standalone-`n` rule was unpinned.
+- All ten planner and edge-cost mutants were killed by the existing 16×16
+  matrices, needing no new fixture: equal-cost ties occur in 24 pairs, the
+  three-path retention cap binds in 124, the depth cap changes the result in 58,
+  56 pairs are structurally impossible, and 124 length-five paths confirm that
+  goal acceptance precedes the depth check.
 
 ## [v0.5.1-kernel] — 2026-07-25
 

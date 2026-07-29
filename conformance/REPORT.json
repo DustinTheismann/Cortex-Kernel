@@ -1,6 +1,6 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-28T17:23:26.092Z",
+  "generatedAt": "2026-07-29T01:36:49.390Z",
   "ciRun": null,
   "integrity": {
     "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
@@ -532,7 +532,11 @@
         {
           "subsystem": "edge-cost",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 3,
+          "killedMutants": 3,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "edge-derivation",
@@ -560,7 +564,11 @@
         {
           "subsystem": "multipath-planning",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 7,
+          "killedMutants": 7,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "property-test-skeleton",

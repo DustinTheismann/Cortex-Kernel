@@ -18,7 +18,7 @@
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { MUTATIONS, SUBSYSTEM_SCOPE, CORPUS_INPUTS } from "./mutation/registry.mjs";
+import { MUTATIONS, SUBSYSTEM_SCOPE, CORPUS_INPUTS, UNPINNABLE } from "./mutation/registry.mjs";
 import { runMutant, cargoRunner, summarize, makeWorkDir, cleanup, binaryExists, fileHash, root, SRC, BINARY } from "./mutation/battery.mjs";
 
 const REPORT = join(root, "conformance/MUTATION-REPORT.json");
@@ -56,7 +56,7 @@ try {
   }
 } finally { cleanup(ctx.workDir); }
 
-const report = summarize(selected, results, SUBSYSTEM_SCOPE, only || "all", { registrySha256: fileHash("conformance/mutation/registry.mjs") });
+const report = summarize(selected, results, SUBSYSTEM_SCOPE, only || "all", { registrySha256: fileHash("conformance/mutation/registry.mjs") }, UNPINNABLE);
 
 // Only a full run may write the report; a --subsystem run must not truncate it.
 if (!only) writeFileSync(REPORT, JSON.stringify(report, null, 2) + "\n");
@@ -75,6 +75,7 @@ console.log("");
 for (const s of report.subsystems) {
   console.log(`  ${s.subsystem}: ${s.killedMutants}/${s.declaredMutants} killed, ${s.survivingMutants} surviving, ${s.inconclusiveMutants} inconclusive — ${s.mutationStatus}`);
 }
+for (const u of report.unpinnable) console.log(`  ${u.subsystem}: "${u.rule}" cannot be pinned — ${u.reason}`);
 console.log("\nOnly `killed_correctly` counts. A hash mismatch is not a kill; a surviving mutant is a corpus defect.");
 if (!only) console.log("report written: conformance/MUTATION-REPORT.json");
 for (const p of problems) console.error("\n  " + p);

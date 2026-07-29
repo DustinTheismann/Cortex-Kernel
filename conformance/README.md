@@ -98,8 +98,9 @@ node conformance/mutants.mjs --subsystem=edge-derivation
 The battery copies the Rust crate to a temp directory, changes exactly one
 semantic boundary — disable ubiquitous-dependency filtering, permit self-edges,
 widen a group bound, fail open on an absent shape or unit, downgrade a unit
-contradiction, prove a versioned copyleft pair — and requires the named corpus
-case to catch it. The working tree is never modified.
+contradiction, prove a versioned copyleft pair, reverse path ranking, widen the
+depth cap, retain a fourth path, drop the lossy penalty — and requires the named
+corpus case to catch it. The working tree is never modified.
 
 ### A hash mismatch is not a kill
 
@@ -127,7 +128,7 @@ came to exist.
 ### The classifier is itself tested
 
 If the classifier silently degraded to "the hash changed", every score would
-still read 24/24 and nothing would notice — the same failure mode, one level up.
+still read 34/34 and nothing would notice — the same failure mode, one level up.
 So `mutation/selftest.mjs` drives the engine with synthetic mutants whose correct
 outcome is known by construction, and asserts that each of the five states is
 reachable and correctly distinguished. It runs first, in milliseconds, without a
@@ -146,6 +147,26 @@ every match, so a refactor that duplicates the fragment would quietly turn a
 one-boundary mutant into a multi-site one — still "killed", but no longer by the
 boundary it names. Each entry declares `expectedOccurrences` and any other count
 is an `invalid_mutant`.
+
+### Probe before you add
+
+A survivor is a corpus defect, but the reverse is not automatic: most rules turn
+out to be pinned already. Each subsystem is therefore assessed by writing the
+mutants FIRST and running them against the corpus as it stands, then adding only
+the minimum fixture the survivors require. Eleven of twelve compatibility and
+license mutants died against the existing matrices; all ten planner and edge-cost
+mutants died against the existing 16×16 matrices, needing no new fixture at all.
+Only the standalone-`n` shape rule was genuinely unpinned.
+
+### Rules no corpus can pin
+
+Some rules cannot be reached by any corpus over a frozen artifact, and the report
+says so under `unpinnable` rather than omitting them — unpinned-by-construction
+and unpinned-by-neglect look identical in a coverage number and are not the same
+finding. The 4000-iteration guard in `adaptersFor` is one: the frozen registry's
+most expensive ordered pair takes 272 iterations, so raising the limit is an
+equivalent mutation, and reaching it would require adding conversion rules the
+frozen artifact forbids.
 
 ### Fixture-complete is not complete
 

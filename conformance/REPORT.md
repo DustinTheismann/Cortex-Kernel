@@ -26,11 +26,11 @@ mutants have been declared for it — which is *not* the same as zero survivors.
 | Implementation | Subsystem | Fixtures | Mutation adequacy | Killed / declared | Surviving |
 |---|---|---|---|---|---|
 | `rust` | compatibility | pass | **qualified** | 11/11 | 0 |
-| `rust` | edge-cost | pass | not-assessed | — | — |
+| `rust` | edge-cost | pass | **qualified** | 3/3 | 0 |
 | `rust` | edge-derivation | pass | **qualified** | 10/10 | 0 |
 | `rust` | license-screening | pass | **qualified** | 3/3 | 0 |
 | `rust` | literature-classification | pass | not-assessed | — | — |
-| `rust` | multipath-planning | pass | not-assessed | — | — |
+| `rust` | multipath-planning | pass | **qualified** | 7/7 | 0 |
 | `rust` | property-test-skeleton | pass | not-assessed | — | — |
 | `rust` | registry | pass | not-assessed | — | — |
 | `rust` | schema-normalization | pass | not-assessed | — | — |
