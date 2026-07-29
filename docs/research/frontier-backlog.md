@@ -102,3 +102,14 @@ Recommended phase.
 - **Required evidence.** Dependency-graph ingestion; package-manager lineage; contribution and fork relationships; import-level usage; temporal adoption data; counterfactual removal tests; and calibration against real ecosystem failures before any claim of causal validity.
 - **Parity impact.** None. Must **not** enter the v0.5.1 extraction; the deterministic kernel is unaffected. Frontier lane only.
 - **Recommended phase.** Phase 5+ (gated on the evidence above; advisory until independently validated).
+
+
+## 10. Domain-rule cleanup of reference-compatible quirks
+
+- **Novelty claim.** Separate *intended domain rules* from *language artifacts* that the frozen reference happens to exhibit, so a future version can be principled rather than accidental.
+- **Technical mechanism.** For each quirk catalogued in `docs/versioning.md` — arrays accepted as schemas (JavaScript's `typeof [] === "object"`), `String()` coercion of metadata arrays, unknown-kind fallback — decide explicitly whether it is intended semantics or an artifact, and specify the corrected behavior for a future canonicalization/kernel version.
+- **Expected advantage.** Removes a class of latent conformance hazard: an implementation author in another language has no reason to expect `[]` to normalize as an empty-port schema, and would "fix" it in good faith.
+- **Research risk.** Low technically, moderate procedurally — each change invalidates fixtures and is a MAJOR event requiring re-certification and a ledger entry.
+- **Required evidence.** A per-quirk determination (intended vs artifact) with rationale; the corrected fixture set; a migration note for existing implementations.
+- **Parity impact.** **None permitted in v0.5.1.** These behaviors are frozen and must be reproduced exactly; this item only plans a future version.
+- **Recommended phase.** Phase 4, alongside API stabilization toward `1.0`.

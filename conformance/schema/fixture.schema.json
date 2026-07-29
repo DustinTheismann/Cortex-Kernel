@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensource-cortex.dev/conformance/fixture.schema.json",
+  "title": "Conformance fixture",
+  "description": "A single captured decision: the complete input and the complete canonical output. Array order within a fixture is significant and must never be normalized.",
+  "type": "object",
+  "required": ["caseId"],
+  "properties": {
+    "caseId": { "type": "string" },
+    "category": { "type": "string" },
+    "input": { "description": "The complete input that produced this output." },
+    "output": { "description": "The complete canonical output." },
+    "data": { "description": "Used instead of input/output for exhaustive kernel sweeps." }
+  }
+}

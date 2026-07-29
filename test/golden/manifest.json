@@ -52,6 +52,15 @@
       "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
+      "caseId": "shape-compat-boundaries",
+      "category": "kernel",
+      "fixture": "fixtures/shape-compat-boundaries.json",
+      "sha256": "6c43cd83a9a446aae82276d53e390cd34a4316eddcf4a1eddb8dcbf72df6b223",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
       "caseId": "unit-compat",
       "category": "kernel",
       "fixture": "fixtures/unit-compat.json",
@@ -101,6 +110,15 @@
       "category": "kernel",
       "fixture": "fixtures/compute-edges.json",
       "sha256": "ef1857656e7f67d90dd669f0d9737d3c96ab062138e80ea34a11f5f977e449a0",
+      "expectedStage": null,
+      "expectedVerdict": null,
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "compute-edges-boundaries",
+      "category": "kernel",
+      "fixture": "fixtures/compute-edges-boundaries.json",
+      "sha256": "8c584e224c954329d964519fe64bcc36fda79a8cb690587d30c65f4ff759a5b6",
       "expectedStage": null,
       "expectedVerdict": null,
       "oracleSource": "reference/src/cortex-v0.5.1.jsx"
@@ -374,6 +392,50 @@
       "expectedStage": null,
       "expectedVerdict": null,
       "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    }
+  ],
+  "blockers": [
+    {
+      "area": "model-schema-extraction",
+      "sourceLines": "839-855 (verifyCascade step 1)",
+      "reason": "Typed mechanism schemas are inferred by window.claude.complete — nondeterministic model output; cannot be a golden oracle.",
+      "boundary": "Captured at its output instead: schemas are supplied directly as compiler input in every cascade case. Not captured; documented only at the boundary."
+    },
+    {
+      "area": "soft-obligation-judgments",
+      "sourceLines": "872-881 (verifyCascade step 2 model call)",
+      "reason": "Per-edge precondition statuses and invariant/metric judgments are model-supplied — nondeterministic in situ.",
+      "boundary": "The single window.claude call is stubbed; the surrounding contract-instantiation, obligation and ladder logic runs verbatim from the frozen source."
+    },
+    {
+      "area": "literature-probe",
+      "sourceLines": "926-943 (verifyCascade step 3)",
+      "reason": "openAlexCount performs a live network request; the fallback is a model call. Both nondeterministic.",
+      "boundary": "The count is injected; classifyLit, the final-verdict mapping and the prize predicate then run verbatim."
+    },
+    {
+      "area": "prize-candidate-export",
+      "sourceLines": "944-957 (verifyCascade step 4)",
+      "reason": "React state setters, uid() identifiers, wall-clock timestamps and a deferred download.",
+      "boundary": "Setters are captured and uid() is a deterministic counter; the derived records run verbatim. Persistence and scheduling are not captured."
+    },
+    {
+      "area": "schema-v7-import",
+      "sourceLines": "711-733 (onFile)",
+      "reason": "FileReader plus ~15 React setters and IndexedDB persistence.",
+      "boundary": "FileReader is stubbed and setters captured; onFile runs verbatim."
+    },
+    {
+      "area": "schema-v7-export",
+      "sourceLines": "751-757 (doExport)",
+      "reason": "Blob, URL.createObjectURL and DOM append/click.",
+      "boundary": "Blob captures the payload; doExport runs verbatim, so the serialized bytes are genuine."
+    },
+    {
+      "area": "persisted-state-hydration",
+      "sourceLines": "196-234 (persistence layer)",
+      "reason": "window.storage/IndexedDB, React mount lifecycle and closure refs.",
+      "boundary": "Not captured; documented only."
     }
   ]
 }

@@ -1,0 +1,18 @@
+[package]
+name = "cortex-conformance"
+version = "0.5.1"
+edition = "2021"
+description = "Rust implementation of the deterministic v0.5.1 Cortex kernel core, verified against the shared conformance corpus."
+license = "MIT"
+
+# No dependencies, by design: the conformance protocol is line-oriented JSON on
+# stdout, and a hand-rolled writer keeps this implementation buildable offline
+# and free of supply-chain surface.
+[dependencies]
+
+[[bin]]
+name = "cortex-conformance"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 2

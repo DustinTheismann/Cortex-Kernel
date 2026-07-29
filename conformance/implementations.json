@@ -1,0 +1,42 @@
+{
+  "corpus": "test/golden/manifest.json",
+  "protocol": "conformance/README.md",
+  "implementations": [
+    {
+      "id": "rust",
+      "language": "Rust",
+      "path": "impl/rust",
+      "build": "cargo build --release --offline --manifest-path impl/rust/Cargo.toml",
+      "command": [
+        "./impl/rust/target/release/cortex-conformance"
+      ],
+      "notes": "Dependency-free peer implementation of the deterministic core: registry, edge costs, min-risk multipath planner, and the shape/unit/license predicates. Written against the frozen semantics, certified by corpus reproduction \u2014 not a transliteration of the JavaScript.",
+      "toolchain": {
+        "compiler": "rustc 1.94.1 (e408947bf 2026-03-25)",
+        "targetTriple": "x86_64-unknown-linux-gnu",
+        "dependencies": "standard library only (enforced by scripts/dependency-policy.mjs)"
+      },
+      "plannerCoverage": {
+        "claim": "Complete 16x16 multipath-planner surface",
+        "meansExactly": [
+          "all 256 ordered kind pairs, including the 16 identity pairs",
+          "top-three path retention per pair (adaptersFor k=3)",
+          "cumulative path cost arithmetic from per-edge costs",
+          "edge cost formula: 1 + 2*lossy + curated-authority penalty + 0.5 per destroyed property",
+          "stable tie-breaking (queue re-sorted by cost each pop; ties keep insertion order)",
+          "goal acceptance before the depth cap, so length-5 paths can appear",
+          "the 4000-iteration guard",
+          "per-step field presence and defaults (from/to/op/ruleId/lossy/auth/pre/lose)",
+          "selected-path ordering and the exact/convertible distinction",
+          "impossibility output for unreachable pairs (empty result; cost sentinel 99 via pair-compat)"
+        ],
+        "notCovered": [
+          "schema-level option build (selection risk with shape/unit penalties)",
+          "contract instantiation, obligations, ladder advancement",
+          "literature assessment and verdict derivation",
+          "schemaVersion 7 import/export"
+        ]
+      }
+    }
+  ]
+}

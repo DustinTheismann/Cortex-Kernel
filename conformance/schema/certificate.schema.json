@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensource-cortex.dev/conformance/certificate.schema.json",
+  "title": "Behavioral certificate",
+  "description": "Binds a frozen reference, a corpus, and an implementation that reproduced it. `evidence` is re-derivable and verified by `certify --check`; `release` is historical and carried forward; `buildEnvironment` is recorded but never compared.",
+  "type": "object",
+  "required": [
+    "artifact",
+    "subject",
+    "releaseTag",
+    "evidence"
+  ],
+  "properties": {
+    "artifact": {
+      "const": "behavioral-certification"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "kernelVersion": {
+      "type": "string"
+    },
+    "releaseTag": {
+      "type": "string"
+    },
+    "acceptanceCommand": {
+      "type": "string"
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "referenceSource",
+        "oracleVersion",
+        "canonicalizationVersion",
+        "fixtureCount",
+        "manifest"
+      ],
+      "properties": {
+        "oracleVersion": {
+          "type": "string"
+        },
+        "canonicalizationVersion": {
+          "type": "integer"
+        },
+        "schemaVersion": {
+          "type": "integer"
+        },
+        "fixtureCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "manifest": {
+          "$ref": "#/$defs/hashedFile"
+        },
+        "invariantVersion": {
+          "type": "object"
+        },
+        "canonicalizer": {
+          "$ref": "#/$defs/hashedFile"
+        },
+        "referenceSource": {
+          "$ref": "#/$defs/hashedFile",
+          "description": "Content hash of the frozen reference source \u2014 history-independent, so verification works in a shallow clone or with no git at all."
+        },
+        "referenceBaseline": {
+          "type": "string",
+          "description": "The reference baseline as recorded in the manifest (provenance; the resolved commit SHA lives under release)."
+        }
+      }
+    },
+    "release": {
+      "type": "object",
+      "properties": {
+        "kernelMergeCommitSha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "certifiedAtCommit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The commit at which this certificate was deliberately issued. Carried forward across regeneration and never recomputed from HEAD: a certificate generated before the commit that contains it can only name that commit's parent, and recomputing it broke the ledger's certificate binding on every commit. The commit a release shipped from is bound by the ledger entry's releaseCommitSha at sealing."
+        },
+        "workflow": {
+          "type": "object"
+        },
+        "releaseTimestamp": {
+          "type": "string"
+        },
+        "referenceCommitSha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "buildEnvironment": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "hashedFile": {
+      "type": "object",
+      "required": [
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "set": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

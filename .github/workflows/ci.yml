@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          # Full history and tags. Release records are verified against the tree
+          # at their OWN tag (`git show <tag>:...`), which a shallow clone
+          # cannot resolve — and a check that silently skips is not a check.
+          fetch-depth: 0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
@@ -56,3 +61,84 @@ jobs:
         run: |
           node test/oracle/harness.mjs --check
           node packages/cortex-kernel/test/golden.mjs --check
+
+      # Gate 8: the candidate certificate still describes this repository, and
+      # every immutable release record still describes the tree at its OWN tag.
+      # An oracle or canonicalizer change that was not re-certified fails here
+      # rather than shipping a stale claim; a release record re-derived from
+      # later state fails rather than quietly rewriting history.
+      - name: certification
+        run: npm run certify:check
+
+      # Gate 9: generated inputs, not just the 41 pinned points. Runs the frozen
+      # oracle and the extracted kernel over a seeded sweep of the input space
+      # and compares canonical decision hashes. Divergence is reported as a
+      # field-level diff with a reproducing seed.
+      - name: differential-fuzz
+        run: npm run fuzz
+
+      # Gate 10: cross-language conformance. Every registered implementation
+      # must reproduce the corpus hashes it declares support for. This is what
+      # keeps the contract portable rather than a JavaScript artifact.
+      - name: conformance
+        run: |
+          npm run conformance:build
+          npm run conformance
+
+      # Gate 11: the certification chain is intact — links unbroken,
+      # certificates unaltered since certification, and the head entry still
+      # describes the current corpus. A behavioral change without a ledger
+      # entry fails here. Release IDENTITY is checked too: a candidate may not
+      # carry a tag that already exists, and a released entry's tag must
+      # resolve to the commit it binds.
+      - name: ledger
+        run: npm run ledger:verify
+
+      # Gate 12: the release-integrity checks are negative-tested. A release
+      # identity is a claim about a shipped artifact, and these gates are only
+      # worth having if they reject — so each defect is injected into a clone,
+      # one at a time, and the corresponding check must fail for the right
+      # reason. This exists because the previous model was internally
+      # parseable, CI-green, and wrong: a shipped tag named a mutable entry.
+      - name: release-integrity
+        run: npm run release:integrity
+
+      # Gate 13: the unverified surface did not grow. New unverified behavior
+      # must be a deliberate, regenerated decision rather than a silent drift.
+      - name: frontier-map
+        run: npm run frontier:check
+
+      # Gate 14: the dependency-free claim is an enforced invariant, not a
+      # lock-file convention. A new crate or npm package fails here unless the
+      # policy is changed in the same commit.
+      - name: dependency-policy
+        run: npm run deps:policy
+
+      # Gate 15: canonicalization is shared infrastructure across languages, so
+      # the encoding itself is pinned by adversarial vectors — absent vs null vs
+      # undefined, -0, Unicode key order, array-order preservation, transient-id
+      # replacement, timestamp exclusion. Drift here invalidates every hash in
+      # every implementation, so it is a canonicalizationVersion event.
+      - name: canonicalization-vectors
+        run: npm run vectors
+
+      # Gate 16: documentation cannot drift from the workflow. The gate set has
+      # grown three times, each time leaving a stale count or table behind; the
+      # workflow is the source of truth and every other inventory must match.
+      - name: gate-inventory
+        run: npm run gates
+
+      # Gate 17: the corpus must be DISCRIMINATING, not merely agreed-with. A
+      # green conformance run proves one implementation matches the fixtures;
+      # it says nothing about whether the fixtures reach the boundaries they
+      # claim to pin. This gate mutates one semantic boundary at a time in the
+      # Rust peer and requires the named corpus case to catch each, with the
+      # predicted violation observable in the mutant's own output — a hash
+      # mismatch alone is not a kill. It fails when a mutant survives (a corpus
+      # defect), is killed incidentally, becomes equivalent or expires, is
+      # never executed, loses its pinning fixture, or when the committed
+      # MUTATION-REPORT.json is stale. The classifier is itself tested first,
+      # against synthetic mutants of every outcome, so it cannot silently
+      # degrade to "the hash changed" while still reporting a full score.
+      - name: mutation-battery
+        run: npm run mutants:check

@@ -24,6 +24,42 @@ import { createHash } from "node:crypto";
 
 export const CANONICALIZATION_VERSION = 1;
 
+/**
+ * Numbers JSON cannot represent are REJECTED, never silently encoded.
+ *
+ * JSON.stringify turns NaN and ±Infinity into `null`, which would collapse
+ * three semantically distinct states into the one value already used for
+ * "explicitly null". Sentinel-encoding them instead would widen the semantic
+ * domain, which is a canonicalizationVersion event — so v1 rejects.
+ *
+ * Integers outside the JavaScript safe range are rejected for the same reason:
+ * they cannot round-trip through a double without silently changing value, so
+ * two distinct inputs could canonicalize identically. A schema that needs them
+ * must encode them as strings.
+ *
+ * This is a tightening of previously-undefined behavior, not a change to any
+ * defined one: no value in the corpus is affected, and every stored hash is
+ * unchanged. It therefore stays canonicalization v1.
+ */
+export class CanonicalizationError extends Error {
+  constructor(code, path, detail) {
+    super(`${code} at ${path || "(root)"}: ${detail}`);
+    this.name = "CanonicalizationError";
+    this.code = code;
+    this.path = path || "(root)";
+  }
+}
+
+const UNSUPPORTED_NUMBER = "CANONICALIZATION_UNSUPPORTED_NUMBER";
+
+const checkNumber = (v, path) => {
+  if (Number.isNaN(v)) throw new CanonicalizationError(UNSUPPORTED_NUMBER, path, "NaN has no JSON representation");
+  if (!Number.isFinite(v)) throw new CanonicalizationError(UNSUPPORTED_NUMBER, path, `${v > 0 ? "Infinity" : "-Infinity"} has no JSON representation`);
+  if (Number.isInteger(v) && !Number.isSafeInteger(v)) {
+    throw new CanonicalizationError(UNSUPPORTED_NUMBER, path, `integer ${v} is outside the safe range (|n| <= 2^53-1) and cannot round-trip; encode it as a string`);
+  }
+};
+
 // Distinguishes "present with value undefined" from null and from absent.
 export const UNDEFINED_SENTINEL = "␀undefined"; // ␀undefined
 
@@ -44,24 +80,28 @@ const transientScheme = (val) => (typeof val === "string" && TRANSIENT_ID.test(v
  * `undefined` values represented by a sentinel. Absent keys stay absent.
  */
 export const canonicalize = (value) => {
-  const walk = (v) => {
+  const walk = (v, path) => {
     if (v === undefined) return UNDEFINED_SENTINEL;
     if (v === null) return null; // preserved distinct from undefined and absent
-    if (Array.isArray(v)) return v.map(walk); // ORDER PRESERVED — never sort
+    if (typeof v === "bigint") throw new CanonicalizationError(UNSUPPORTED_NUMBER, path, "BigInt has no JSON representation; encode it as a string");
+    if (Array.isArray(v)) return v.map((x, i) => walk(x, `${path}[${i}]`)); // ORDER PRESERVED — never sort
     if (typeof v === "object") {
       const out = {};
+      // Keys sort by UTF-16 code unit (the default of Array.prototype.sort on
+      // strings), NOT by locale or code point — see CANONICALIZATION.md §2.3.
       for (const k of Object.keys(v).sort()) {
         if (NONDETERMINISTIC_KEYS.has(k)) continue; // exclude timestamps
         const raw = v[k];
+        const child = path ? `${path}.${k}` : k;
         const scheme = isTransientIdKey(k) ? transientScheme(raw) : null;
-        out[k] = scheme !== null ? scheme : walk(raw);
+        out[k] = scheme !== null ? scheme : walk(raw, child);
       }
       return out;
     }
-    if (typeof v === "number") return Object.is(v, -0) ? 0 : v;
+    if (typeof v === "number") { checkNumber(v, path); return Object.is(v, -0) ? 0 : v; }
     return v; // string | boolean
   };
-  return walk(value);
+  return walk(value, "");
 };
 
 /** Canonical JSON encoding used as the hash preimage. */

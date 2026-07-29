@@ -1,0 +1,35 @@
+{
+  "name": "cortex-kernel-repo",
+  "private": true,
+  "type": "module",
+  "description": "Repository-level verification entry points for the frozen v0.5.1 reference, its behavioral oracle, and the extracted @opensource-cortex/kernel package.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "certify": "node scripts/certify.mjs",
+    "certify:check": "node scripts/certify.mjs --check",
+    "oracle:check": "node test/oracle/harness.mjs --check",
+    "kernel:golden": "npm --prefix packages/cortex-kernel run kernel:golden -- --check",
+    "kernel:test": "npm --prefix packages/cortex-kernel test",
+    "fuzz": "node test/differential/fuzz.mjs --cases=2000",
+    "verify": "npm run oracle:check && npm run kernel:test && npm run kernel:golden && npm run fuzz && npm run certify:check && npm run mutants && npm run conformance && npm run ledger:verify && npm run release:integrity && npm run frontier:check && npm run deps:policy && npm run vectors && npm run gates",
+    "conformance": "node conformance/verify.mjs",
+    "mutants": "npm run mutants:selftest && node conformance/mutants.mjs",
+    "mutants:check": "npm run mutants:selftest && node conformance/mutants.mjs --check",
+    "mutants:selftest": "node --test conformance/mutation/selftest.mjs",
+    "mutants:list": "node conformance/mutants.mjs --list",
+    "mutation:edge-derivation": "node conformance/mutants.mjs --subsystem=edge-derivation",
+    "conformance:build": "cargo build --release --offline --manifest-path impl/rust/Cargo.toml",
+    "ledger": "node scripts/ledger.mjs",
+    "ledger:verify": "node scripts/ledger.mjs --verify",
+    "frontier:map": "node scripts/frontier-map.mjs",
+    "frontier:check": "node scripts/frontier-map.mjs --check",
+    "self-ladder": "node scripts/self-ladder.mjs",
+    "deps:policy": "node scripts/dependency-policy.mjs",
+    "vectors": "node conformance/vectors/verify-vectors.mjs",
+    "gates": "node scripts/gate-inventory.mjs",
+    "release:integrity": "node --test test/release-integrity.test.mjs"
+  }
+}

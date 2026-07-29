@@ -30,7 +30,7 @@ import { computeEdges, importBrainIndex, exportBrainIndex } from "../src/seriali
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const manifest = JSON.parse(readFileSync(join(root, "test/golden/manifest.json"), "utf8"));
 // Test inputs are shared with the oracle (they define the cases, not the behavior).
-const { SHAPES, UNITS, LICENSES, SYNTH_CASES, CLASSIFY_INPUTS, RAW_SCHEMAS, EDGE_CORPORA } = await import(join(root, "test/oracle/cases.mjs"));
+const { SHAPES, SHAPES_BOUNDARY, UNITS, LICENSES, SYNTH_CASES, CLASSIFY_INPUTS, RAW_SCHEMAS, EDGE_CORPORA, EDGE_CORPORA_BOUNDARIES } = await import(join(root, "test/oracle/cases.mjs"));
 const fixtureInput = (caseId) => JSON.parse(readFileSync(join(root, "test/golden/fixtures", caseId + ".json"), "utf8")).input;
 
 // Cascade categories run the full evaluateCascade over the fixture's input.
@@ -86,6 +86,11 @@ const PRODUCERS = {
     for (const x of SHAPES) for (const y of SHAPES) t[x + "|" + y] = shapeCompat({ shape: x }, { shape: y });
     return { caseId: "shape-compat", category: "kernel", data: t };
   },
+  "shape-compat-boundaries": () => {
+    const t = {};
+    for (const x of SHAPES_BOUNDARY) for (const y of SHAPES_BOUNDARY) t[x + "|" + y] = shapeCompat({ shape: x }, { shape: y });
+    return { caseId: "shape-compat-boundaries", category: "kernel", data: t };
+  },
   "unit-compat": () => {
     const t = {};
     for (const x of UNITS) for (const y of UNITS) t[x + "|" + y] = unitCompat({ units: x }, { units: y });
@@ -115,6 +120,11 @@ const PRODUCERS = {
   }),
   "classify-lit": () => ({ caseId: "classify-lit", category: "kernel", data: CLASSIFY_INPUTS.map((c) => ({ in: c, out: classifyLit(c) })) }),
   "norm-schema": () => ({ caseId: "norm-schema", category: "kernel", data: RAW_SCHEMAS.map((s) => ({ in: s, out: normSchema(s) })) }),
+  "compute-edges-boundaries": () => {
+    const corpora = {};
+    for (const [name, list] of Object.entries(EDGE_CORPORA_BOUNDARIES)) corpora[name] = computeEdges(list);
+    return { caseId: "compute-edges-boundaries", category: "kernel", data: corpora };
+  },
   "compute-edges": () => {
     const corpora = {};
     for (const [name, list] of Object.entries(EDGE_CORPORA)) corpora[name] = computeEdges(list);

@@ -1,0 +1,624 @@
+{
+  "artifact": "conformance-report",
+  "generatedAt": "2026-07-29T01:59:29.008Z",
+  "ciRun": null,
+  "integrity": {
+    "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
+    "canonicalizationSpecSha256": "5ed64bf745d2e41c8287052859200711f879ba605d8b5c3fa17ee9d91c267d1d",
+    "canonicalizerSha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8",
+    "verifierSha256": "8e9e9f9de79c326c5bea15370e554433f832088cbfcb00b675f0cbcff3857c24",
+    "baselineSha256": "2de515620e528167593009be1486cb9fe50ed6f18a6a2747827637f59e00ab58",
+    "referenceSourceSha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
+  },
+  "corpus": {
+    "oracle": "v0.5.1",
+    "schemaVersion": 7,
+    "canonicalizationVersion": 1,
+    "fixtures": 43
+  },
+  "reference": {
+    "source": "reference/src/cortex-v0.5.1.jsx",
+    "baseline": "804f767"
+  },
+  "implementations": [
+    {
+      "implementation": "rust",
+      "language": "Rust",
+      "status": "pass",
+      "fixtures": "13/43",
+      "canonicalHashesIdentical": 13,
+      "declaredCasesFailing": 0,
+      "cases": [
+        "mech-kinds",
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat",
+        "shape-compat",
+        "shape-compat-boundaries",
+        "unit-compat",
+        "license-compat",
+        "classify-lit",
+        "synth-test",
+        "norm-schema",
+        "compute-edges",
+        "compute-edges-boundaries"
+      ],
+      "semanticAreasCovered": [
+        "compatibility",
+        "depth-cap",
+        "edge-cost",
+        "edge-derivation",
+        "group-size-bounds",
+        "impossibility",
+        "license-screening",
+        "literature-classification",
+        "multipath-planning",
+        "path-enumeration",
+        "property-test-skeleton",
+        "ranking",
+        "registry",
+        "schema-normalization",
+        "selected-path-ordering",
+        "tie-breaking",
+        "types",
+        "unclassified"
+      ],
+      "semanticAreasUncovered": [
+        "cascade",
+        "cascade-compatibility",
+        "cascade-planning",
+        "contract-instantiation",
+        "error-handling",
+        "import-export",
+        "literature-assessment",
+        "obligations",
+        "serialization",
+        "stage-advancement",
+        "verdict-derivation"
+      ],
+      "coverageMap": [
+        {
+          "fixture": "mech-kinds",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "types"
+          ]
+        },
+        {
+          "fixture": "conv-rules",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "registry",
+            "edge-cost"
+          ]
+        },
+        {
+          "fixture": "multipath-kind-paths",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "registry",
+            "multipath-planning",
+            "path-enumeration",
+            "ranking",
+            "tie-breaking",
+            "depth-cap",
+            "impossibility"
+          ]
+        },
+        {
+          "fixture": "pair-compat",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "registry",
+            "multipath-planning",
+            "ranking",
+            "selected-path-ordering",
+            "impossibility"
+          ]
+        },
+        {
+          "fixture": "shape-compat",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "compatibility"
+          ]
+        },
+        {
+          "fixture": "shape-compat-boundaries",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "unclassified"
+          ]
+        },
+        {
+          "fixture": "unit-compat",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "compatibility"
+          ]
+        },
+        {
+          "fixture": "license-compat",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "compatibility",
+            "license-screening"
+          ]
+        },
+        {
+          "fixture": "synth-test",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "property-test-skeleton"
+          ]
+        },
+        {
+          "fixture": "norm-schema",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "schema-normalization"
+          ]
+        },
+        {
+          "fixture": "classify-lit",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "literature-classification"
+          ]
+        },
+        {
+          "fixture": "compute-edges",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "edge-derivation"
+          ]
+        },
+        {
+          "fixture": "compute-edges-boundaries",
+          "implementation": "rust",
+          "status": "supported",
+          "hashMatch": true,
+          "semanticAreas": [
+            "edge-derivation",
+            "group-size-bounds",
+            "tie-breaking"
+          ]
+        },
+        {
+          "fixture": "directly-compatible",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "cascade-compatibility",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "incompatible",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "cascade-compatibility",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "single-conversion-path",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "cascade-planning",
+            "ranking",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "multiple-competing-paths",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "cascade-planning",
+            "ranking",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "equal-cost-path-tie",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "cascade-planning",
+            "ranking",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "soft-precondition-satisfied",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "contract-instantiation",
+            "obligations",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "soft-precondition-unresolved",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "contract-instantiation",
+            "obligations",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "soft-precondition-failed",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "contract-instantiation",
+            "obligations",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "hard-incompatibility",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "cascade-compatibility",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "missing-conversion-rule",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "cascade-compatibility",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "no-schema",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "cascade-compatibility",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "partially-instantiated-obligations",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "obligations",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "advancement-through-type-composable",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "stage-advancement",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "lit-unexplored",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "literature-assessment",
+            "verdict-derivation",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "lit-emerging",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "literature-assessment",
+            "verdict-derivation",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "lit-known",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "literature-assessment",
+            "verdict-derivation",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "lit-unverified",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "literature-assessment",
+            "verdict-derivation",
+            "cascade"
+          ]
+        },
+        {
+          "fixture": "import-with-githubUser",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "import-export"
+          ]
+        },
+        {
+          "fixture": "import-without-githubUser",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "import-export"
+          ]
+        },
+        {
+          "fixture": "import-repo-edge-roundtrip-edges-present",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "import-export"
+          ]
+        },
+        {
+          "fixture": "import-edges-recomputed-when-absent",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "import-export"
+          ]
+        },
+        {
+          "fixture": "import-unknown-extra-fields",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "import-export"
+          ]
+        },
+        {
+          "fixture": "import-empty-graph",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "import-export"
+          ]
+        },
+        {
+          "fixture": "malformed-missing-repos",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "error-handling"
+          ]
+        },
+        {
+          "fixture": "malformed-repos-not-array",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "error-handling"
+          ]
+        },
+        {
+          "fixture": "malformed-not-json",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "error-handling"
+          ]
+        },
+        {
+          "fixture": "export-sixteen-keys",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "import-export"
+          ]
+        },
+        {
+          "fixture": "export-fifteen-keys-githubUser-undefined",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "import-export"
+          ]
+        },
+        {
+          "fixture": "export-drops-unknown-fields",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "import-export"
+          ]
+        },
+        {
+          "fixture": "roundtrip-repo-edge",
+          "implementation": "rust",
+          "status": "not_implemented",
+          "hashMatch": false,
+          "semanticAreas": [
+            "serialization",
+            "import-export"
+          ]
+        }
+      ],
+      "subsystems": [
+        {
+          "subsystem": "compatibility",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 11,
+          "killedMutants": 11,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "edge-cost",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 3,
+          "killedMutants": 3,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "edge-derivation",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 10,
+          "killedMutants": 10,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "license-screening",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 3,
+          "killedMutants": 3,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "literature-classification",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 3,
+          "killedMutants": 3,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "multipath-planning",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 7,
+          "killedMutants": 7,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "property-test-skeleton",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 2,
+          "killedMutants": 2,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "registry",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 5,
+          "killedMutants": 5,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "schema-normalization",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 4,
+          "killedMutants": 4,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "types",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
+          "declaredMutants": 3,
+          "killedMutants": 3,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
+        }
+      ],
+      "binarySha256": "b41b66ae437d9c638619880772039257a53ac40ff4b30c46631f73c9fec9b0db",
+      "toolchain": {
+        "compiler": "rustc 1.94.1 (e408947bf 2026-03-25)",
+        "targetTriple": "x86_64-unknown-linux-gnu",
+        "dependencies": "standard library only (enforced by scripts/dependency-policy.mjs)"
+      },
+      "notes": "Dependency-free peer implementation of the deterministic core: registry, edge costs, min-risk multipath planner, and the shape/unit/license predicates. Written against the frozen semantics, certified by corpus reproduction — not a transliteration of the JavaScript."
+    }
+  ],
+  "interpretation": "An implementation conforms when every case it DECLARES reproduces the corpus hash byte-for-byte after canonicalization. Coverage is the fraction of the corpus it declares; partial coverage is legitimate, a failing declared case is not."
+}
