@@ -29,18 +29,23 @@ pre-existing fixture hash is untouched.
   mutants of all five outcomes (`mutation/selftest.mjs`, 17 assertions).
 - Rust peer: `compute-edges`, `compute-edges-boundaries` and
   `shape-compat-boundaries`, mutation-qualifying `edge-derivation`,
-  `compatibility` and `license-screening`; the planner and edge-cost surfaces
-  qualified against the corpus unchanged (coverage 10/41 → 13/43).
-- 34 declared mutants across five subsystems — edge derivation, the
-  compatibility predicates, license screening, multipath planning and edge cost
-  — each carrying a semantic rule, a pinning fixture, a symbolic violation name,
-  an exact site count, a confinement scope, and an assertion over the mutant's
-  own output.
-- `unpinnable`: rules no corpus over the frozen artifact can reach, recorded
-  rather than omitted. The 4000-iteration search guard is the first — the
-  registry's most expensive ordered pair takes 272 iterations, so raising the
-  limit is an equivalent mutation and reaching it would require adding
-  conversion rules the frozen artifact forbids.
+  `compatibility` and `license-screening`; the planner, edge-cost, registry,
+  types, schema-normalization, literature-classification and
+  property-test-skeleton surfaces qualified against the corpus unchanged
+  (coverage 10/41 → 13/43).
+- 51 declared mutants across all ten subsystems a second implementation
+  declares — registry, types, schema normalization, literature classification,
+  the property-test skeleton, multipath planning, edge cost, edge derivation,
+  the compatibility predicates and license screening — each carrying a semantic
+  rule, a pinning fixture, a symbolic violation name, an exact site count, a
+  confinement scope, and an assertion over the mutant's own output.
+- `unpinnable`: rules no corpus can reach **over this state space**, recorded
+  with their measurement rather than asserted in prose. The 4000-iteration
+  search guard is the first: an exhaustive replay over all 256 ordered pairs
+  reaches 272 iterations at worst (`tensor>graph`), a 14.7x headroom, bound to
+  the registry and planner hashes and carrying the condition under which it must
+  be revisited. The claim is "unreachable under the v0.5.1 registry", not
+  "universally unreachable" — a denser future registry could make it bind.
 
 ### Changed
 - `conformance/baseline.json`: `subsystemsComplete` renamed to
@@ -59,9 +64,13 @@ pre-existing fixture hash is untouched.
   tag exists at HEAD, and `npm run verify` passes.
 
 ### Verified
-- The corpus is discriminating for all five assessed subsystems: 34/34 mutants
-  killed correctly, zero surviving, zero killed incidentally, zero collateral
-  divergence.
+- The corpus is discriminating for every subsystem a second implementation
+  declares: 51/51 mutants killed correctly, zero surviving, zero killed
+  incidentally, zero collateral divergence.
+- Across all 51, exactly one rule was found unpinned — the standalone-`n` shape
+  wildcard — and one additive fixture closed it. Everything else was already
+  discriminated by the corpus as it stood, which is the result rather than a
+  disappointment.
 - Restricting the battery to the pre-existing `compute-edges` case alone leaves
   8 of its 10 mutants alive, which is the state that shipped before this change.
 - Eleven of the twelve compatibility and license mutants were killed by the
@@ -71,6 +80,11 @@ pre-existing fixture hash is untouched.
   three-path retention cap binds in 124, the depth cap changes the result in 58,
   56 pairs are structurally impossible, and 124 length-five paths confirm that
   goal acceptance precedes the depth check.
+- Canonicalization bounds what a fixture can pin: object keys are sorted, so a
+  map-shaped case cannot observe enumeration order. Reordering `MECH_KINDS`
+  leaves every planner matrix byte-identical; only `mech-kinds`, which emits an
+  array, catches it. The battery reported this rather than letting a wider
+  `expectedKillers` stand as an unearned claim.
 
 ## [v0.5.1-kernel] — 2026-07-25
 

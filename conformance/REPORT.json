@@ -1,6 +1,6 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-29T01:36:49.390Z",
+  "generatedAt": "2026-07-29T01:59:29.008Z",
   "ciRun": null,
   "integrity": {
     "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
@@ -559,7 +559,11 @@
         {
           "subsystem": "literature-classification",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 3,
+          "killedMutants": 3,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "multipath-planning",
@@ -573,22 +577,38 @@
         {
           "subsystem": "property-test-skeleton",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 2,
+          "killedMutants": 2,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "registry",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 5,
+          "killedMutants": 5,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "schema-normalization",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 4,
+          "killedMutants": 4,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "types",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 3,
+          "killedMutants": 3,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         }
       ],
       "binarySha256": "b41b66ae437d9c638619880772039257a53ac40ff4b30c46631f73c9fec9b0db",

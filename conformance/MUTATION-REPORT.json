@@ -4,14 +4,26 @@
   "integrity": {
     "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
     "implementationSourceSha256": "6d10510e85c4ae18038ce545fc502710a17f91a7656824f097f7a8bbc266e117",
-    "registrySha256": "4d5f4dd647e6cf063eb19981b40ef5cf1b56c18f226cfd761920c786d05b4714"
+    "registrySha256": "91a0e5f1f91fa364de3323a31474c5a58b0e1330def82abcb2c71a7610494864"
   },
   "scope": "all",
   "unpinnable": [
     {
       "rule": "the 4000-iteration guard bounds uniform-cost search",
       "subsystem": "multipath-planning",
-      "reason": "the frozen registry's worst pair reaches 272 iterations, so the guard is never reached. Exercising it would require adding conversion rules, which the frozen artifact forbids."
+      "claim": "unreachable under the frozen v0.5.1 registry and this search state space — NOT universally unreachable",
+      "reason": "raising the limit is an equivalent mutation for this registry: search terminates far below it on every ordered pair. Reaching the guard would require additional conversion rules, which the frozen artifact forbids.",
+      "revisitWhen": "a MAJOR registry version adds conversion rules — re-run this measurement, because a denser graph can make the guard bind",
+      "evidence": {
+        "guardLimit": 4000,
+        "orderedPairsTested": 256,
+        "measuredMaxIterations": 272,
+        "worstPair": "tensor>graph",
+        "headroomFactor": 14.7,
+        "method": "exhaustive replay of uniform-cost search over every ordered kind pair, counting queue pops",
+        "conversionRegistrySha256": "40e939c0a495c843b09105590a5b88a7c0595a2d6d39888dc717475156eca547",
+        "plannerSha256": "69c81fe172f86dd8c7a76d0e7057f3203cb6ed6c10afd2ce37bad49fca964de8"
+      }
     }
   ],
   "subsystems": [
@@ -66,6 +78,17 @@
       "mutationStatus": "qualified"
     },
     {
+      "subsystem": "literature-classification",
+      "corpusScope": [
+        "classify-lit"
+      ],
+      "declaredMutants": 3,
+      "killedMutants": 3,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
+    },
+    {
       "subsystem": "multipath-planning",
       "corpusScope": [
         "multipath-kind-paths",
@@ -77,9 +100,339 @@
       "survivingMutants": 0,
       "inconclusiveMutants": 0,
       "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "property-test-skeleton",
+      "corpusScope": [
+        "synth-test"
+      ],
+      "declaredMutants": 2,
+      "killedMutants": 2,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "registry",
+      "corpusScope": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat",
+        "synth-test"
+      ],
+      "declaredMutants": 5,
+      "killedMutants": 5,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "schema-normalization",
+      "corpusScope": [
+        "norm-schema"
+      ],
+      "declaredMutants": 4,
+      "killedMutants": 4,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "types",
+      "corpusScope": [
+        "mech-kinds",
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat",
+        "norm-schema",
+        "synth-test"
+      ],
+      "declaredMutants": 3,
+      "killedMutants": 3,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
     }
   ],
   "mutants": [
+    {
+      "id": "registry-drop-a-rule",
+      "subsystem": "registry",
+      "rule": "the conversion registry contains exactly the frozen rule set — a missing edge silently removes reachability",
+      "expectedFailure": "CONVERSION_RULE_MISSING",
+      "expectedKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "CONVERSION_RULE_MISSING observed; killed by conv-rules, multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "registry-alter-endpoint",
+      "subsystem": "registry",
+      "rule": "each rule's target kind is part of the contract — retargeting rewires the graph without changing its size",
+      "expectedFailure": "RULE_ENDPOINT_RETARGETED",
+      "expectedKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "RULE_ENDPOINT_RETARGETED observed; killed by conv-rules, multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "registry-reorder-rules",
+      "subsystem": "registry",
+      "rule": "rule order within a source kind is observable — it feeds enumeration order and every tie-break",
+      "expectedFailure": "RULE_ORDER_CHANGED",
+      "expectedKillers": [
+        "conv-rules"
+      ],
+      "actualKillers": [
+        "conv-rules"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "RULE_ORDER_CHANGED observed; killed by conv-rules"
+    },
+    {
+      "id": "registry-shadow-duplicate-rule",
+      "subsystem": "registry",
+      "rule": "no source kind carries a duplicate rule — a shadowed edge inflates enumeration and can win a tie it should not contest",
+      "expectedFailure": "DUPLICATE_RULE_SHADOWED",
+      "expectedKillers": [
+        "conv-rules",
+        "multipath-kind-paths"
+      ],
+      "actualKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "DUPLICATE_RULE_SHADOWED observed; killed by conv-rules, multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "registry-flip-authority",
+      "subsystem": "registry",
+      "rule": "each rule's authority class is part of the contract — an axiomatic rule is not a curated one",
+      "expectedFailure": "RULE_AUTHORITY_RECLASSIFIED",
+      "expectedKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "conv-rules",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "RULE_AUTHORITY_RECLASSIFIED observed; killed by conv-rules, multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "types-drop-a-kind",
+      "subsystem": "types",
+      "rule": "the mechanism kind set is exactly sixteen members — dropping one removes it from every matrix and from schema validation",
+      "expectedFailure": "KIND_MISSING_FROM_ENUMERATION",
+      "expectedKillers": [
+        "mech-kinds",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "mech-kinds",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "KIND_MISSING_FROM_ENUMERATION observed; killed by mech-kinds, multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "types-reorder-kinds",
+      "subsystem": "types",
+      "rule": "kind order is observable — it fixes the enumeration and every array the corpus emits from it",
+      "expectedFailure": "KIND_ORDER_CHANGED",
+      "expectedKillers": [
+        "mech-kinds"
+      ],
+      "actualKillers": [
+        "mech-kinds"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "KIND_ORDER_CHANGED observed; killed by mech-kinds"
+    },
+    {
+      "id": "types-rename-a-kind",
+      "subsystem": "types",
+      "rule": "kind spelling is the wire contract — `proof_term` is not `proofTerm`",
+      "expectedFailure": "KIND_RESPELLED",
+      "expectedKillers": [
+        "mech-kinds",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "actualKillers": [
+        "mech-kinds",
+        "multipath-kind-paths",
+        "pair-compat"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "KIND_RESPELLED observed; killed by mech-kinds, multipath-kind-paths, pair-compat"
+    },
+    {
+      "id": "norm-widen-port-cap",
+      "subsystem": "schema-normalization",
+      "rule": "each port list is truncated to four entries",
+      "expectedFailure": "PORT_CAP_WIDENED",
+      "expectedKillers": [
+        "norm-schema"
+      ],
+      "actualKillers": [
+        "norm-schema"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "PORT_CAP_WIDENED observed; killed by norm-schema"
+    },
+    {
+      "id": "norm-unknown-kind-default",
+      "subsystem": "schema-normalization",
+      "rule": "an unrecognised kind fails CLOSED to `claim`, never to the value supplied",
+      "expectedFailure": "UNKNOWN_KIND_PASSED_THROUGH",
+      "expectedKillers": [
+        "norm-schema"
+      ],
+      "actualKillers": [
+        "norm-schema"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNKNOWN_KIND_PASSED_THROUGH observed; killed by norm-schema"
+    },
+    {
+      "id": "norm-keep-unspecified",
+      "subsystem": "schema-normalization",
+      "rule": "the literal `unspecified` collapses to the empty string — it is absence, not a value",
+      "expectedFailure": "UNSPECIFIED_RETAINED_AS_VALUE",
+      "expectedKillers": [
+        "norm-schema"
+      ],
+      "actualKillers": [
+        "norm-schema"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNSPECIFIED_RETAINED_AS_VALUE observed; killed by norm-schema"
+    },
+    {
+      "id": "norm-accept-non-object",
+      "subsystem": "schema-normalization",
+      "rule": "a non-object schema normalizes to null — arrays are accepted only because JavaScript calls them objects",
+      "expectedFailure": "NON_OBJECT_SCHEMA_NORMALIZED",
+      "expectedKillers": [
+        "norm-schema"
+      ],
+      "actualKillers": [
+        "norm-schema"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "NON_OBJECT_SCHEMA_NORMALIZED observed; killed by norm-schema"
+    },
+    {
+      "id": "lit-known-threshold",
+      "subsystem": "literature-classification",
+      "rule": "a count is KNOWN only ABOVE 300 — 300 itself is EMERGING",
+      "expectedFailure": "KNOWN_BOUNDARY_INCLUSIVE",
+      "expectedKillers": [
+        "classify-lit"
+      ],
+      "actualKillers": [
+        "classify-lit"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "KNOWN_BOUNDARY_INCLUSIVE observed; killed by classify-lit"
+    },
+    {
+      "id": "lit-emerging-threshold",
+      "subsystem": "literature-classification",
+      "rule": "a count is EMERGING at 25 and above — the lower boundary is inclusive",
+      "expectedFailure": "EMERGING_BOUNDARY_EXCLUSIVE",
+      "expectedKillers": [
+        "classify-lit"
+      ],
+      "actualKillers": [
+        "classify-lit"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "EMERGING_BOUNDARY_EXCLUSIVE observed; killed by classify-lit"
+    },
+    {
+      "id": "lit-absent-count",
+      "subsystem": "literature-classification",
+      "rule": "an absent count is UNVERIFIED — never UNEXPLORED, which would assert the literature was checked and found empty",
+      "expectedFailure": "ABSENT_COUNT_REPORTED_AS_SEARCHED",
+      "expectedKillers": [
+        "classify-lit"
+      ],
+      "actualKillers": [
+        "classify-lit"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "ABSENT_COUNT_REPORTED_AS_SEARCHED observed; killed by classify-lit"
+    },
+    {
+      "id": "synth-drop-adapter-composition",
+      "subsystem": "property-test-skeleton",
+      "rule": "the generated harness composes the SELECTED adapter's operations around the sample",
+      "expectedFailure": "ADAPTER_NOT_COMPOSED_INTO_HARNESS",
+      "expectedKillers": [
+        "synth-test"
+      ],
+      "actualKillers": [
+        "synth-test"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "ADAPTER_NOT_COMPOSED_INTO_HARNESS observed; killed by synth-test"
+    },
+    {
+      "id": "synth-alter-template",
+      "subsystem": "property-test-skeleton",
+      "rule": "the harness text is observable output, not a comment — its wording is part of the contract",
+      "expectedFailure": "HARNESS_TEMPLATE_ALTERED",
+      "expectedKillers": [
+        "synth-test"
+      ],
+      "actualKillers": [
+        "synth-test"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "HARNESS_TEMPLATE_ALTERED observed; killed by synth-test"
+    },
     {
       "id": "planner-descending-cost-order",
       "subsystem": "multipath-planning",

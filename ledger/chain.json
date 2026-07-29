@@ -58,11 +58,11 @@
         "changedFixtures": [],
         "unchangedFixtures": 0,
         "baselineFixtures": 43,
-        "statement": "Genesis: the v0.5.1 behavioral baseline — 43 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation whose compatibility, edge-cost, edge-derivation, license-screening and multipath-planning subsystems are mutation-qualified."
+        "statement": "Genesis: the v0.5.1 behavioral baseline — 43 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation whose ten declared subsystems are all mutation-qualified."
       },
       "previousEntrySha256": null,
-      "restatements": 5,
-      "entrySha256": "cf69ea7d2c29a3c180c8e5e1a21f0c77001663997a00fb3ee13167ac531f9ccd"
+      "restatements": 6,
+      "entrySha256": "2e262f12bac776c1353860ad86ff06263468081a0a158539529d806e025e8136"
     }
   ]
 }

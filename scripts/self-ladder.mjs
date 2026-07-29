@@ -70,6 +70,18 @@ const declaredSubsystems = (() => {
 })();
 const unMutated = declaredSubsystems.filter((s) => !mutationScope.includes(s));
 
+// Fixtures no mutation scope reaches. "Every declared subsystem is qualified"
+// must not be read as "the corpus is discriminating": the cascade and
+// serialization families have no second implementation, so nothing mutates
+// them and their adequacy is untested rather than established.
+const unassessedFixtures = (() => {
+  try {
+    const covered = new Set((readJson("conformance/MUTATION-REPORT.json").subsystems || [])
+      .flatMap((s) => s.corpusScope || []));
+    return manifest.cases.filter((c) => !covered.has(c.caseId)).length;
+  } catch { return manifest.cases.length; }
+})();
+
 const OBLIGATIONS = [
   { id: "SO-1", name: "Package exists and imports without side effects", method: "deterministic",
     status: has("packages/cortex-kernel/src/index.js") ? "PROVED" : "REFUTED",
@@ -111,10 +123,12 @@ const OBLIGATIONS = [
     status: mutants.ok === null ? "UNRESOLVED" : (mutants.ok ? "CONDITIONALLY-SATISFIED" : "REFUTED"),
     detail: mutants.ok === null
       ? "conformance binary not built — run npm run conformance:build"
-      : `every declared semantic mutation of ${mutationScope.join(", ") || "(nothing)"} is killed by the case that claims to pin it, with the predicted violation observable; `
+      : `every declared semantic mutation of ${mutationScope.length} subsystem(s) is killed by the case that claims to pin it, with the predicted violation observable and every other declared case unperturbed; `
         + (unMutated.length
-          ? `${unMutated.length} declared subsystem(s) have no mutation coverage and are pinned by assumption: ${unMutated.join(", ")}`
-          : "every declared subsystem is mutation-covered"),
+          ? `${unMutated.length} declared subsystem(s) have no mutation coverage and are pinned by assumption: ${unMutated.join(", ")}. `
+          : "every subsystem a second implementation declares is now mutation-qualified. ")
+        + `${unassessedFixtures} of ${manifest.cases.length} corpus fixtures remain outside every mutation scope — the cascade and serialization layers, which no second implementation reaches, so their adequacy is untested rather than established. `
+        + "Adequacy is also finite: a hand-authored mutation set can only refute discrimination, never prove it.",
     falsifier: "A semantic mutation of a declared subsystem that the corpus does not catch." },
 
   { id: "SO-8", name: "Mechanized refinement proof", method: "formal",

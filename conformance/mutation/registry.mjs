@@ -16,6 +16,9 @@
 // no entry is reported as `not-assessed`, never as "zero mutants survived".
 
 import { EDGE_CORPORA, EDGE_CORPORA_BOUNDARIES } from "../../test/oracle/cases.mjs";
+import { MECH_KINDS } from "../../packages/cortex-kernel/src/types.js";
+
+const MECH_KIND_SET = new Set(MECH_KINDS);
 
 /** Corpus cases each subsystem's mutants may perturb. A mutant that escapes
  *  its scope means the subsystem boundary is not where we think it is. */
@@ -32,22 +35,69 @@ export const SUBSYSTEM_SCOPE = {
   // Edge cost is shared the same way: published directly by `conv-rules` and
   // consumed by every planner decision.
   "edge-cost": ["conv-rules", "multipath-kind-paths", "pair-compat", "synth-test"],
+  // The conversion topology reaches every planner-derived case, and the kind
+  // enumeration reaches everything that iterates or validates a kind. These
+  // wide scopes are the honest ones: the propagation is real, and individual
+  // mutants narrow below them where they can.
+  "registry": ["conv-rules", "multipath-kind-paths", "pair-compat", "synth-test"],
+  "types": ["mech-kinds", "conv-rules", "multipath-kind-paths", "pair-compat", "norm-schema", "synth-test"],
+  "schema-normalization": ["norm-schema"],
+  "literature-classification": ["classify-lit"],
+  "property-test-skeleton": ["synth-test"],
 };
 
-// Rules that CANNOT be pinned by any corpus over the frozen registry, recorded
-// rather than quietly omitted. The 4000-iteration guard in `adaptersFor` is a
-// safety valve the frozen rule set never trips: the most expensive of the 240
-// ordered pairs takes 272 iterations. Raising the limit is therefore an
-// equivalent mutation for this registry, and no additive fixture can change
-// that without adding rules to frozen state. It is unpinned by construction,
-// not by corpus neglect — a distinction the report should not blur.
-export const UNPINNABLE = [
-  {
+// Rules that no corpus can pin OVER THIS STATE SPACE, recorded rather than
+// quietly omitted — unpinned-by-construction and unpinned-by-neglect look
+// identical in a coverage number and are not the same finding.
+//
+// The claim is deliberately bounded. It is NOT "this rule is unreachable"; it
+// is "no fixture over the v0.5.1 registry can reach it", measured. A future
+// MAJOR registry version with more conversion rules could make the guard bind,
+// at which point the measurement below changes and the entry must be revisited.
+// So the finding is emitted with its evidence — the exhaustive search it rests
+// on, and hashes of the two artifacts that determine the answer.
+
+/** Replays uniform-cost search over the frozen registry, counting iterations. */
+const measureSearchIterations = (kinds, rules, edgeCost) => {
+  let max = 0, worst = null, pairs = 0;
+  for (const from of kinds) for (const to of kinds) {
+    pairs++;
+    if (from === to) continue;
+    const results = []; let pq = [[0, from, []]]; let iters = 0;
+    while (pq.length && results.length < 3 && iters < 4000) {
+      iters++;
+      pq.sort((a, b) => a[0] - b[0]);
+      const [c, node, path] = pq.shift();
+      if (node === to) { results.push(c); continue; }
+      if (path.length > 4) continue;
+      for (const e of (rules[node] || [])) pq.push([c + edgeCost(e), e.to, path.concat([e])]);
+    }
+    if (iters > max) { max = iters; worst = `${from}>${to}`; }
+  }
+  return { max, worst, pairs };
+};
+
+export const unpinnableFindings = (kinds, rules, edgeCost, hashes) => {
+  const m = measureSearchIterations(kinds, rules, edgeCost);
+  return [{
     rule: "the 4000-iteration guard bounds uniform-cost search",
     subsystem: "multipath-planning",
-    reason: "the frozen registry's worst pair reaches 272 iterations, so the guard is never reached. Exercising it would require adding conversion rules, which the frozen artifact forbids.",
-  },
-];
+    claim: "unreachable under the frozen v0.5.1 registry and this search state space — NOT universally unreachable",
+    reason: "raising the limit is an equivalent mutation for this registry: search terminates far below it on every ordered pair. Reaching the guard would require additional conversion rules, which the frozen artifact forbids.",
+    revisitWhen: "a MAJOR registry version adds conversion rules — re-run this measurement, because a denser graph can make the guard bind",
+    evidence: {
+      guardLimit: 4000,
+      orderedPairsTested: m.pairs,
+      measuredMaxIterations: m.max,
+      worstPair: m.worst,
+      headroomFactor: Math.round((4000 / m.max) * 10) / 10,
+      method: "exhaustive replay of uniform-cost search over every ordered kind pair, counting queue pops",
+      // The two artifacts that determine the answer: change either and the
+      // measurement above is no longer the one that was made.
+      ...hashes,
+    },
+  }];
+};
 
 /** Corpus inputs, so an assertion can reason about what the output SHOULD have
  *  been rather than only about what it is. */
@@ -102,7 +152,225 @@ const rulesWithCost = (out) => {
     rs.map((r) => ({ ...r, from, cost: (d.edgeCosts || {})[`${from}>${r.to}:${r.op}`] })));
 };
 
+// ---- remaining deterministic helpers ---------------------------------------
+const kinds = (out) => (out["mech-kinds"] || {}).kinds || [];
+const registryOf = (out) => (out["conv-rules"] || {}).registry || {};
+const flatRules = (out) => Object.entries(registryOf(out)).flatMap(([from, rs]) => rs.map((r) => ({ ...r, from })));
+const normRows = (out) => out["norm-schema"] || [];
+const litRows = (out) => out["classify-lit"] || [];
+const synthRows = (out) => out["synth-test"] || [];
+const allPorts = (out) => normRows(out).flatMap((r) => [...((r.out || {}).consumes || []), ...((r.out || {}).produces || [])]);
+
 export const MUTATIONS = [
+  // ---- registry: conversion topology --------------------------------------
+  {
+    id: "registry-drop-a-rule",
+    subsystem: "registry",
+    rule: "the conversion registry contains exactly the frozen rule set — a missing edge silently removes reachability",
+    find: 'r("dataset", "materialize", AX, None, None, None),',
+    replace: "",
+    expectedOccurrences: 1,
+    expectedKillers: ["conv-rules", "multipath-kind-paths", "pair-compat"],
+    expectedFailure: "CONVERSION_RULE_MISSING",
+    assert: (out) => !flatRules(out).some((r) => r.from === "tensor" && r.to === "dataset" && r.op === "materialize"),
+  },
+  {
+    id: "registry-alter-endpoint",
+    subsystem: "registry",
+    rule: "each rule's target kind is part of the contract — retargeting rewires the graph without changing its size",
+    find: 'r("measurement", "observe", CUR, Some("tensor is an observable quantity"), None, None),',
+    replace: 'r("policy", "observe", CUR, Some("tensor is an observable quantity"), None, None),',
+    expectedOccurrences: 1,
+    expectedKillers: ["conv-rules", "multipath-kind-paths", "pair-compat"],
+    expectedFailure: "RULE_ENDPOINT_RETARGETED",
+    assert: (out) => flatRules(out).some((r) => r.from === "tensor" && r.op === "observe" && r.to !== "measurement"),
+  },
+  {
+    id: "registry-reorder-rules",
+    subsystem: "registry",
+    rule: "rule order within a source kind is observable — it feeds enumeration order and every tie-break",
+    find: `r("distribution", "normalize", CUR, Some("nonneg & normalizable to unit mass"), None, Some(&["scale"])),
+            r("measurement", "observe", CUR, Some("tensor is an observable quantity"), None, None),`,
+    replace: `r("measurement", "observe", CUR, Some("tensor is an observable quantity"), None, None),
+            r("distribution", "normalize", CUR, Some("nonneg & normalizable to unit mass"), None, Some(&["scale"])),`,
+    expectedOccurrences: 1,
+    expectedKillers: ["conv-rules"],
+    expectedFailure: "RULE_ORDER_CHANGED",
+    assert: (out) => ((registryOf(out).tensor || [])[0] || {}).to !== "distribution",
+  },
+  {
+    id: "registry-shadow-duplicate-rule",
+    subsystem: "registry",
+    rule: "no source kind carries a duplicate rule — a shadowed edge inflates enumeration and can win a tie it should not contest",
+    find: 'r("dataset", "materialize", AX, None, None, None),\n        ]),',
+    replace: 'r("dataset", "materialize", AX, None, None, None),\n            r("dataset", "materialize", AX, None, None, None),\n        ]),',
+    expectedOccurrences: 1,
+    expectedKillers: ["conv-rules", "multipath-kind-paths"],
+    expectedFailure: "DUPLICATE_RULE_SHADOWED",
+    assert: (out) => {
+      const ids = flatRules(out).map((r) => `${r.from}>${r.to}:${r.op}`);
+      return new Set(ids).size !== ids.length;
+    },
+  },
+  {
+    id: "registry-flip-authority",
+    subsystem: "registry",
+    rule: "each rule's authority class is part of the contract — an axiomatic rule is not a curated one",
+    find: 'r("scalar", "reduce", AX, None, Some(true), Some(&["structure"])),',
+    replace: 'r("scalar", "reduce", CUR, None, Some(true), Some(&["structure"])),',
+    expectedOccurrences: 1,
+    expectedKillers: ["conv-rules", "multipath-kind-paths", "pair-compat"],
+    expectedFailure: "RULE_AUTHORITY_RECLASSIFIED",
+    assert: (out) => flatRules(out).some((r) => r.from === "tensor" && r.op === "reduce" && (r.auth || "cur") !== "ax"),
+  },
+
+  // ---- types: the kind enumeration ----------------------------------------
+  {
+    id: "types-drop-a-kind",
+    subsystem: "types",
+    rule: "the mechanism kind set is exactly sixteen members — dropping one removes it from every matrix and from schema validation",
+    // The array is fixed-size, so the length annotation moves with the member.
+    find: '[&str; 16] = [\n    "tensor", "scalar", "distribution", "graph", "subgraph", "bound", "certificate",\n    "proof_term", "constraint_set", "optimization_problem", "program", "trace",\n    "dataset", "policy", "claim", "measurement",\n];',
+    replace: '[&str; 15] = [\n    "tensor", "scalar", "distribution", "graph", "subgraph", "bound", "certificate",\n    "proof_term", "constraint_set", "optimization_problem", "program", "trace",\n    "dataset", "policy", "claim",\n];',
+    expectedOccurrences: 1,
+    expectedKillers: ["mech-kinds", "multipath-kind-paths", "pair-compat"],
+    expectedFailure: "KIND_MISSING_FROM_ENUMERATION",
+    assert: (out) => kinds(out).length !== 16,
+  },
+  {
+    id: "types-reorder-kinds",
+    subsystem: "types",
+    // Only `mech-kinds` can pin this. The planner matrices are OBJECTS keyed
+    // "a>b", and canonicalization sorts keys by design — so reordering the
+    // enumeration is invisible to them. Order is observable only where the
+    // corpus emits an array. The battery reported this rather than letting the
+    // wider expectedKillers stand as an unearned claim.
+    rule: "kind order is observable — it fixes the enumeration and every array the corpus emits from it",
+    find: '"tensor", "scalar", "distribution", "graph", "subgraph", "bound", "certificate",',
+    replace: '"scalar", "tensor", "distribution", "graph", "subgraph", "bound", "certificate",',
+    expectedOccurrences: 1,
+    scope: ["mech-kinds"],
+    expectedKillers: ["mech-kinds"],
+    expectedFailure: "KIND_ORDER_CHANGED",
+    assert: (out) => kinds(out)[0] !== "tensor",
+  },
+  {
+    id: "types-rename-a-kind",
+    subsystem: "types",
+    rule: "kind spelling is the wire contract — `proof_term` is not `proofTerm`",
+    find: '"proof_term", "constraint_set", "optimization_problem", "program", "trace",',
+    replace: '"proofTerm", "constraint_set", "optimization_problem", "program", "trace",',
+    expectedOccurrences: 1,
+    expectedKillers: ["mech-kinds", "multipath-kind-paths", "pair-compat"],
+    expectedFailure: "KIND_RESPELLED",
+    assert: (out) => !kinds(out).includes("proof_term"),
+  },
+
+  // ---- schema normalization -----------------------------------------------
+  {
+    id: "norm-widen-port-cap",
+    subsystem: "schema-normalization",
+    rule: "each port list is truncated to four entries",
+    find: ".take(4)",
+    replace: ".take(5)",
+    expectedOccurrences: 1,
+    expectedKillers: ["norm-schema"],
+    expectedFailure: "PORT_CAP_WIDENED",
+    assert: (out) => normRows(out).some((r) => (((r.out || {}).consumes || []).length > 4 || ((r.out || {}).produces || []).length > 4)),
+  },
+  {
+    id: "norm-unknown-kind-default",
+    subsystem: "schema-normalization",
+    rule: "an unrecognised kind fails CLOSED to `claim`, never to the value supplied",
+    find: 'Some(k) if MECH_KINDS.contains(&k) => k,\n                _ => "claim",',
+    replace: 'Some(k) if MECH_KINDS.contains(&k) => k,\n                Some(k) => k,\n                _ => "claim",',
+    expectedOccurrences: 1,
+    expectedKillers: ["norm-schema"],
+    expectedFailure: "UNKNOWN_KIND_PASSED_THROUGH",
+    assert: (out) => allPorts(out).some((p) => p.kind && !MECH_KIND_SET.has(p.kind)),
+  },
+  {
+    id: "norm-keep-unspecified",
+    subsystem: "schema-normalization",
+    rule: "the literal `unspecified` collapses to the empty string — it is absence, not a value",
+    find: 'Some(x) if !x.is_empty() && x != "unspecified" => x.to_string(),',
+    replace: "Some(x) if !x.is_empty() => x.to_string(),",
+    expectedOccurrences: 1,
+    expectedKillers: ["norm-schema"],
+    expectedFailure: "UNSPECIFIED_RETAINED_AS_VALUE",
+    assert: (out) => allPorts(out).some((p) => p.shape === "unspecified" || p.units === "unspecified"),
+  },
+  {
+    id: "norm-accept-non-object",
+    subsystem: "schema-normalization",
+    rule: "a non-object schema normalizes to null — arrays are accepted only because JavaScript calls them objects",
+    find: "if !is_objectish { return J::Null; }",
+    replace: "if false { return J::Null; }",
+    expectedOccurrences: 1,
+    expectedKillers: ["norm-schema"],
+    expectedFailure: "NON_OBJECT_SCHEMA_NORMALIZED",
+    assert: (out) => normRows(out).some((r) => (r.in === null || typeof r.in !== "object") && r.out !== null),
+  },
+
+  // ---- literature classification ------------------------------------------
+  {
+    id: "lit-known-threshold",
+    subsystem: "literature-classification",
+    rule: "a count is KNOWN only ABOVE 300 — 300 itself is EMERGING",
+    find: "Some(c) if c > LIT_KNOWN => \"KNOWN\",",
+    replace: "Some(c) if c >= LIT_KNOWN => \"KNOWN\",",
+    expectedOccurrences: 1,
+    expectedKillers: ["classify-lit"],
+    expectedFailure: "KNOWN_BOUNDARY_INCLUSIVE",
+    assert: (out) => litRows(out).some((r) => r.in === 300 && r.out !== "EMERGING"),
+  },
+  {
+    id: "lit-emerging-threshold",
+    subsystem: "literature-classification",
+    rule: "a count is EMERGING at 25 and above — the lower boundary is inclusive",
+    find: "Some(c) if c >= LIT_EMERGING => \"EMERGING\",",
+    replace: "Some(c) if c > LIT_EMERGING => \"EMERGING\",",
+    expectedOccurrences: 1,
+    expectedKillers: ["classify-lit"],
+    expectedFailure: "EMERGING_BOUNDARY_EXCLUSIVE",
+    assert: (out) => litRows(out).some((r) => r.in === 25 && r.out !== "EMERGING"),
+  },
+  {
+    id: "lit-absent-count",
+    subsystem: "literature-classification",
+    rule: "an absent count is UNVERIFIED — never UNEXPLORED, which would assert the literature was checked and found empty",
+    find: 'None => "UNVERIFIED",',
+    replace: 'None => "UNEXPLORED",',
+    expectedOccurrences: 1,
+    expectedKillers: ["classify-lit"],
+    expectedFailure: "ABSENT_COUNT_REPORTED_AS_SEARCHED",
+    assert: (out) => litRows(out).some((r) => r.in === null && r.out !== "UNVERIFIED"),
+  },
+
+  // ---- property-test skeleton ---------------------------------------------
+  {
+    id: "synth-drop-adapter-composition",
+    subsystem: "property-test-skeleton",
+    rule: "the generated harness composes the SELECTED adapter's operations around the sample",
+    find: "for s in adapter { expr = format!(\"{}({})\", s.op, expr); }",
+    replace: "for _s in adapter { }",
+    expectedOccurrences: 1,
+    expectedKillers: ["synth-test"],
+    expectedFailure: "ADAPTER_NOT_COMPOSED_INTO_HARNESS",
+    assert: (out) => synthRows(out).some((r) => /const y = x;/.test(r.out)),
+  },
+  {
+    id: "synth-alter-template",
+    subsystem: "property-test-skeleton",
+    rule: "the harness text is observable output, not a comment — its wording is part of the contract",
+    find: "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)",
+    replace: "// generated property-test harness",
+    expectedOccurrences: 1,
+    expectedKillers: ["synth-test"],
+    expectedFailure: "HARNESS_TEMPLATE_ALTERED",
+    assert: (out) => synthRows(out).some((r) => !/RunPack for a real backend/.test(r.out)),
+  },
+
   // ---- planner: multipath search ------------------------------------------
   {
     id: "planner-descending-cost-order",

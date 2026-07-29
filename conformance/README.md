@@ -70,7 +70,7 @@ that fails is not legitimate, and fails the run.
 | Implementation | Language | Coverage | Notes |
 |---|---|---|---|
 | `packages/cortex-kernel` | JavaScript | 43/43 | Full corpus, including cascade and serialization |
-| `impl/rust` | Rust | 13/43 | Deterministic core plus schema normalization, edge derivation and the compatibility predicates: registry, edge costs, min-risk multipath planner, shape/unit/license predicates. Dependency-free. |
+| `impl/rust` | Rust | 13/43, all ten subsystems mutation-qualified | Deterministic core plus schema normalization, edge derivation and the compatibility predicates: registry, edge costs, min-risk multipath planner, shape/unit/license predicates. Dependency-free. |
 
 The Rust implementation was written independently against the frozen semantics
 and reproduced its declared hashes — including the full 16×16 multipath
@@ -128,7 +128,7 @@ came to exist.
 ### The classifier is itself tested
 
 If the classifier silently degraded to "the hash changed", every score would
-still read 34/34 and nothing would notice — the same failure mode, one level up.
+still read 51/51 and nothing would notice — the same failure mode, one level up.
 So `mutation/selftest.mjs` drives the engine with synthetic mutants whose correct
 outcome is known by construction, and asserts that each of the five states is
 reachable and correctly distinguished. It runs first, in milliseconds, without a
@@ -153,20 +153,38 @@ is an `invalid_mutant`.
 A survivor is a corpus defect, but the reverse is not automatic: most rules turn
 out to be pinned already. Each subsystem is therefore assessed by writing the
 mutants FIRST and running them against the corpus as it stands, then adding only
-the minimum fixture the survivors require. Eleven of twelve compatibility and
-license mutants died against the existing matrices; all ten planner and edge-cost
-mutants died against the existing 16×16 matrices, needing no new fixture at all.
-Only the standalone-`n` shape rule was genuinely unpinned.
+the minimum fixture the survivors require. Across 51 mutants over ten subsystems, exactly one rule turned out to be
+unpinned — the standalone-`n` shape wildcard — and one additive fixture closed
+it. Everything else was already discriminated by the corpus as it stood.
 
-### Rules no corpus can pin
+### Rules no corpus can pin *over this state space*
 
 Some rules cannot be reached by any corpus over a frozen artifact, and the report
 says so under `unpinnable` rather than omitting them — unpinned-by-construction
 and unpinned-by-neglect look identical in a coverage number and are not the same
-finding. The 4000-iteration guard in `adaptersFor` is one: the frozen registry's
-most expensive ordered pair takes 272 iterations, so raising the limit is an
-equivalent mutation, and reaching it would require adding conversion rules the
-frozen artifact forbids.
+finding.
+
+The claim is deliberately bounded, and carries its measurement rather than an
+assertion. The 4000-iteration guard in `adaptersFor` is the first entry: it is
+unreachable **under the v0.5.1 registry and this search state space**, not
+universally. A denser future registry could make it bind, so the finding records
+the exhaustive replay it rests on and the hashes of the two artifacts that decide
+the answer:
+
+```json
+{ "guardLimit": 4000, "orderedPairsTested": 256,
+  "measuredMaxIterations": 272, "worstPair": "tensor>graph",
+  "headroomFactor": 14.7,
+  "revisitWhen": "a MAJOR registry version adds conversion rules" }
+```
+
+### Canonicalization bounds what a fixture can pin
+
+Object keys are sorted by the canonicalizer, so a map-shaped fixture cannot
+observe enumeration order at all. Reordering `MECH_KINDS` leaves every `"a>b"`
+planner matrix byte-identical; only `mech-kinds`, which emits an **array**, can
+catch it. The battery reported this as `killed_incidentally` rather than letting
+a wider `expectedKillers` stand as an unearned claim.
 
 ### Fixture-complete is not complete
 

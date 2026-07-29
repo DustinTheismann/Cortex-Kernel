@@ -18,7 +18,9 @@
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { MUTATIONS, SUBSYSTEM_SCOPE, CORPUS_INPUTS, UNPINNABLE } from "./mutation/registry.mjs";
+import { MUTATIONS, SUBSYSTEM_SCOPE, CORPUS_INPUTS, unpinnableFindings } from "./mutation/registry.mjs";
+import { MECH_KINDS } from "../packages/cortex-kernel/src/types.js";
+import { CONV_RULES, edgeCost } from "../packages/cortex-kernel/src/registry.js";
 import { runMutant, cargoRunner, summarize, makeWorkDir, cleanup, binaryExists, fileHash, root, SRC, BINARY } from "./mutation/battery.mjs";
 
 const REPORT = join(root, "conformance/MUTATION-REPORT.json");
@@ -56,7 +58,13 @@ try {
   }
 } finally { cleanup(ctx.workDir); }
 
-const report = summarize(selected, results, SUBSYSTEM_SCOPE, only || "all", { registrySha256: fileHash("conformance/mutation/registry.mjs") }, UNPINNABLE);
+const report = summarize(selected, results, SUBSYSTEM_SCOPE, only || "all", { registrySha256: fileHash("conformance/mutation/registry.mjs") },
+  // Measured now, over the current registry and planner — not asserted from a
+  // comment that could outlive the code it describes.
+  unpinnableFindings(MECH_KINDS, CONV_RULES, edgeCost, {
+    conversionRegistrySha256: fileHash("packages/cortex-kernel/src/registry.js"),
+    plannerSha256: fileHash("packages/cortex-kernel/src/planner.js"),
+  }));
 
 // Only a full run may write the report; a --subsystem run must not truncate it.
 if (!only) writeFileSync(REPORT, JSON.stringify(report, null, 2) + "\n");
@@ -75,7 +83,10 @@ console.log("");
 for (const s of report.subsystems) {
   console.log(`  ${s.subsystem}: ${s.killedMutants}/${s.declaredMutants} killed, ${s.survivingMutants} surviving, ${s.inconclusiveMutants} inconclusive — ${s.mutationStatus}`);
 }
-for (const u of report.unpinnable) console.log(`  ${u.subsystem}: "${u.rule}" cannot be pinned — ${u.reason}`);
+for (const u of report.unpinnable) {
+  console.log(`  ${u.subsystem}: "${u.rule}" — ${u.claim}`);
+  console.log(`      ${u.evidence.measuredMaxIterations} iterations at worst (${u.evidence.worstPair}) across ${u.evidence.orderedPairsTested} ordered pairs; guard is ${u.evidence.guardLimit} (${u.evidence.headroomFactor}x headroom)`);
+}
 console.log("\nOnly `killed_correctly` counts. A hash mismatch is not a kill; a surviving mutant is a corpus defect.");
 if (!only) console.log("report written: conformance/MUTATION-REPORT.json");
 for (const p of problems) console.error("\n  " + p);
