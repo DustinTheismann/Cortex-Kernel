@@ -585,15 +585,23 @@ impl SynthPort {
     fn label(&self) -> &'static str { self.semantics.or(self.name).unwrap_or(self.kind) }
 }
 
+/// The frozen harness template, at exactly one site. The deterministic
+/// `synthTest` surface and the cascade emit the same text; a second copy could
+/// drift from the first, and would also silently widen any mutation anchored to
+/// the template into a two-boundary mutation that no longer isolates anything.
+fn synth_harness(po_kind: &str, ci_kind: &str, po_label: &str, ci_label: &str, expr: &str) -> String {
+    format!(
+        "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('{}→{} preserves semantics', () => {{\n  const x = sample_{}();          // {}\n  const y = {};\n  assert isValid_{}(y);            // {}\n  assert approxPreserves(semantics(x), semantics(y), eps);\n}});",
+        po_kind, ci_kind, po_kind, po_label, expr, ci_kind, ci_label)
+}
+
 /// Property-test skeleton (synthTest), verbatim. The adapter chain folds into
 /// nested calls: [normalize] over x becomes `normalize(x)`; an empty chain
 /// leaves `x` untouched.
 fn synth_test(po: &SynthPort, ci: &SynthPort, adapter: &[Step]) -> String {
     let mut expr = String::from("x");
     for s in adapter { expr = format!("{}({})", s.op, expr); }
-    format!(
-        "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('{}→{} preserves semantics', () => {{\n  const x = sample_{}();          // {}\n  const y = {};\n  assert isValid_{}(y);            // {}\n  assert approxPreserves(semantics(x), semantics(y), eps);\n}});",
-        po.kind, ci.kind, po.kind, po.label(), expr, ci.kind, ci.label())
+    synth_harness(po.kind, ci.kind, po.label(), ci.label(), &expr)
 }
 
 const SHAPES: [&str; 11] = ["", "[batch,d]", "[BATCH,D]", "DAG", "dag", "scalar", "[n]", "any", "unspecified", "3x3", "*"];
@@ -831,6 +839,13 @@ fn build(case_id: &str) -> Option<J> {
             (name.to_string(), J::A(compute_edges(list).iter().map(|e| e.json()).collect()))
         }).collect())),
 
+        id if cascade_cases().iter().any(|c| c.id == id) => {
+            let rules = conv_rules();
+            let cases = cascade_cases();
+            let c = cases.iter().find(|c| c.id == id).unwrap();
+            Some(cascade_payload(&rules, c))
+        }
+
         "classify-lit" => Some(J::A(CLASSIFY_INPUTS.iter().map(|c| obj(vec![
             ("in", match c { None => J::Null, Some(v) => J::N(*v) }),
             ("out", J::s(classify_lit(*c))),
@@ -851,11 +866,563 @@ fn main() {
                          "shape-compat", "shape-compat-boundaries", "unit-compat", "license-compat", "classify-lit",
                          "synth-test", "norm-schema", "compute-edges",
                          "compute-edges-boundaries"];
-        println!("{}", J::A(supported.iter().map(|c| J::s(c)).collect()).to_json());
+        let mut all: Vec<J> = supported.iter().map(|c| J::s(c)).collect();
+        for c in cascade_cases() { all.push(J::s(c.id)); }
+        println!("{}", J::A(all).to_json());
         return;
     }
     match build(&args[1]) {
         Some(v) => println!("{}", v.to_json()),
         None => { eprintln!("unsupported case: {}", args[1]); std::process::exit(3); }
     }
+}
+
+// ============================================================ cascade (C1)
+//
+// The frozen verifyCascade steps 2-4, as a pure function: schema-level port
+// planning -> contract instantiation -> the ordered proof-obligation vector ->
+// the five-stage ladder, then the post-ladder literature layer.
+//
+// PARITY ONLY. This reproduces the 17 cascade fixtures; it makes no
+// mutation-adequacy claim, and no mutation is declared against it yet.
+//
+// Two boundaries are inputs rather than behavior, exactly as the oracle
+// documents: the typed schemas (model-extracted in situ) and the soft
+// precondition/invariant/metric judgments (model-supplied). The literature
+// count is likewise injected. Everything between them runs here.
+
+#[derive(Clone)]
+struct CPort { name: String, kind: String, shape: String, units: String, semantics: String }
+
+impl CPort {
+    /// The raw port as the case defines it — "unspecified" not yet collapsed.
+    fn raw_json(&self) -> J {
+        obj(vec![
+            ("name", J::S(self.name.clone())), ("kind", J::S(self.kind.clone())),
+            ("shape", J::S(self.shape.clone())), ("units", J::S(self.units.clone())),
+            ("semantics", J::S(self.semantics.clone())),
+        ])
+    }
+    /// normSchema's per-port normalization: unknown kind fails closed to
+    /// "claim"; "unspecified" shape/units collapse to the empty string.
+    fn norm(&self) -> CPort {
+        let collapse = |v: &str| if !v.is_empty() && v != "unspecified" { v.to_string() } else { String::new() };
+        CPort {
+            name: self.name.clone(),
+            kind: if MECH_KINDS.contains(&self.kind.as_str()) { self.kind.clone() } else { "claim".into() },
+            shape: collapse(&self.shape), units: collapse(&self.units),
+            semantics: self.semantics.clone(),
+        }
+    }
+    fn json(&self) -> J {
+        obj(vec![
+            ("name", J::S(self.name.clone())), ("kind", J::S(self.kind.clone())),
+            ("shape", J::S(self.shape.clone())), ("units", J::S(self.units.clone())),
+            ("semantics", J::S(self.semantics.clone())),
+        ])
+    }
+}
+
+#[derive(Clone)]
+struct CSchema { produces: Vec<CPort>, consumes: Vec<CPort>, assumptions: Vec<String>, invariants: Vec<String> }
+
+impl CSchema {
+    fn raw_json(&self) -> J {
+        obj(vec![
+            ("produces", J::A(self.produces.iter().map(|p| p.raw_json()).collect())),
+            ("consumes", J::A(self.consumes.iter().map(|p| p.raw_json()).collect())),
+            ("certifies", J::A(vec![])),
+            ("assumptions", J::A(self.assumptions.iter().map(|a| J::S(a.clone())).collect())),
+            ("invariants", J::A(self.invariants.iter().map(|a| J::S(a.clone())).collect())),
+        ])
+    }
+    fn norm(&self) -> CSchema {
+        CSchema {
+            produces: self.produces.iter().take(4).map(|p| p.norm()).collect(),
+            consumes: self.consumes.iter().take(4).map(|p| p.norm()).collect(),
+            assumptions: self.assumptions.clone(), invariants: self.invariants.clone(),
+        }
+    }
+}
+
+/// The model-supplied soft judgments. `pre` applies to every curated
+/// precondition unless `pre_overrides` names the ruleId.
+#[derive(Clone, Default)]
+struct Soft { pre: Option<&'static str>, pre_overrides: Vec<(&'static str, &'static str)>, invariant: Option<&'static str>, metric: Option<&'static str> }
+
+/// mapSoft, fail-closed: anything unrecognised (including absent) is UNRESOLVED.
+fn map_soft(v: Option<&str>) -> &'static str {
+    match v {
+        Some("satisfied") | Some("conditional") => "CONDITIONALLY-SATISFIED",
+        Some("violated") => "REFUTED",
+        _ => "UNRESOLVED",
+    }
+}
+
+struct COption { dir: &'static str, source_output: CPort, target_input: CPort, exact: bool, adapters: Vec<Step>, static_risk: f64, risk: f64, unit: &'static str }
+
+/// portPairsFor + planPortBridges: candidate pairs both directions capped at
+/// 24, options ranked by risk, top three retained.
+fn plan_port_bridges(rules: &[(&'static str, Vec<Rule>)], a: &CSchema, b: &CSchema, a_present: bool, b_present: bool) -> (usize, Vec<COption>) {
+    let mut pairs: Vec<(&'static str, CPort, CPort)> = vec![];
+    if a_present && b_present {
+        for po in &a.produces { for ci in &b.consumes { pairs.push(("A→B", po.clone(), ci.clone())); } }
+        for po in &b.produces { for ci in &a.consumes { pairs.push(("B→A", po.clone(), ci.clone())); } }
+    }
+    pairs.truncate(24);
+    let n_pairs = pairs.len();
+
+    let mut opts: Vec<COption> = vec![];
+    for (dir, po, ci) in &pairs {
+        let rs = adapters_for(rules, &po.kind, &ci.kind, 3);
+        if rs.is_empty() { continue; }
+        let u = unit_compat(&po.units, &ci.units);
+        let sh = shape_compat(&po.shape, &ci.shape);
+        for o in &rs {
+            opts.push(COption {
+                dir, source_output: po.clone(), target_input: ci.clone(),
+                exact: o.exact, adapters: o.path.clone(), static_risk: o.cost,
+                risk: o.cost + if sh == "proved" { 0.0 } else { 0.5 }
+                    + if u == "refuted" { 90.0 } else if u == "proved" { 0.0 } else { 0.5 },
+                unit: u,
+            });
+        }
+    }
+    // Stable sort by risk — ties keep enumeration order, as in the frozen sort.
+    opts.sort_by(|x, y| x.risk.partial_cmp(&y.risk).unwrap());
+    opts.truncate(3);
+    (n_pairs, opts)
+}
+
+impl COption {
+    fn json(&self) -> J {
+        obj(vec![
+            ("dir", J::s(self.dir)),
+            ("sourceOutput", self.source_output.json()),
+            ("targetInput", self.target_input.json()),
+            ("exact", J::B(self.exact)),
+            ("adapters", J::A(self.adapters.iter().map(|s| s.to_json()).collect())),
+            ("staticRisk", J::N(self.static_risk)),
+            ("risk", J::N(self.risk)),
+            ("unit", J::s(self.unit)),
+        ])
+    }
+}
+
+#[derive(Clone)]
+struct Inst { rule_id: String, op: String, pre: String, status: &'static str }
+
+impl Inst {
+    fn json(&self) -> J {
+        obj(vec![
+            ("ruleId", J::S(self.rule_id.clone())), ("op", J::S(self.op.clone())),
+            ("pre", J::S(self.pre.clone())), ("status", J::s(self.status)),
+        ])
+    }
+}
+
+/// instantiateContract: only curated steps carrying a precondition become
+/// RuleInstantiations, each graded by the soft judgment for its ruleId.
+fn instantiate_contract(adapters: &[Step], soft: &Soft) -> Vec<Inst> {
+    adapters.iter().filter(|s| s.auth == "cur" && !s.pre.is_empty()).map(|s| {
+        let raw = soft.pre_overrides.iter().find(|(k, _)| *k == s.rule_id.as_str()).map(|(_, v)| *v).or(soft.pre);
+        Inst { rule_id: s.rule_id.clone(), op: s.op.clone(), pre: s.pre.clone(), status: map_soft(raw) }
+    }).collect()
+}
+
+struct Scored { inst: Vec<Inst>, refuted: bool, score: f64 }
+
+/// scoreOptions: risk + 10·unresolved + 1000·refuted; refuted paths pruned;
+/// lowest-scoring survivor wins, falling back to the lowest refuted so a
+/// refuted precondition yields TYPE_COMPOSABLE rather than PROPOSED.
+fn score_options(options: &[COption], soft: &Soft) -> (Vec<Scored>, usize) {
+    let scored: Vec<Scored> = options.iter().map(|o| {
+        let inst = instantiate_contract(&o.adapters, soft);
+        let refuted = inst.iter().any(|x| x.status == "REFUTED");
+        let unresolved = inst.iter().filter(|x| x.status == "UNRESOLVED").count();
+        Scored { inst, refuted, score: o.risk + unresolved as f64 * 10.0 + if refuted { 1000.0 } else { 0.0 } }
+    }).collect();
+    let mut order: Vec<usize> = (0..scored.len()).filter(|&i| !scored[i].refuted).collect();
+    order.sort_by(|&x, &y| scored[x].score.partial_cmp(&scored[y].score).unwrap());
+    let chosen = order.first().copied().unwrap_or_else(|| {
+        let mut all: Vec<usize> = (0..scored.len()).collect();
+        all.sort_by(|&x, &y| scored[x].score.partial_cmp(&scored[y].score).unwrap());
+        all[0]
+    });
+    (scored, chosen)
+}
+
+/// evaluateObligations: the ordered PO-1..PO-8 vector. Every detail string is
+/// observable and copied character-for-character.
+fn evaluate_obligations(po: &CPort, ci: &CPort, adapters: &[Step], inst: &[Inst], unit: &str, soft: &Soft) -> Vec<J> {
+    let sc = shape_compat(&po.shape, &ci.shape);
+    let mut o: Vec<J> = vec![];
+    let up = |s: &str| s.to_uppercase();
+    o.push(obj(vec![("id", J::s("PO-1")), ("name", J::s("Kind path")), ("method", J::s("deterministic")),
+        ("status", J::s("PROVED")),
+        ("detail", J::S(if !adapters.is_empty() {
+            format!("{} → {} via {}", po.kind, ci.kind, adapters.iter().map(|s| s.op.as_str()).collect::<Vec<_>>().join(" → "))
+        } else { format!("{} ≡ {}", po.kind, ci.kind) }))]));
+    let dsh = |v: &str| if v.is_empty() { "unspecified".to_string() } else { v.to_string() };
+    o.push(obj(vec![("id", J::s("PO-2")), ("name", J::s("Shape compatibility")), ("method", J::s("deterministic")),
+        ("status", J::S(up(sc))), ("detail", J::S(format!("{} ⟶ {}", dsh(&po.shape), dsh(&ci.shape))))]));
+    let dimensionless = format!("{}{}", po.units, ci.units).to_lowercase().contains("dimensionless");
+    o.push(obj(vec![("id", J::s("PO-3")), ("name", J::s("Unit preservation")), ("method", J::s("deterministic")),
+        ("status", J::S(up(unit))),
+        ("detail", J::S(format!("{} ⟶ {}{}", dsh(&po.units), dsh(&ci.units),
+            if unit == "unresolved" && dimensionless { " (dimensionless ≠ dimensional — not auto-proved)" } else { "" })))]));
+    // Both repos carry no license metadata in every cascade case, so screening
+    // is UNRESOLVED — never PROVED, which would be the fail-open direction.
+    o.push(obj(vec![("id", J::s("PO-4")), ("name", J::s("License metadata screening")), ("method", J::s("deterministic")),
+        ("status", J::s("UNRESOLVED")), ("detail", J::s("? / ? — license metadata absent"))]));
+    if inst.is_empty() {
+        o.push(obj(vec![("id", J::s("PO-5")), ("name", J::s("Preconditions")), ("method", J::s("deterministic")),
+            ("status", J::s("PROVED")), ("detail", J::s("path is fully axiomatic — no semantic precondition"))]));
+    } else {
+        for (i, x) in inst.iter().enumerate() {
+            o.push(obj(vec![("id", J::S(format!("PO-5.{}", i + 1))), ("name", J::S(format!("Precondition · {}", x.op))),
+                ("method", J::s("model-assisted")), ("status", J::s(x.status)), ("detail", J::S(x.pre.clone()))]));
+        }
+    }
+    let destroyed: Vec<String> = adapters.iter().flat_map(|s| s.lose.clone()).collect();
+    o.push(obj(vec![("id", J::s("PO-6")), ("name", J::s("Invariant preservation")), ("method", J::s("model-assisted")),
+        ("status", J::s(map_soft(soft.invariant))),
+        ("detail", J::S(if !destroyed.is_empty() { format!("destroys: {}", destroyed.join(", ")) } else { "no properties destroyed on path".into() }))]));
+    o.push(obj(vec![("id", J::s("PO-7")), ("name", J::s("Metric measures outcome")), ("method", J::s("model-assisted")),
+        ("status", J::s(map_soft(soft.metric))), ("detail", J::s(""))]));
+    if adapters.iter().any(|s| s.lossy) {
+        o.push(obj(vec![("id", J::s("PO-8")), ("name", J::s("Bounded information loss")), ("method", J::s("deterministic")),
+            ("status", J::s("CONDITIONALLY-SATISFIED")),
+            ("detail", J::S(format!("lossy hops: {} — adapter must bound loss",
+                adapters.iter().filter(|s| s.lossy).map(|s| s.op.as_str()).collect::<Vec<_>>().join(", "))))]));
+    }
+    o
+}
+
+/// synthTest for cascade ports. Same frozen template as `synth_test`; only the
+/// label preference differs, since a CPort carries empty strings where a
+/// SynthPort carries None.
+fn synth_test_cascade(po: &CPort, ci: &CPort, adapters: &[Step]) -> String {
+    let mut expr = String::from("x");
+    for s in adapters { expr = format!("{}({})", s.op, expr); }
+    let label = |p: &CPort| if !p.semantics.is_empty() { p.semantics.clone() } else if !p.name.is_empty() { p.name.clone() } else { p.kind.clone() };
+    synth_harness(&po.kind, &ci.kind, &label(po), &label(ci), &expr)
+}
+
+struct Decision { out: Vec<(String, J)> }
+
+impl Decision {
+    fn set(&mut self, k: &str, v: J) { self.out.push((k.to_string(), v)); }
+}
+
+/// evaluateDeterministicCascade + applyLiteratureAssessment, projected to the
+/// oracle's DECISION_FIELDS. Absent fields stay ABSENT: an impossibility case
+/// carries no bridge, mechClass, mechCompat or blockReason at all, and that
+/// absence is observable after canonicalization.
+fn evaluate_cascade(rules: &[(&'static str, Vec<Rule>)], c: &CascadeCase) -> J {
+    let a_present = c.schema_a.is_some();
+    let b_present = c.schema_b.is_some();
+    let empty = CSchema { produces: vec![], consumes: vec![], assumptions: vec![], invariants: vec![] };
+    let sa: CSchema = c.schema_a.as_ref().map(|s| s.norm()).unwrap_or_else(|| empty.clone());
+    let sb: CSchema = c.schema_b.as_ref().map(|s| s.norm()).unwrap_or_else(|| empty.clone());
+
+    let (n_pairs, options) = plan_port_bridges(rules, &sa, &sb, a_present, b_present);
+    let mut d = Decision { out: vec![] };
+
+    if options.is_empty() {
+        let both = a_present && b_present;
+        let code = if both { if n_pairs > 0 { "NO_KIND_PATH" } else { "NO_SHARED_PORTS" } } else { "NO_SCHEMA" };
+        let detail = if both {
+            if n_pairs > 0 { "no admissible conversion between any shared ports" }
+            else { "no output→input port pairing between these mechanisms" }
+        } else { "mechanism schema unavailable — fail-closed" };
+        d.set("stage", J::s("PROPOSED"));
+        d.set("obligations", J::A(vec![]));
+        d.set("options", J::A(vec![]));
+        d.set("impossibility", obj(vec![("code", J::s(code)), ("from", J::Null), ("to", J::Null), ("detail", J::s(detail))]));
+        d.set("typeCheck", obj(vec![
+            ("pass", J::B(false)), ("verdict", J::s("type_killed")), ("stage", J::s("PROPOSED")),
+            ("sharedObject", J::Null),
+            ("reason", J::S(format!("structurally impossible [{}] — {}", code, detail))),
+        ]));
+        return literature(d, c, false, None, None);
+    }
+
+    let (scored, ci_idx) = score_options(&options, &c.soft);
+    let best = &options[ci_idx];
+    let inst = &scored[ci_idx].inst;
+    let po = &best.source_output;
+    let ci = &best.target_input;
+    let adapters = &best.adapters;
+
+    let obligations = evaluate_obligations(po, ci, adapters, inst, best.unit, &c.soft);
+    let status_of = |id: &str| -> &'static str {
+        for o in &obligations {
+            if let J::O(kv) = o {
+                let is = kv.iter().any(|(k, v)| k == "id" && matches!(v, J::S(s) if s == id));
+                if is { if let Some((_, J::S(s))) = kv.iter().find(|(k, _)| k == "status") {
+                    return match s.as_str() {
+                        "CONDITIONALLY-SATISFIED" => "CONDITIONALLY-SATISFIED",
+                        "REFUTED" => "REFUTED", "PROVED" => "PROVED", _ => "UNRESOLVED" }; } }
+            }
+        }
+        "UNRESOLVED"
+    };
+    let po6 = status_of("PO-6");
+    let po7 = status_of("PO-7");
+
+    let unit_contra = best.unit == "refuted";
+    let type_composable = !unit_contra;
+    let any_refuted = inst.iter().any(|x| x.status == "REFUTED");
+    let any_unresolved = inst.iter().any(|x| x.status == "UNRESOLVED");
+    let pre_ok = inst.is_empty() || inst.iter().all(|x| x.status == "CONDITIONALLY-SATISFIED" || x.status == "PROVED");
+    let contract_ok = type_composable && pre_ok;
+    let epistemic_ok = contract_ok && po6 == "CONDITIONALLY-SATISFIED" && po7 == "CONDITIONALLY-SATISFIED";
+    let stage = if !type_composable { "PATH_FOUND" }
+        else if !contract_ok { "TYPE_COMPOSABLE" }
+        else if !epistemic_ok { "CONTRACT_ADMISSIBLE" } else { "EPISTEMICALLY_SUPPORTED" };
+
+    let pruned = scored.iter().filter(|s| s.refuted).count();
+    let mech_class = obj(vec![("sourceKind", J::S(po.kind.clone())), ("targetKind", J::S(ci.kind.clone()))]);
+    let matched: Vec<J> = options.iter().map(|o| obj(vec![
+        ("dir", J::s(o.dir)), ("sourceOutput", o.source_output.json()), ("targetInput", o.target_input.json()),
+        ("compatibility", J::s(if o.exact { "exact" } else { "convertible" })),
+        ("adapter", J::A(o.adapters.iter().map(|s| s.to_json()).collect())),
+        ("lossy", J::B(o.adapters.iter().any(|s| s.lossy))),
+    ])).collect();
+
+    d.set("stage", J::s(stage));
+    d.set("obligations", J::A(obligations.clone()));
+    d.set("options", J::A(options.iter().map(|o| o.json()).collect()));
+    d.set("mechClass", mech_class);
+
+    let verdict = if unit_contra { "type_killed" } else if best.exact { "type_valid" } else { "conversion_required" };
+    d.set("mechCompat", obj(vec![
+        ("matchedPorts", J::A(matched)),
+        ("sharedFormalObject", J::B(best.exact)),
+        ("verdict", J::s(verdict)),
+        ("consideredPaths", J::N(scored.len() as f64)),
+        ("prunedPaths", J::N(pruned as f64)),
+    ]));
+
+    if unit_contra {
+        let detail = format!("units {} ⟶ {} cannot compose", po.units, ci.units);
+        d.set("impossibility", obj(vec![("code", J::s("UNIT_CONTRADICTION")),
+            ("from", J::S(po.kind.clone())), ("to", J::S(ci.kind.clone())), ("detail", J::S(detail.clone()))]));
+        d.set("bridge", J::Null);
+        d.set("typeCheck", obj(vec![
+            ("pass", J::B(false)), ("verdict", J::s("type_killed")), ("stage", J::s(stage)),
+            ("sharedObject", J::Null),
+            ("reason", J::S(format!("structurally impossible [UNIT_CONTRADICTION] — {}", detail))),
+        ]));
+        return literature(d, c, false, None, None);
+    }
+
+    let (so, si) = if best.dir == "A→B" { (&sa, &sb) } else { (&sb, &sa) };
+    d.set("bridge", obj(vec![
+        ("sourcePort", po.json()), ("targetPort", ci.json()), ("dir", J::s(best.dir)),
+        ("adapters", J::A(adapters.iter().map(|s| s.to_json()).collect())),
+        ("riskCost", J::N((best.risk * 10.0).round() / 10.0)),
+        ("ruleInstantiations", J::A(inst.iter().map(|x| x.json()).collect())),
+        ("requiredAssumptions", J::A(so.assumptions.iter().map(|x| J::S(x.clone())).collect())),
+        ("preservedInvariants", J::A(si.invariants.iter().map(|x| J::S(x.clone())).collect())),
+        ("destroyedProperties", J::A(adapters.iter().flat_map(|s| s.lose.clone()).map(J::S).collect())),
+        ("executableTest", J::S(synth_test_cascade(po, ci, adapters))),
+        ("proofObligations", J::A(obligations)),
+    ]));
+    d.set("impossibility", J::Null);
+    d.set("blockReason", if stage == "EPISTEMICALLY_SUPPORTED" { J::Null }
+        else if any_refuted { J::s("PRECONDITION_UNSATISFIED") }
+        else if any_unresolved { J::s("PRECONDITION_UNRESOLVED") }
+        else if po6 == "REFUTED" { J::s("INVARIANT_VIOLATION") }
+        else if po7 == "REFUTED" { J::s("POSTCONDITION_INSUFFICIENT") }
+        else { J::s("EVIDENCE_PENDING") });
+
+    let shared_object = if best.exact {
+        format!("{}: {}", po.kind, if !po.semantics.is_empty() { &po.semantics } else { &ci.semantics })
+    } else {
+        format!("{} → {} ({})", po.kind, ci.kind, adapters.iter().map(|s| s.op.as_str()).collect::<Vec<_>>().join(" → "))
+    };
+    let reason = format!("{} — reached {}{}",
+        if verdict == "type_valid" { "shared formal object" } else { "composable via adapter" }, stage,
+        if scored.len() > 1 { format!(" · {} paths considered, {} pruned", scored.len(), pruned) } else { String::new() });
+    d.set("typeCheck", obj(vec![
+        ("pass", J::B(true)), ("verdict", J::s(verdict)), ("stage", J::s(stage)),
+        ("sharedObject", J::S(shared_object.clone())), ("reason", J::S(reason)),
+    ]));
+
+    literature(d, c, true, Some(stage.to_string()), Some(shared_object))
+}
+
+/// The post-ladder literature layer (frozen steps 3-4). The count is an INPUT;
+/// no network call is made, and no count is invented when grounding is off.
+fn literature(mut d: Decision, c: &CascadeCase, pass: bool, stage: Option<String>, shared_object: Option<String>) -> J {
+    let grounded = true; // hollow verdict is PLAUSIBLE in every cascade case
+    d.set("mechanismGrounded", J::B(grounded));
+
+    let (lit_class, lit_count): (&'static str, Option<f64>) = if !pass {
+        ("SKIPPED", None)
+    } else if !c.lit_ground {
+        ("OFF", None)
+    } else {
+        (classify_lit(c.lit_count), c.lit_count)
+    };
+    d.set("litClass", J::s(lit_class));
+
+    if !pass {
+        d.set("finalVerdict", J::s("INCOHERENT"));
+        let reason = d.out.iter().find(|(k, _)| k == "typeCheck").and_then(|(_, v)| {
+            if let J::O(kv) = v { kv.iter().find(|(k, _)| k == "reason").map(|(_, r)| r.clone()) } else { None }
+        }).unwrap_or(J::s(""));
+        d.set("verifications", J::A(vec![obj(vec![
+            ("instrument", J::s("typecheck")), ("result", J::s("fail")), ("reason", reason), ("at", J::s("")),
+        ])]));
+    } else {
+        let final_verdict = if !grounded { "INCOHERENT" }
+            else if lit_class == "OFF" { "PLAUSIBLE" }
+            else if lit_class == "UNEXPLORED" { "PROMISING" } else { lit_class };
+        d.set("litCount", lit_count.map(J::N).unwrap_or(J::Null));
+        // `litNote` is present-but-undefined in the frozen projection: the
+        // literature result object never carries a note. Canonicalization has
+        // a sentinel for exactly this, so absent and undefined stay distinct.
+        d.set("litNote", J::s("␀undefined"));
+        d.set("modelEstimated", J::B(false));
+        d.set("finalVerdict", J::s(final_verdict));
+        d.set("verifications", J::A(vec![
+            obj(vec![("instrument", J::s("typecheck")), ("result", J::s("pass")),
+                ("sharedObject", shared_object.clone().map(J::S).unwrap_or(J::Null)), ("at", J::s(""))]),
+            obj(vec![("instrument", J::s("openalex")), ("result", J::s(lit_class)),
+                ("count", lit_count.map(J::N).unwrap_or(J::Null)), ("preregId", J::s("prereg:kernel")), ("at", J::s(""))]),
+        ]));
+        d.set("preregId", J::s("prereg:kernel"));
+    }
+
+    let prize = pass && stage.as_deref() == Some("EPISTEMICALLY_SUPPORTED") && grounded && lit_class == "UNEXPLORED";
+    let get = |k: &str| d.out.iter().find(|(kk, _)| kk == k).map(|(_, v)| v.clone()).unwrap_or(J::Null);
+    let prize_candidate = if prize {
+        obj(vec![
+            ("id", J::s("cand:kernel")), ("at", J::s("")), ("cell", J::s("cellA×cellB")),
+            ("combination", J::s("A ⊕ B")), ("usesFromA", J::s("repoA")), ("usesFromB", J::s("repoB")),
+            ("sharedMechanism", J::s("shared mechanism")), ("hollowCheck", J::Null),
+            ("typeCheck", get("typeCheck")), ("mechCompat", get("mechCompat")), ("mechClass", get("mechClass")),
+            ("bridge", get("bridge")), ("obligations", get("obligations")), ("impossibility", get("impossibility")),
+            ("schemaA", c.schema_a.as_ref().map(|s| norm_schema_json(&s.norm())).unwrap_or(J::Null)),
+            ("schemaB", c.schema_b.as_ref().map(|s| norm_schema_json(&s.norm())).unwrap_or(J::Null)),
+            ("litQuery", J::s("query terms")), ("litCount", lit_count.map(J::N).unwrap_or(J::Null)),
+            ("litTop", J::A(vec![])), ("preregId", J::s("prereg:kernel")),
+            ("producedBy", J::s("model:in-artifact")), ("status", J::s("candidate-awaiting-independent-verification")),
+        ])
+    } else { J::Null };
+
+    let verdict_word = if prize { "CANDIDATE" }
+        else if lit_class == "EMERGING" { "EMERGING" }
+        else if lit_class == "KNOWN" { "KNOWN" } else { "INCOHERENT" };
+    let probe = obj(vec![
+        ("cellName", J::s("cellA×cellB")), ("density", J::N(0.0)),
+        ("paperCount", lit_count.map(J::N).unwrap_or(J::Null)),
+        ("verdict", J::s(verdict_word)), ("prize", J::B(prize)),
+        ("killedByType", J::N(if pass { 0.0 } else { 1.0 })),
+        ("mechClasses", match get("mechClass") { J::Null => J::A(vec![]), m => J::A(vec![m]) }),
+        ("at", J::s("")),
+    ]);
+    d.set("prizeCandidate", prize_candidate);
+    d.set("probeLogEntry", probe);
+    J::O(d.out)
+}
+
+fn norm_schema_json(s: &CSchema) -> J {
+    obj(vec![
+        ("consumes", J::A(s.consumes.iter().map(|p| p.json()).collect())),
+        ("produces", J::A(s.produces.iter().map(|p| p.json()).collect())),
+        ("certifies", J::A(vec![])),
+        ("assumptions", J::A(s.assumptions.iter().map(|a| J::S(a.clone())).collect())),
+        ("invariants", J::A(s.invariants.iter().map(|a| J::S(a.clone())).collect())),
+    ])
+}
+
+/// One cascade case: the schemas, the soft judgments, and the literature
+/// input. Mirrors test/oracle/cases.mjs CASCADE_CASES.
+struct CascadeCase {
+    id: &'static str,
+    schema_a: Option<CSchema>,
+    schema_b: Option<CSchema>,
+    soft: Soft,
+    lit_ground: bool,
+    lit_count: Option<f64>,
+}
+
+/// port(kind) — the case helper: name is the kind's first letter, shape and
+/// units are "unspecified", semantics is "<kind> mechanism".
+fn cport(kind: &str) -> CPort {
+    CPort { name: kind[0..1].to_string(), kind: kind.to_string(), shape: "unspecified".into(),
+        units: "unspecified".into(), semantics: format!("{} mechanism", kind) }
+}
+fn cport_with(kind: &str, semantics: Option<&str>, units: Option<&str>) -> CPort {
+    let mut p = cport(kind);
+    if let Some(s) = semantics { p.semantics = s.to_string(); }
+    if let Some(u) = units { p.units = u.to_string(); }
+    p
+}
+/// schema(produces, consumes) — certifies empty, fixed assumption/invariant.
+fn cschema(produces: Vec<CPort>, consumes: Vec<CPort>) -> CSchema {
+    CSchema { produces, consumes, assumptions: vec!["assumption-x".into()], invariants: vec!["invariant-y".into()] }
+}
+fn soft(pre: Option<&'static str>, invariant: Option<&'static str>, metric: Option<&'static str>) -> Soft {
+    Soft { pre, pre_overrides: vec![], invariant, metric }
+}
+
+fn cascade_cases() -> Vec<CascadeCase> {
+    let ev = || soft(Some("satisfied"), Some("unknown"), Some("unknown"));
+    let all = || soft(Some("satisfied"), Some("satisfied"), Some("satisfied"));
+    let none = || soft(None, None, None);
+    let mk = |id, a: Option<CSchema>, b: Option<CSchema>, s: Soft, lg: bool, lc: Option<f64>|
+        CascadeCase { id, schema_a: a, schema_b: b, soft: s, lit_ground: lg, lit_count: lc };
+    let a_prod = |k: &str| Some(cschema(vec![cport(k)], vec![]));
+    let b_cons = |k: &str| Some(cschema(vec![], vec![cport(k)]));
+    vec![
+        mk("directly-compatible",
+            Some(cschema(vec![cport_with("tensor", Some("certified L2 radius"), None)], vec![])),
+            Some(cschema(vec![], vec![cport_with("tensor", Some("input field"), None)])), all(), false, None),
+        mk("incompatible", Some(cschema(vec![], vec![cport("tensor")])), Some(cschema(vec![], vec![cport("tensor")])), none(), false, None),
+        mk("single-conversion-path", a_prod("tensor"), b_cons("dataset"), ev(), false, None),
+        mk("multiple-competing-paths", a_prod("tensor"), b_cons("distribution"), ev(), false, None),
+        mk("equal-cost-path-tie", a_prod("distribution"), b_cons("dataset"), ev(), false, None),
+        mk("soft-precondition-satisfied", a_prod("tensor"), b_cons("distribution"), ev(), false, None),
+        mk("soft-precondition-unresolved", a_prod("tensor"), b_cons("distribution"), soft(Some("unknown"), Some("unknown"), Some("unknown")), false, None),
+        mk("soft-precondition-failed", a_prod("tensor"), b_cons("distribution"), soft(Some("violated"), Some("unknown"), Some("unknown")), false, None),
+        mk("hard-incompatibility",
+            Some(cschema(vec![cport_with("tensor", None, Some("probability"))], vec![])),
+            Some(cschema(vec![], vec![cport_with("tensor", None, Some("seconds"))])), none(), false, None),
+        mk("missing-conversion-rule", a_prod("tensor"), b_cons("policy"), none(), false, None),
+        mk("no-schema", a_prod("tensor"), None, none(), false, None),
+        mk("partially-instantiated-obligations", a_prod("tensor"), b_cons("certificate"),
+            Soft { pre: None, pre_overrides: vec![("scalar>bound:threshold", "satisfied"), ("bound>certificate:wrap", "unknown")],
+                   invariant: Some("unknown"), metric: Some("unknown") }, false, None),
+        mk("advancement-through-type-composable", a_prod("tensor"), b_cons("distribution"), all(), false, None),
+        mk("lit-unexplored", a_prod("tensor"), b_cons("distribution"), all(), true, Some(10.0)),
+        mk("lit-emerging", a_prod("tensor"), b_cons("distribution"), all(), true, Some(100.0)),
+        mk("lit-known", a_prod("tensor"), b_cons("distribution"), all(), true, Some(5000.0)),
+        mk("lit-unverified", a_prod("tensor"), b_cons("distribution"), all(), true, None),
+    ]
+}
+
+/// The fixture payload: the case input as declared, plus the computed decision.
+fn cascade_payload(rules: &[(&'static str, Vec<Rule>)], c: &CascadeCase) -> J {
+    let mut model: Vec<(&str, J)> = vec![];
+    if !c.soft.pre_overrides.is_empty() {
+        model.push(("preOverrides", J::O(c.soft.pre_overrides.iter().map(|(k, v)| (k.to_string(), J::s(v))).collect())));
+    }
+    if let Some(p) = c.soft.pre { model.push(("pre", J::s(p))); }
+    if let Some(i) = c.soft.invariant { model.push(("invariant", J::s(i))); }
+    if let Some(m) = c.soft.metric { model.push(("metric", J::s(m))); }
+    let mut input: Vec<(&str, J)> = vec![
+        ("schemaA", c.schema_a.as_ref().map(|s| s.raw_json()).unwrap_or(J::Null)),
+        ("schemaB", c.schema_b.as_ref().map(|s| s.raw_json()).unwrap_or(J::Null)),
+        ("model", obj(model)),
+    ];
+    if c.lit_ground {
+        input.push(("litGround", J::B(true)));
+        input.push(("litCount", c.lit_count.map(J::N).unwrap_or(J::Null)));
+    }
+    obj(vec![("input", obj(input)), ("output", evaluate_cascade(rules, c))])
 }

@@ -6,15 +6,15 @@ Corpus: oracle **v0.5.1**, schemaVersion **7**, canonicalization **v1**, **43** 
 
 | Implementation | Language | Fixtures | Canonical hashes identical | Declared failing | Status |
 |---|---|---|---|---|---|
-| `rust` | Rust | 13/43 | 13 | 0 | **PASS** |
+| `rust` | Rust | 30/43 | 30 | 0 | **PASS** |
 
 | Implementation | Cases reproduced |
 |---|---|
-| `rust` | mech-kinds, conv-rules, multipath-kind-paths, pair-compat, shape-compat, shape-compat-boundaries, unit-compat, license-compat, classify-lit, synth-test, norm-schema, compute-edges, compute-edges-boundaries |
+| `rust` | mech-kinds, conv-rules, multipath-kind-paths, pair-compat, shape-compat, shape-compat-boundaries, unit-compat, license-compat, classify-lit, synth-test, norm-schema, compute-edges, compute-edges-boundaries, directly-compatible, incompatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, missing-conversion-rule, no-schema, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified |
 
 | Implementation | Semantic areas covered | Not yet covered |
 |---|---|---|
-| `rust` | compatibility, depth-cap, edge-cost, edge-derivation, group-size-bounds, impossibility, license-screening, literature-classification, multipath-planning, path-enumeration, property-test-skeleton, ranking, registry, schema-normalization, selected-path-ordering, tie-breaking, types, unclassified | cascade, cascade-compatibility, cascade-planning, contract-instantiation, error-handling, import-export, literature-assessment, obligations, serialization, stage-advancement, verdict-derivation |
+| `rust` | cascade, cascade-compatibility, cascade-planning, compatibility, contract-instantiation, depth-cap, edge-cost, edge-derivation, group-size-bounds, impossibility, license-screening, literature-assessment, literature-classification, multipath-planning, obligations, path-enumeration, property-test-skeleton, ranking, registry, schema-normalization, selected-path-ordering, stage-advancement, tie-breaking, types, unclassified, verdict-derivation | error-handling, import-export, serialization |
 
 ## Subsystem completion
 
@@ -25,16 +25,26 @@ mutants have been declared for it — which is *not* the same as zero survivors.
 
 | Implementation | Subsystem | Fixtures | Mutation adequacy | Killed / declared | Surviving |
 |---|---|---|---|---|---|
+| `rust` | cascade | pass | not-assessed | — | — |
+| `rust` | cascade-compatibility | pass | not-assessed | — | — |
+| `rust` | cascade-planning | pass | not-assessed | — | — |
 | `rust` | compatibility | pass | **qualified** | 11/11 | 0 |
+| `rust` | contract-instantiation | pass | not-assessed | — | — |
 | `rust` | edge-cost | pass | **qualified** | 3/3 | 0 |
 | `rust` | edge-derivation | pass | **qualified** | 10/10 | 0 |
+| `rust` | impossibility | pass | not-assessed | — | — |
 | `rust` | license-screening | pass | **qualified** | 3/3 | 0 |
+| `rust` | literature-assessment | pass | not-assessed | — | — |
 | `rust` | literature-classification | pass | **qualified** | 3/3 | 0 |
 | `rust` | multipath-planning | pass | **qualified** | 7/7 | 0 |
+| `rust` | obligations | pass | not-assessed | — | — |
 | `rust` | property-test-skeleton | pass | **qualified** | 2/2 | 0 |
+| `rust` | ranking | pass | not-assessed | — | — |
 | `rust` | registry | pass | **qualified** | 5/5 | 0 |
 | `rust` | schema-normalization | pass | **qualified** | 4/4 | 0 |
+| `rust` | stage-advancement | pass | not-assessed | — | — |
 | `rust` | types | pass | **qualified** | 3/3 | 0 |
+| `rust` | verdict-derivation | pass | not-assessed | — | — |
 
 ## How to read this
 
