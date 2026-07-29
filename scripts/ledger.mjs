@@ -29,7 +29,8 @@
 // tag at HEAD, and every gate green, all checked at sealing time.
 //
 //   node scripts/ledger.mjs --restate [--statement="..."]  # rewrite the candidate head
-//   node scripts/ledger.mjs --release --tag=v0.6.0-kernel  # seal it; the tag must exist
+//   node scripts/ledger.mjs --release --tag=v0.6.0-kernel [--statement="..."]
+//                                                          # seal it; the tag must exist
 //   node scripts/ledger.mjs --verify                       # release-integrity checks
 //   node scripts/ledger.mjs                                # print the lineage
 //
@@ -199,6 +200,13 @@ const release = () => {
 
   head.status = "released";
   head.releaseTag = tag;
+  // The sealed statement is supplied at SEALING, not inherited. A candidate's
+  // wording describes an unreleased state — ours literally said "NOTHING HAS
+  // BEEN RELEASED" — and inheriting it would freeze a sentence that is false
+  // the instant it becomes immutable. That is the precise contradiction this
+  // release model exists to remove, so it must not be reintroduced by default.
+  // Falls back to the candidate's wording only when no statement is given.
+  head.behavioralDelta = { ...head.behavioralDelta, statement: arg("statement", head.behavioralDelta.statement) };
   head.certificatePath = relPath;
   head.certificateSha256 = sha(readFileSync(join(root, relPath)));
   head.releaseCommitSha = headSha;

@@ -41,7 +41,7 @@ const TAG = "vTEST-release";
  * produced by the code under test rather than hand-assembled, and every
  * mutation below corrupts a genuinely sealed release.
  */
-const sandbox = (mutate) => {
+const sandbox = (mutate, sealArgs = []) => {
   const dir = mkdtempSync(join(tmpdir(), "cortex-release-"));
   execFileSync("git", ["clone", "--quiet", "--local", "--no-hardlinks", root, dir], { stdio: "pipe" });
   for (const p of ["ledger/chain.json", "docs/certification", "scripts", "test/golden", "test/oracle", "package.json"]) {
@@ -62,10 +62,12 @@ const sandbox = (mutate) => {
   pkg.scripts.verify = "node -e 0";
   writeFileSync(join(dir, "package.json"), JSON.stringify(pkg, null, 2) + "\n");
   g("add", "-A"); g("commit", "-q", "--allow-empty", "-m", "neutralise gates"); g("tag", "-f", "-a", TAG, "-m", "sandbox release");
-  execFileSync("node", [join(dir, "scripts/ledger.mjs"), "--release", `--tag=${TAG}`], { cwd: dir, stdio: "pipe" });
+  execFileSync("node", [join(dir, "scripts/ledger.mjs"), "--release", `--tag=${TAG}`, ...sealArgs], { cwd: dir, stdio: "pipe" });
   mutate(dir);
   return dir;
 };
+
+const chainOf = (dir) => JSON.parse(readFileSync(join(dir, "ledger/chain.json"), "utf8"));
 
 const run = (dir, args) => {
   try {
@@ -188,6 +190,40 @@ test("sealing refuses to reuse a tag the chain already released", () => {
   const r = run(dir, ["--release", `--tag=${TAG}`]);
   assert.equal(r.ok, false);
   assert.match(r.out, /already used by ledger entry/);
+  rmSync(dir, { recursive: true, force: true });
+});
+
+// A candidate's wording describes an UNRELEASED state. Inheriting it into an
+// immutable released entry freezes a sentence that is false the moment it is
+// sealed — which is the contradiction the whole release model removes. The
+// override must therefore be honoured at sealing, not only at restatement.
+
+test("--release seals the supplied statement, not the candidate's", () => {
+  const RELEASE_STATEMENT = "Kernel 0.5.2 certified against frozen reference 0.5.1 — sealed statement, supplied at release.";
+  const before = JSON.parse(readFileSync(join(root, "ledger/chain.json"), "utf8"));
+  const candidateStatement = before.entries[before.entries.length - 1].behavioralDelta.statement;
+
+  const dir = sandbox(() => {}, [`--statement=${RELEASE_STATEMENT}`]);
+  const sealed = chainOf(dir).entries.find((e) => e.status === "released");
+
+  assert.equal(sealed.behavioralDelta.statement, RELEASE_STATEMENT,
+    "the sealed entry must carry the statement supplied at --release, exactly");
+  assert.notEqual(sealed.behavioralDelta.statement, candidateStatement,
+    "candidate statement and release statement must differ — inheriting the candidate's is the defect");
+  // The chain must still verify with the overridden wording: the statement is
+  // inside entryHash, so a naive override would break the entry hash.
+  assert.equal(run(dir, ["--verify"]).ok, true, "the sealed chain must verify");
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test("--release falls back to the candidate's statement when none is supplied", () => {
+  const before = JSON.parse(readFileSync(join(root, "ledger/chain.json"), "utf8"));
+  const candidateStatement = before.entries[before.entries.length - 1].behavioralDelta.statement;
+
+  const dir = sandbox(() => {});
+  const sealed = chainOf(dir).entries.find((e) => e.status === "released");
+  assert.equal(sealed.behavioralDelta.statement, candidateStatement,
+    "with no override the candidate's wording is carried forward unchanged");
   rmSync(dir, { recursive: true, force: true });
 });
 
