@@ -6,11 +6,15 @@
 // chain and the certificate directory in a scratch copy of the repository —
 // one defect at a time — and require the corresponding check to fail.
 //
-// The defect that motivated them: the certificate was named for a shipped tag
+// The defect that motivated them: the certificate was named for a release tag
 // while its evidence tracked HEAD, and the ledger's only entry carried that
-// same shipped tag while being restated on every corpus change. Both were
-// individually parseable, CI was green, and neither gate could see the problem
-// because neither validated release identity — only representation.
+// same tag while being restated on every corpus change. Both were individually
+// parseable, CI was green, and neither gate could see the problem because
+// neither validated release identity — only representation.
+//
+// Enforcing that model then surfaced a second fact the first review had assumed
+// away: the tag it was named for was never published. The repository has no
+// released entry at all today, which is exactly why these tests seal their own.
 //
 //   node --test test/release-integrity.test.mjs
 
@@ -24,20 +28,37 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
+const TAG = "vTEST-release";
+
 /**
- * A local clone of the repository under test. Cloning rather than re-creating
- * history means the sandbox's tags resolve to the SAME commits and trees as the
- * real repository, so the committed chain and certificates are valid in it
- * unchanged — and any failure is caused by the test's mutation, not by the
- * fixture setup. Uncommitted working-tree state is copied over the clone so the
- * tests run against what is actually staged for review.
+ * A clone of the repository that then SEALS ITS OWN release, so the tests do
+ * not depend on the real repository having one. That independence matters: the
+ * repository currently has no published tag at all, and a test suite that
+ * silently degrades when no release exists would be testing nothing — the
+ * failure mode these checks were written to eliminate.
+ *
+ * Sealing is driven through the real `ledger --release`, so the fixture is
+ * produced by the code under test rather than hand-assembled, and every
+ * mutation below corrupts a genuinely sealed release.
  */
 const sandbox = (mutate) => {
   const dir = mkdtempSync(join(tmpdir(), "cortex-release-"));
   execFileSync("git", ["clone", "--quiet", "--local", "--no-hardlinks", root, dir], { stdio: "pipe" });
-  for (const p of ["ledger/chain.json", "docs/certification", "scripts", "test/golden/manifest.json"]) {
+  for (const p of ["ledger/chain.json", "docs/certification", "scripts", "test/golden", "test/oracle", "package.json"]) {
     if (existsSync(join(root, p))) cpSync(join(root, p), join(dir, p), { recursive: true });
   }
+  const g = (...a) => execFileSync("git", ["-c", "user.email=t@t", "-c", "user.name=t", ...a], { cwd: dir, stdio: "pipe" });
+  g("checkout", "-q", "-B", "main");
+  g("add", "-A");
+  g("commit", "-qm", "sandbox base");
+  g("tag", "-a", TAG, "-m", "sandbox release");
+  // --skip-gates is refused by design, so the gate run is neutralised instead:
+  // the sandbox has no Rust toolchain and the point here is release identity.
+  const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
+  pkg.scripts.verify = "node -e 0";
+  writeFileSync(join(dir, "package.json"), JSON.stringify(pkg, null, 2) + "\n");
+  g("add", "-A"); g("commit", "-qm", "neutralise gates"); g("tag", "-f", "-a", TAG, "-m", "sandbox release");
+  execFileSync("node", [join(dir, "scripts/ledger.mjs"), "--release", `--tag=${TAG}`], { cwd: dir, stdio: "pipe" });
   mutate(dir);
   return dir;
 };
@@ -81,7 +102,7 @@ test("1b. an entry whose status is outside candidate|released is rejected", () =
 
 test("2. a candidate carrying a tag that already exists is rejected", () => {
   // The exact impossible state that shipped: shipped identity, mutable content.
-  const dir = sandbox((d) => editChain(d, (c) => { c.entries[1].releaseTag = "v0.5.1-kernel"; }));
+  const dir = sandbox((d) => editChain(d, (c) => { c.entries[1].releaseTag = TAG; }));
   const r = run(dir, ["--verify"]);
   assert.equal(r.ok, false);
   assert.match(r.out, /a candidate must not carry a releaseTag/);
@@ -98,11 +119,12 @@ test("3. a released entry whose tag does not resolve to its releaseCommitSha is 
 });
 
 test("4. a release record regenerated from later state is rejected by the ledger", () => {
-  // Overwrite the immutable record's fixture count with the candidate's.
+  // Claim a fixture count the tree at the tag does not have — what
+  // regenerating an immutable record from a later, larger corpus would produce.
   const dir = sandbox((d) => {
-    const p = join(d, "docs/certification/v0.5.1-kernel.json");
+    const p = join(d, `docs/certification/${TAG}.json`);
     const c = JSON.parse(readFileSync(p, "utf8"));
-    c.evidence.fixtureCount = 43;
+    c.evidence.fixtureCount = c.evidence.fixtureCount + 7;
     writeFileSync(p, JSON.stringify(c, null, 2) + "\n");
   });
   const r = run(dir, ["--verify"]);
@@ -115,14 +137,14 @@ test("4. a release record regenerated from later state is rejected by the ledger
 
 test("5. a release record that does not describe the tree at its tag is rejected by certify", () => {
   const dir = sandbox((d) => {
-    const p = join(d, "docs/certification/v0.5.1-kernel.json");
+    const p = join(d, `docs/certification/${TAG}.json`);
     const c = JSON.parse(readFileSync(p, "utf8"));
     c.evidence.manifest.sha256 = "f".repeat(64);
     writeFileSync(p, JSON.stringify(c, null, 2) + "\n");
   });
   const r = certify(dir);
   assert.equal(r.ok, false);
-  assert.match(r.out, /does not describe the tree at v0\.5\.1-kernel/);
+  assert.match(r.out, new RegExp(`does not describe the tree at ${TAG}`));
   rmSync(dir, { recursive: true, force: true });
 });
 
@@ -130,7 +152,7 @@ test("5b. a candidate that borrows a release identity is rejected by certify", (
   const dir = sandbox((d) => {
     const p = join(d, "docs/certification/candidate.json");
     const c = JSON.parse(readFileSync(p, "utf8"));
-    c.releaseTag = "v0.5.1-kernel";
+    c.releaseTag = TAG;
     writeFileSync(p, JSON.stringify(c, null, 2) + "\n");
   });
   const r = certify(dir);
@@ -148,6 +170,8 @@ test("a released entry may not record restatements", () => {
 });
 
 test("restating a released head is refused", () => {
+  // Drop the fresh candidate that sealing opened, leaving the released entry
+  // as the head.
   const dir = sandbox((d) => editChain(d, (c) => { c.entries.pop(); }));
   const r = run(dir, ["--restate"]);
   assert.equal(r.ok, false);
@@ -157,7 +181,7 @@ test("restating a released head is refused", () => {
 
 test("sealing refuses to reuse a tag the chain already released", () => {
   const dir = sandbox(() => {});
-  const r = run(dir, ["--release", "--tag=v0.5.1-kernel"]);
+  const r = run(dir, ["--release", `--tag=${TAG}`]);
   assert.equal(r.ok, false);
   assert.match(r.out, /already used by ledger entry/);
   rmSync(dir, { recursive: true, force: true });

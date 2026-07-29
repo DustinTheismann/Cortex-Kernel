@@ -3,6 +3,15 @@
 All notable changes to this repository are documented here. Versioning follows
 [`docs/versioning.md`](docs/versioning.md).
 
+> **Nothing has been released yet.** No git tag exists on the repository. The
+> dated sections below record verified milestones on `main` — each was merged
+> and green in CI — but none was cut as a release, and the certification chain
+> holds a single **candidate** entry with no released predecessor.
+> `docs/certification/candidate.json` is the only certification artifact.
+> The first release will be tagged deliberately, after which
+> `scripts/ledger.mjs --release` seals it and writes an immutable
+> `docs/certification/<tag>.json`.
+
 ## [Unreleased]
 
 Corpus growth and cross-language coverage. No frozen behavior changed; every
@@ -59,15 +68,18 @@ pre-existing fixture hash is untouched.
   `docs/certification/<tag>.json` is written once at sealing and describes the
   tree at that tag, verified against `git show <tag>:…`. They were previously one
   file, which produced a record with no unambiguous temporal subject: named for
-  the shipped `v0.5.1-kernel` tag while its evidence tracked HEAD.
+  the `v0.5.1-kernel` tag while its evidence tracked HEAD.
 - **Ledger entries are `candidate` or `released`.** A candidate carries
   `releaseTag: null` and is restatable; a released entry names an existing tag,
   binds the commit it resolves to, and can only be succeeded. The previous single
-  entry carried a shipped tag while being restated on every corpus change — an
-  impossible lifecycle state that `--release` could never resolve, because the
-  tag already identified an earlier commit.
-- `v0.5.1-kernel` is reconstructed from its own tagged tree (41 fixtures) and
-  sealed; the 43-fixture evidence is now the unreleased candidate.
+  entry carried a release tag while being restated on every corpus change — an
+  impossible lifecycle state that `--release` could never resolve.
+- The repository now states plainly that **nothing has been released**. The
+  certification chain holds a single candidate entry and the certificate
+  directory holds only `candidate.json`. Reconstructing a release record for
+  `v0.5.1-kernel` is what revealed that its tag was never published: the new
+  gate refused to verify a record against a tag it could not resolve, in CI and
+  in a tagless clone alike.
 - `conformance/baseline.json`: `subsystemsComplete` renamed to
   `fixtureCompleteSubsystems`. The old name asserted a completeness the field
   cannot support; fixture parity and mutation adequacy are separate claims and
@@ -76,12 +88,19 @@ pre-existing fixture hash is untouched.
   and `multipath-planning` previously meant both the deterministic predicate and
   planner surface and the cascade stage above it, which let the baseline claim a
   subsystem the implementation had only half-covered.
-- `scripts/certify.mjs` generates the Markdown certificate from the JSON and
-  fails `--check` on drift; `release.certifiedAtCommit` is carried forward
-  rather than recomputed from HEAD.
-- `scripts/ledger.mjs`: entries carry `provisional`/`released` status.
-  `--release` refuses unless the tree is clean, HEAD is on `main`, an annotated
-  tag exists at HEAD, and `npm run verify` passes.
+- `scripts/certify.mjs` generates the Markdown projection from the JSON and
+  fails `--check` on drift; it writes the candidate only, never a release record.
+- `scripts/ledger.mjs --release` refuses unless the tag is unused, the tree is
+  clean, HEAD is on `main`, an annotated tag exists at HEAD, and
+  `npm run verify` passes. It then writes the immutable release record and opens
+  a fresh candidate, so the chain always has a moving head.
+- CI checks out with `fetch-depth: 0`. Release records are verified against the
+  tree at their own tag, which a shallow clone cannot resolve — and a check that
+  silently skips is not a check.
+- `scripts/gate-inventory.mjs` reads the candidate's gate list. Immutable release
+  records are excluded by design: each records the gate set that existed at its
+  own release, and forcing them to match today's workflow would be the
+  retroactive rewriting this model forbids.
 
 ### Verified
 - The corpus is discriminating for every subsystem a second implementation
@@ -92,7 +111,7 @@ pre-existing fixture hash is untouched.
   discriminated by the corpus as it stood, which is the result rather than a
   disappointment.
 - Restricting the battery to the pre-existing `compute-edges` case alone leaves
-  8 of its 10 mutants alive, which is the state that shipped before this change.
+  8 of its 10 mutants alive, which is the state that preceded this change.
 - Eleven of the twelve compatibility and license mutants were killed by the
   corpus as it already stood; only the standalone-`n` rule was unpinned.
 - All ten planner and edge-cost mutants were killed by the existing 16×16
@@ -106,7 +125,7 @@ pre-existing fixture hash is untouched.
   array, catches it. The battery reported this rather than letting a wider
   `expectedKillers` stand as an unearned claim.
 
-## [v0.5.1-kernel] — 2026-07-25
+## v0.5.1-kernel — milestone verified 2026-07-25, never tagged
 
 The frozen v0.5.1 semantic kernel, extracted into a framework-independent
 package whose behavioral equivalence to the reference artifact is independently
@@ -133,15 +152,18 @@ enforced by CI.
   `docs/certification/<tag>.json` is written once at sealing and describes the
   tree at that tag, verified against `git show <tag>:…`. They were previously one
   file, which produced a record with no unambiguous temporal subject: named for
-  the shipped `v0.5.1-kernel` tag while its evidence tracked HEAD.
+  the `v0.5.1-kernel` tag while its evidence tracked HEAD.
 - **Ledger entries are `candidate` or `released`.** A candidate carries
   `releaseTag: null` and is restatable; a released entry names an existing tag,
   binds the commit it resolves to, and can only be succeeded. The previous single
-  entry carried a shipped tag while being restated on every corpus change — an
-  impossible lifecycle state that `--release` could never resolve, because the
-  tag already identified an earlier commit.
-- `v0.5.1-kernel` is reconstructed from its own tagged tree (41 fixtures) and
-  sealed; the 43-fixture evidence is now the unreleased candidate.
+  entry carried a release tag while being restated on every corpus change — an
+  impossible lifecycle state that `--release` could never resolve.
+- The repository now states plainly that **nothing has been released**. The
+  certification chain holds a single candidate entry and the certificate
+  directory holds only `candidate.json`. Reconstructing a release record for
+  `v0.5.1-kernel` is what revealed that its tag was never published: the new
+  gate refused to verify a record against a tag it could not resolve, in CI and
+  in a tagless clone alike.
 - Replaced the earlier, never-oracle-validated TypeScript transcription with
   the JavaScript extraction derived from the frozen reference.
 - Pinned CI actions to immutable commit SHAs so a moved tag cannot change what
@@ -161,6 +183,10 @@ enforced by CI.
 - Verified by workflow run
   [`30141097317`](https://github.com/DustinTheismann/Cortex-Kernel/actions/runs/30141097317)
   (`success`)
+- **Not tagged.** This milestone was verified and merged but never published as
+  a git tag, so it has no immutable release record and no released ledger entry.
+  The release-integrity gate surfaced this by refusing to verify a release
+  record whose tag it could not resolve.
 
 ### Known limitations
 - Model schema extraction, the OpenAlex literature probe, and persisted-state
@@ -172,7 +198,7 @@ enforced by CI.
   `EPISTEMICALLY_SUPPORTED` belongs to a backend of independent instruments.
 - The package is not published to npm.
 
-## [v0.5.1-reference] — 2026-07-24
+## v0.5.1-reference — milestone verified 2026-07-24, never tagged
 
 ### Added
 - The frozen v0.5.1 standalone as the reference contract, the full standalone
