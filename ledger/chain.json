@@ -6,7 +6,7 @@
       "status": "candidate",
       "releaseTag": null,
       "certificatePath": "docs/certification/candidate.json",
-      "certificateSha256": "a8ec49904b9f75f1e761482fe57fc8aecd4e58ad4f6f23c159ac23dcb7bdeee6",
+      "certificateSha256": "189445b08fa8027a598545a824d22714a914487e9af3017b4cbd8e19af78fa7d",
       "fixtureCount": 43,
       "fixtureHashes": {
         "mech-kinds": "d8a99f3fd101bbc55a233bcc2a246dbdd2cc22439db7978bff9ef888c77d8ac6",
@@ -60,11 +60,11 @@
         "changedFixtures": [],
         "unchangedFixtures": 0,
         "baselineFixtures": 43,
-        "statement": "Genesis candidate: the v0.5.1 behavioral baseline — 43 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation whose ten declared subsystems are all mutation-qualified. NOTHING HAS BEEN RELEASED: no git tag exists on the repository, so this chain has no released entry yet."
+        "statement": "Genesis candidate: the v0.5.1 behavioral baseline — 43 fixtures, canonicalization v1, reproduced by the extracted kernel and corroborated by an independent Rust implementation whose ten declared subsystems are all mutation-qualified. Prepared for release as kernel 0.5.2 certified against reference 0.5.1. NOTHING HAS BEEN RELEASED: no git tag exists on the repository, so this chain has no released entry yet."
       },
       "previousEntrySha256": null,
-      "restatements": 0,
-      "entrySha256": "9e7b9272e4b4cb99a9602f33824e7814e4636a73c3e308ea436bbe1e6d034fea"
+      "restatements": 1,
+      "entrySha256": "05748950ca5bbc4a5b51bd7b412bc720925b89c9016e312b4b878512e2bf5aab"
     }
   ]
 }

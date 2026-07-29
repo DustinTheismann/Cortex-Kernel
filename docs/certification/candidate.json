@@ -1,7 +1,8 @@
 {
   "artifact": "behavioral-certification-candidate",
   "subject": "@opensource-cortex/kernel",
-  "kernelVersion": "0.5.1",
+  "kernelVersion": "0.5.2",
+  "referenceVersion": "0.5.1",
   "identity": "candidate",
   "releaseTag": null,
   "acceptanceCommand": "npm run kernel:golden -- --check",

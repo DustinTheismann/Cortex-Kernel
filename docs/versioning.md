@@ -8,11 +8,26 @@ way to misread a tag.
 | Line | Example | What it names |
 |---|---|---|
 | **Reference** | `v0.5.1-reference` | A frozen standalone artifact — the executable specification. Immutable once tagged. |
-| **Kernel** | `v0.5.1-kernel` | An extraction that reproduces a specific reference version's behavior, verified against the oracle corpus. |
+| **Kernel** | `v0.5.2-kernel` | A release of `@opensource-cortex/kernel`, carrying **its own** SemVer, certified against some reference version. |
 
-A kernel tag always carries the reference version it certifies against. So
-`v0.5.1-kernel` means *"the kernel that is behaviorally equivalent to reference
-v0.5.1"*, and its certificate names the exact reference commit.
+**The two numbers move independently, and a kernel tag carries only its own.**
+An earlier version of this page said a kernel tag "always carries the reference
+version it certifies against", which read naturally while both lines happened to
+sit at `0.5.1` — and became incoherent the moment they diverged. Under that rule
+`v0.5.2-kernel` would have to mean "equivalent to reference v0.5.2", a reference
+version that does not exist.
+
+A PATCH to tooling bumps the kernel and leaves the reference untouched, so the
+first kernel release is `v0.5.2-kernel` certified against reference `0.5.1`. The
+pairing is recorded in the certificate, which is the only place it belongs:
+
+```json
+{ "kernelVersion": "0.5.2", "referenceVersion": "0.5.1" }
+```
+
+Both fields are **derived**, never written by hand —`kernelVersion` from
+`packages/cortex-kernel/package.json`, `referenceVersion` from the oracle
+manifest — so neither can drift from a literal in the generator.
 
 ## Kernel package semantics
 

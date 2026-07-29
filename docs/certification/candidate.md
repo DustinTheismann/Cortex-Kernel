@@ -19,6 +19,8 @@ verification works in a shallow checkout, from a tarball, or with no git at all.
 
 | Field | Value |
 |---|---|
+| Kernel version | `0.5.2` |
+| Certifies against reference | `0.5.1` |
 | Reference source hash (sha256 of `reference/src/cortex-v0.5.1.jsx`) | `2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427` |
 | Reference baseline (provenance) | `804f767e2b9e9eb292c8368e60e9f3224a6a54f7` |
 | Oracle version | `v0.5.1` |
