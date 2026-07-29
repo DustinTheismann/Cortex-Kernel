@@ -103,10 +103,11 @@ npm run verify        # the whole chain, in order
 | `kernel-differential` | Enabling the explainability trace never changes a decision hash |
 | `package-smoke` | The packed ESM artifact imports cleanly |
 | `determinism` | Repeated invocation is bit-stable |
-| `certification` | The committed certificate still describes this repository |
+| `certification` | The candidate certificate describes this tree, and every immutable release record still describes the tree at its own tag |
 | `differential-fuzz` | Oracle and kernel agree on generated inputs beyond the pinned points |
 | `conformance` | Every registered implementation reproduces its declared corpus hashes |
-| `ledger` | The certification chain is intact and describes the current corpus |
+| `ledger` | The certification chain is intact and describes the current corpus; a candidate never carries a shipped tag, and a released entry's tag resolves to the commit it binds |
+| `release-integrity` | Every release-identity check is negative-tested: each defect injected into a clone must be rejected, for the right reason |
 | `frontier-map` | The unverified surface did not grow |
 | `dependency-policy` | Both npm manifests and lock files remain dependency-free; the Rust package graph contains exactly the implementation crate itself. |
 | `canonicalization-vectors` | Adversarial language-neutral vectors pin absent/null/undefined distinctions, Unicode key ordering, array order, numeric edge cases, generated identifiers, and timestamp exclusion. |

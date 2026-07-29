@@ -30,9 +30,9 @@ const missingFromReadme = gates.filter((g) => !readme.includes("| `" + g + "` |"
 if (missingFromReadme.length) problems.push(`README verification table is missing gate(s): ${missingFromReadme.join(", ")}`);
 
 // 2. Any prose gate count must match. Catches "Thirteen CI gates" after a 14th lands.
-const WORDS = { seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16 };
+const WORDS = { seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18 };
 for (const file of ["README.md", "CHANGELOG.md", "docs/roadmap.md", "docs/releasing.md", "docs/versioning.md",
-  "docs/certification/v0.5.1-kernel.md", "conformance/README.md", "conformance/REPORT.md",
+  "docs/certification/candidate.md", "conformance/README.md", "conformance/REPORT.md",
   "conformance/CANONICALIZATION.md", "conformance/baseline.json", "packages/cortex-kernel/README.md"]) {
   let text;
   try { text = read(file); } catch { continue; }
@@ -48,15 +48,19 @@ for (const file of ["README.md", "CHANGELOG.md", "docs/roadmap.md", "docs/releas
   }
 }
 
-// 3. The certificate's recorded gate list must match.
+// 3. The CANDIDATE certificate's gate list must match. Immutable release
+// records are deliberately excluded: each one records the gate set that existed
+// at ITS release, and forcing them to match today's workflow would be exactly
+// the retroactive rewriting the release-integrity model forbids. v0.5.1-kernel
+// legitimately records eight gates.
 try {
-  const cert = JSON.parse(read("docs/certification/v0.5.1-kernel.json"));
+  const cert = JSON.parse(read("docs/certification/candidate.json"));
   const certGates = cert.gates || [];
   const missing = gates.filter((g) => !certGates.includes(g));
   const extra = certGates.filter((g) => !gates.includes(g));
-  if (missing.length) problems.push(`certificate gate list is missing: ${missing.join(", ")}`);
-  if (extra.length) problems.push(`certificate lists gates the workflow does not define: ${extra.join(", ")}`);
-} catch { /* certificate absent — other gates cover that */ }
+  if (missing.length) problems.push(`candidate certificate gate list is missing: ${missing.join(", ")}`);
+  if (extra.length) problems.push(`candidate certificate lists gates the workflow does not define: ${extra.join(", ")}`);
+} catch { /* candidate absent — the certification gate covers that */ }
 
 writeFileSync(join(root, "docs/gate-inventory.json"), JSON.stringify({
   artifact: "gate-inventory",

@@ -1,45 +1,64 @@
 #!/usr/bin/env node
-// Reproducible behavioral certification.
+// Behavioral certification — candidate evidence and immutable release records.
 //
-// Certification is not a one-time hand-written artifact: this script derives
-// it from live repository state so it can be regenerated and, more
-// importantly, VERIFIED.
+// ---------------------------------------------------------------------------
+// Two artifacts, because there are two claims.
+// ---------------------------------------------------------------------------
+// These were previously one file, and the result was a certificate with no
+// unambiguous temporal subject: it was NAMED for a shipped release tag while
+// its evidence tracked HEAD. A reader could not tell whether it meant "the
+// immutable certificate for the release tagged v0.5.1-kernel" or "the current
+// candidate's evidence against the v0.5.1 oracle". Both are useful records.
+// They are not the same artifact, and a release identity must never be reused
+// as a mutable candidate identity.
 //
-//   node scripts/certify.mjs            # regenerate docs/certification/<tag>.json
-//   node scripts/certify.mjs --check    # verify the committed certificate still
-//                                       # matches repository state; exit 1 on drift
+//   docs/certification/candidate.json   MOVING. Regenerated from the current
+//     tree on every `npm run certify`. Carries NO release tag, because it has
+//     not shipped. This is what a pull request is certifying.
 //
-// The certificate has two parts, deliberately separated:
+//   docs/certification/<tag>.json       IMMUTABLE. Written once, when a release
+//     is sealed, and never regenerated. Its evidence describes the tree at
+//     <tag> — not the tree that happens to be checked out. `--check` verifies
+//     it against `git show <tag>:…`, so a release record that drifts from the
+//     release it names fails rather than quietly re-deriving.
 //
-//   evidence — DERIVABLE from the repo at any time (commit SHAs, oracle and
-//     canonicalization versions, fixture count, content hashes of the manifest,
-//     invariant set and canonicalizer). `--check` recomputes these and fails on
-//     any mismatch, so an un-recertified change to the oracle cannot pass CI.
+//   node scripts/certify.mjs            # regenerate the CANDIDATE only
+//   node scripts/certify.mjs --check    # candidate matches the tree, and every
+//                                       # release record still matches its tag
 //
-//   release — HISTORICAL facts about the certified release that cannot be
-//     recomputed later (the merge commit that shipped it, the workflow run that
-//     verified it, the release timestamp). These are supplied once, carried
-//     forward verbatim on regeneration, and never invented.
+// The candidate has three blocks, deliberately separated:
 //
-//   buildEnvironment — the toolchain that produced the run (Node, npm, OS).
-//     Recorded for reproducibility, but NOT compared by --check: a different
-//     machine must be able to verify the same evidence.
+//   evidence — DERIVABLE from the tree at any time (oracle and canonicalization
+//     versions, fixture count, content hashes of the manifest, invariant set,
+//     canonicalizer and frozen source). `--check` recomputes and compares.
+//
+//   provenance — facts about the candidate that cannot be recomputed later
+//     (the workflow run that verified it). Carried forward, never invented.
+//
+//   buildEnvironment — the toolchain that produced it. NOT compared: a
+//     different machine must be able to verify the same evidence.
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const RELEASE_TAG = "v0.5.1-kernel";
-const OUT = join(root, "docs/certification", RELEASE_TAG + ".json");
-const OUT_MD = join(root, "docs/certification", RELEASE_TAG + ".md");
+const CERT_DIR = join(root, "docs/certification");
+const CANDIDATE = join(CERT_DIR, "candidate.json");
+const CANDIDATE_MD = join(CERT_DIR, "candidate.md");
 
 const sh = (cmd, args) => execFileSync(cmd, args, { cwd: root, encoding: "utf8" }).trim();
-/** git that tolerates a shallow clone: returns null rather than throwing. */
+/** git that tolerates a shallow clone or a missing tag: null rather than throw. */
 const shSafe = (cmd, args) => { try { return sh(cmd, args); } catch { return null; } };
-const sha256 = (relPath) => createHash("sha256").update(readFileSync(join(root, relPath))).digest("hex");
+const hash = (buf) => createHash("sha256").update(buf).digest("hex");
+const sha256 = (relPath) => hash(readFileSync(join(root, relPath)));
+/** The same file as it existed in the tree at a git ref. */
+const sha256AtRef = (ref, relPath) => {
+  try { return hash(execFileSync("git", ["show", `${ref}:${relPath}`], { cwd: root, maxBuffer: 64 * 1024 * 1024 })); }
+  catch { return null; }
+};
 
 const HASHED_FILES = {
   manifest: "test/golden/manifest.json",
@@ -49,27 +68,26 @@ const HASHED_FILES = {
 };
 
 /**
- * Everything a third party can recompute from the repository alone, and which
- * is STABLE across ordinary commits. HEAD is deliberately not here: it changes
- * every commit, so comparing it would make the gate fail for reasons unrelated
- * to behavior. HEAD at certification time is recorded under `release`.
+ * Everything a third party can recompute from a tree alone. `at` selects the
+ * tree: the working copy by default, or a git ref for a release record.
  */
-const deriveEvidence = () => {
-  const manifest = JSON.parse(readFileSync(join(root, HASHED_FILES.manifest), "utf8"));
+const deriveEvidence = (at = null) => {
+  const read = (p) => (at ? execFileSync("git", ["show", `${at}:${p}`], { cwd: root, maxBuffer: 64 * 1024 * 1024 }) : readFileSync(join(root, p)));
+  const h = (p) => (at ? sha256AtRef(at, p) : sha256(p));
+  const manifest = JSON.parse(read(HASHED_FILES.manifest).toString("utf8"));
   return {
     // Content-addressed, not history-addressed. Hashing the frozen source is
-    // both stronger than recording a commit SHA (it detects tampering that a
-    // commit record cannot) and independent of clone depth, so verification
-    // works in a shallow checkout, from a tarball, or with no git at all.
-    referenceSource: { path: HASHED_FILES.referenceSource, sha256: sha256(HASHED_FILES.referenceSource) },
+    // stronger than recording a commit SHA (it detects tampering a commit
+    // record cannot) and independent of clone depth.
+    referenceSource: { path: HASHED_FILES.referenceSource, sha256: h(HASHED_FILES.referenceSource) },
     referenceBaseline: manifest.sourceBaseline,
     oracleVersion: manifest.oracleVersion,
     canonicalizationVersion: manifest.canonicalizationVersion,
     schemaVersion: manifest.schemaVersion,
     fixtureCount: manifest.cases.length,
-    manifest: { path: HASHED_FILES.manifest, sha256: sha256(HASHED_FILES.manifest) },
-    invariantVersion: { set: HASHED_FILES.invariants, sha256: sha256(HASHED_FILES.invariants) },
-    canonicalizer: { path: HASHED_FILES.canonicalizer, sha256: sha256(HASHED_FILES.canonicalizer) },
+    manifest: { path: HASHED_FILES.manifest, sha256: h(HASHED_FILES.manifest) },
+    invariantVersion: { set: HASHED_FILES.invariants, sha256: h(HASHED_FILES.invariants) },
+    canonicalizer: { path: HASHED_FILES.canonicalizer, sha256: h(HASHED_FILES.canonicalizer) },
   };
 };
 
@@ -80,104 +98,77 @@ const buildEnvironment = () => ({
   arch: process.arch,
 });
 
-// Release metadata: taken from the existing certificate when present (so
-// regeneration never fabricates history), overridable by flags/CI env.
-const releaseMetadata = (existing) => {
-  const arg = (name) => {
-    const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
-    return hit ? hit.slice(name.length + 3) : undefined;
-  };
-  const prior = (existing && existing.release) || {};
-  const runId = arg("run-id") || process.env.GITHUB_RUN_ID || prior.workflow?.runId || null;
-  const manifest = JSON.parse(readFileSync(join(root, HASHED_FILES.manifest), "utf8"));
-  return {
-    kernelMergeCommitSha: arg("merge-commit") || prior.kernelMergeCommitSha || null,
-    // Provenance, not compared evidence: resolving a short SHA needs history a
-    // shallow clone does not have, so this is best-effort and carried forward.
-    referenceCommitSha: arg("reference-commit") || shSafe("git", ["rev-parse", manifest.sourceBaseline]) || prior.referenceCommitSha || null,
-    // Carried forward, never recomputed. Recomputing it from HEAD made the
-    // certificate churn on every commit, and because the ledger binds the
-    // certificate's hash, every churn broke the chain until the entry was
-    // restated. It was also structurally unable to be right: generated BEFORE
-    // the commit that contains it, it could only ever name that commit's
-    // parent. The commit a release actually shipped from is bound by
-    // `scripts/ledger.mjs --release`, which sets it at sealing time against an
-    // existing annotated tag. Set here only when deliberately re-issuing:
-    // `npm run certify -- --head=<sha>`.
-    certifiedAtCommit: arg("head") || prior.certifiedAtCommit || null,
-    workflow: {
-      name: prior.workflow?.name || "kernel",
-      runId,
-      conclusion: arg("conclusion") || prior.workflow?.conclusion || null,
-      url: runId ? `https://github.com/DustinTheismann/Cortex-Kernel/actions/runs/${runId}` : null,
-    },
-    releaseTimestamp: arg("timestamp") || prior.releaseTimestamp || new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
-  };
-};
-
-const buildCertificate = (existing) => ({
-  artifact: "behavioral-certification",
-  subject: "@opensource-cortex/kernel",
-  kernelVersion: "0.5.1",
-  releaseTag: RELEASE_TAG,
-  acceptanceCommand: "npm run kernel:golden -- --check",
-  // Derived from the workflow, never hardcoded: a hardcoded list goes stale
-  // the moment a gate is added, and a certificate that misstates its own gate
-  // set is exactly the kind of quiet drift this repository exists to prevent.
-  gates: workflowGates(),
-  evidence: deriveEvidence(),
-  release: releaseMetadata(existing),
-  buildEnvironment: buildEnvironment(),
-});
-
 /** The gate names defined by the CI workflow — the source of truth. */
 const workflowGates = () => {
   const wf = readFileSync(join(root, ".github/workflows/ci.yml"), "utf8");
   return [...wf.matchAll(/^\s+- name:\s+(\S+)\s*$/gm)].map((m) => m[1]);
 };
 
-const readExisting = () => (existsSync(OUT) ? JSON.parse(readFileSync(OUT, "utf8")) : null);
+const arg = (name) => {
+  const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
+  return hit ? hit.slice(name.length + 3) : undefined;
+};
+
+const buildCandidate = (prior) => {
+  const p = (prior && prior.provenance) || {};
+  const runId = arg("run-id") || process.env.GITHUB_RUN_ID || p.workflowRunId || null;
+  return {
+    artifact: "behavioral-certification-candidate",
+    subject: "@opensource-cortex/kernel",
+    kernelVersion: "0.5.1",
+    // Deliberately NOT a release tag. This candidate has not shipped, and
+    // borrowing a shipped tag's name is the defect this split exists to fix.
+    identity: "candidate",
+    releaseTag: null,
+    acceptanceCommand: "npm run kernel:golden -- --check",
+    // Derived from the workflow, never hardcoded: a hardcoded list goes stale
+    // the moment a gate is added.
+    gates: workflowGates(),
+    evidence: deriveEvidence(),
+    provenance: {
+      referenceCommitSha: arg("reference-commit") || shSafe("git", ["rev-parse", JSON.parse(readFileSync(join(root, HASHED_FILES.manifest), "utf8")).sourceBaseline]) || p.referenceCommitSha || null,
+      workflowName: p.workflowName || "kernel",
+      workflowRunId: runId,
+      workflowUrl: runId ? `https://github.com/DustinTheismann/Cortex-Kernel/actions/runs/${runId}` : null,
+    },
+    buildEnvironment: buildEnvironment(),
+    note: "A candidate, not a release. When a release is cut, scripts/ledger.mjs --release copies this evidence into docs/certification/<tag>.json, which is then immutable and verified against the tree at <tag>.",
+  };
+};
 
 /**
- * The human-readable projection, DERIVED from the certificate rather than
- * maintained alongside it. Hand-maintained projections drift: this one was
- * carrying a fixture count and a manifest hash that had not matched the JSON
- * for several corpus revisions, and nothing caught it because prose was the
- * only place the numbers disagreed. Anything that changes on every invocation
- * (the generating commit, the build environment, the release timestamp) is
- * referenced rather than inlined, so regeneration produces a byte-identical
- * file unless the evidence itself moved.
+ * The human-readable projection, DERIVED rather than maintained alongside.
+ * Hand-maintained projections drift: this one carried a fixture count and a
+ * manifest hash that had not matched the JSON for several corpus revisions.
+ * Anything that changes on every invocation is referenced, not inlined, so
+ * regeneration is byte-stable unless the evidence itself moved.
  */
-const renderMarkdown = (cert) => {
-  const e = cert.evidence, r = cert.release;
+const renderCandidateMarkdown = (c) => {
+  const e = c.evidence, p = c.provenance;
   return [
-    `# Behavioral certification — ${cert.subject} ${cert.releaseTag}`,
+    "# Behavioral certification — candidate",
     "",
-    "Generated by `npm run certify` from `" + RELEASE_TAG + ".json`. Do not edit by hand.",
+    "Generated by `npm run certify` from `candidate.json`. Do not edit by hand.",
     "",
-    `This record certifies that the framework-independent kernel reproduces the`,
-    `frozen OpenSource Cortex **v${cert.kernelVersion}** behavior byte-for-byte, as enforced by`,
-    `the CI workflow. The machine-readable form is [\`${RELEASE_TAG}.json\`](./${RELEASE_TAG}.json).`,
+    "> **This is not a release record.** It certifies the *current* tree against the",
+    "> frozen v0.5.1 behavioral oracle and carries no release tag, because it has not",
+    "> shipped. Immutable per-release records live beside it as",
+    "> `docs/certification/<tag>.json` and describe the tree at their tag, not this one.",
     "",
-    "**The certificate is reproducible, not hand-written.** Regenerate it with",
-    "`npm run certify`; verify it with `npm run certify:check` (CI gate",
-    "`certification`). The JSON separates `evidence` — everything re-derivable from",
-    "the repository, which `--check` recomputes and compares — from `release`, the",
-    "historical facts about the certified run that cannot be recomputed later, and",
-    "`buildEnvironment`, the toolchain that produced it.",
+    "Verified by `npm run certify:check` (CI gate `certification`), which recomputes",
+    "every field below from the working tree and fails on any mismatch — so an",
+    "oracle or canonicalizer change that was not re-certified fails CI rather than",
+    "shipping a stale claim.",
     "",
     "The frozen reference is identified by the **content hash** of",
-    "`" + e.referenceSource.path + "`, not by its commit SHA. That is both stronger",
+    "`" + e.referenceSource.path + "`, not by a commit SHA. That is both stronger",
     "(it detects tampering a commit record cannot) and independent of clone depth, so",
     "verification works in a shallow checkout, from a tarball, or with no git at all.",
-    "The commit SHA is retained under `release` as provenance.",
     "",
     "| Field | Value |",
     "|---|---|",
     `| Reference source hash (sha256 of \`${e.referenceSource.path}\`) | \`${e.referenceSource.sha256}\` |`,
-    `| Reference commit (frozen baseline, provenance) | \`${r.referenceCommitSha || "—"}\` |`,
-    `| Kernel merge commit | \`${r.kernelMergeCommitSha || "—"}\` |`,
-    `| Release tag | \`${cert.releaseTag}\` |`,
+    `| Reference baseline (provenance) | \`${p.referenceCommitSha || "—"}\` |`,
     `| Oracle version | \`${e.oracleVersion}\` |`,
     `| Canonicalization version | \`${e.canonicalizationVersion}\` |`,
     `| schemaVersion | \`${e.schemaVersion}\` |`,
@@ -185,16 +176,13 @@ const renderMarkdown = (cert) => {
     `| Manifest hash (sha256 of \`${e.manifest.path}\`) | \`${e.manifest.sha256}\` |`,
     `| Invariant-set hash (sha256 of \`${e.invariantVersion.set}\`) | \`${e.invariantVersion.sha256}\` |`,
     `| Canonicalizer hash (sha256 of \`${e.canonicalizer.path}\`) | \`${e.canonicalizer.sha256}\` |`,
-    `| Workflow run ID | \`${r.workflow.runId || "—"}\` |`,
-    `| Workflow conclusion | \`${r.workflow.conclusion || "—"}\` |`,
-    `| Certified at commit | \`${r.certifiedAtCommit || "—"}\` (carried forward; the released commit is bound by the ledger at sealing) |`,
+    `| Verifying workflow run | \`${p.workflowRunId || "—"}\` |`,
     "| Build environment | see JSON `buildEnvironment` (Node, npm, platform, arch) |",
-    "| Release timestamp | see JSON `release.releaseTimestamp` |",
     "",
     "## Acceptance",
     "",
     "```bash",
-    cert.acceptanceCommand,
+    c.acceptanceCommand,
     "```",
     "",
     "Passes only when the extracted kernel reproduces every manifest hash and fails",
@@ -202,14 +190,23 @@ const renderMarkdown = (cert) => {
     "regressions, missing cases, unexpected output fields, nondeterministic output,",
     "or frozen-reference drift.",
     "",
-    `## Gates (${cert.gates.length})`,
+    `## Gates (${c.gates.length})`,
     "",
-    cert.gates.map((g) => "`" + g + "`").join(" · "),
+    c.gates.map((g) => "`" + g + "`").join(" · "),
     "",
-    "Derived from `.github/workflows/ci.yml`, which is the source of truth for the",
-    "gate set; `npm run gates` fails if this list, the README table, or any prose",
-    "count disagrees with it. The first seven were green on the certified workflow",
-    "run; every later gate was added to keep this record from going stale.",
+    "Derived from `.github/workflows/ci.yml`, the source of truth for the gate set;",
+    "`npm run gates` fails if this list, the README table, or any prose count",
+    "disagrees with it.",
+    "",
+    "## Becoming a release",
+    "",
+    "```bash",
+    "node scripts/ledger.mjs --release --tag=<tag>",
+    "```",
+    "",
+    "Seals the ledger's candidate entry and copies this evidence to",
+    "`docs/certification/<tag>.json`, which is thereafter immutable and verified",
+    "against the tree at `<tag>` rather than against HEAD.",
     "",
     "## Scope",
     "",
@@ -219,39 +216,81 @@ const renderMarkdown = (cert) => {
   ].join("\n");
 };
 
+/** Every immutable release record on disk. */
+const releaseRecords = () => (existsSync(CERT_DIR)
+  ? readdirSync(CERT_DIR)
+    .filter((f) => f.endsWith(".json") && f !== "candidate.json")
+    .map((f) => ({ file: f, tag: f.replace(/\.json$/, ""), path: join(CERT_DIR, f) }))
+  : []);
+
 const main = () => {
-  const existing = readExisting();
+  const prior = existsSync(CANDIDATE) ? JSON.parse(readFileSync(CANDIDATE, "utf8")) : null;
 
   if (process.argv.includes("--check")) {
-    if (!existing) { console.error("certify --check: no certificate at " + OUT); process.exit(1); }
-    const fresh = deriveEvidence();
-    const stored = existing.evidence || {};
     const problems = [];
-    const cmp = (path, a, b) => { if (JSON.stringify(a) !== JSON.stringify(b)) problems.push(`  ${path}\n    certificate: ${JSON.stringify(a)}\n    repository:  ${JSON.stringify(b)}`); };
-    for (const k of Object.keys(fresh)) cmp("evidence." + k, stored[k], fresh[k]);
 
-    // The Markdown projection is generated, so it must equal what the committed
-    // certificate renders to. Without this the prose can restate a fixture
-    // count or a hash the JSON no longer holds — which is precisely how it went
-    // stale before it was generated.
-    const renderedMd = renderMarkdown(existing);
-    const committedMd = existsSync(OUT_MD) ? readFileSync(OUT_MD, "utf8") : null;
-    if (committedMd !== renderedMd) problems.push("  docs/certification/" + RELEASE_TAG + ".md\n    the committed Markdown projection is not what the certificate renders to");
+    // 1. The candidate must describe the tree it sits in.
+    if (!prior) problems.push(`no candidate certificate at ${CANDIDATE.replace(root + "/", "")} — run npm run certify`);
+    else {
+      const fresh = deriveEvidence();
+      const stored = prior.evidence || {};
+      for (const k of Object.keys(fresh)) {
+        if (JSON.stringify(stored[k]) !== JSON.stringify(fresh[k])) {
+          problems.push(`  candidate evidence.${k}\n    certificate: ${JSON.stringify(stored[k])}\n    repository:  ${JSON.stringify(fresh[k])}`);
+        }
+      }
+      if (prior.releaseTag !== null) problems.push("  the candidate carries a releaseTag — a candidate has not shipped and must not borrow a release identity");
+      const md = existsSync(CANDIDATE_MD) ? readFileSync(CANDIDATE_MD, "utf8") : null;
+      if (md !== renderCandidateMarkdown(prior)) problems.push("  docs/certification/candidate.md is not what the candidate renders to");
+    }
+
+    // 2. Every release record must still describe the tree at ITS OWN tag —
+    //    never the tree that happens to be checked out. This is the check that
+    //    makes a release record immutable in substance and not just in prose.
+    for (const rec of releaseRecords()) {
+      const cert = JSON.parse(readFileSync(rec.path, "utf8"));
+      if (cert.identity !== "release") { problems.push(`  ${rec.file}: identity is ${JSON.stringify(cert.identity)}, expected "release"`); continue; }
+      if (cert.releaseTag !== rec.tag) { problems.push(`  ${rec.file}: releaseTag ${JSON.stringify(cert.releaseTag)} does not match its filename`); continue; }
+      const resolved = shSafe("git", ["rev-list", "-n", "1", rec.tag]);
+      if (!resolved) {
+        problems.push(`  ${rec.file}: tag ${rec.tag} does not resolve — a release record whose tag is unreachable cannot be verified.\n    In CI this means the checkout must fetch tags (fetch-depth: 0).`);
+        continue;
+      }
+      if (cert.release && cert.release.releaseCommitSha && cert.release.releaseCommitSha !== resolved) {
+        problems.push(`  ${rec.file}: records releaseCommitSha ${cert.release.releaseCommitSha} but tag ${rec.tag} resolves to ${resolved}`);
+      }
+      const atTag = deriveEvidence(rec.tag);
+      for (const k of Object.keys(atTag)) {
+        if (JSON.stringify((cert.evidence || {})[k]) !== JSON.stringify(atTag[k])) {
+          problems.push(`  ${rec.file}: evidence.${k} does not describe the tree at ${rec.tag}\n    certificate: ${JSON.stringify((cert.evidence || {})[k])}\n    tree at tag: ${JSON.stringify(atTag[k])}`);
+        }
+      }
+    }
 
     if (problems.length) {
-      console.error("certification FAILED — the certificate no longer describes this repository:\n" + problems.join("\n"));
-      console.error("\nIf the change is intended, re-run `npm run certify` and commit the updated certificate.");
+      console.error("certification FAILED:\n" + problems.join("\n"));
+      console.error("\nA candidate that drifted: re-run `npm run certify` and commit it.");
+      console.error("A release record that drifted: it is IMMUTABLE — do not regenerate it. Restore it from the tag.");
       process.exit(1);
     }
-    console.log(`certification OK: evidence matches repository state (${fresh.fixtureCount} fixtures, oracle ${fresh.oracleVersion}, canonicalization v${fresh.canonicalizationVersion})`);
+    const e = prior.evidence;
+    console.log(`certification OK: candidate matches the working tree (${e.fixtureCount} fixtures, oracle ${e.oracleVersion}, canonicalization v${e.canonicalizationVersion})`);
+    const rels = releaseRecords();
+    console.log(`  ${rels.length} immutable release record(s) verified against their tags: ${rels.map((r) => r.tag).join(", ") || "(none)"}`);
     return;
   }
 
-  mkdirSync(dirname(OUT), { recursive: true });
-  const cert = buildCertificate(existing);
-  writeFileSync(OUT, JSON.stringify(cert, null, 2) + "\n");
-  writeFileSync(OUT_MD, renderMarkdown(cert));
-  console.log("certification written: " + OUT.replace(root + "/", "") + " + " + OUT_MD.replace(root + "/", ""));
+  // Regeneration writes the CANDIDATE only. Release records are written once,
+  // by `ledger --release`, and never again.
+  if (process.argv.includes("--release-record")) {
+    console.error("certify does not write release records. Seal a release with: node scripts/ledger.mjs --release --tag=<tag>");
+    process.exit(2);
+  }
+  mkdirSync(CERT_DIR, { recursive: true });
+  const c = buildCandidate(prior);
+  writeFileSync(CANDIDATE, JSON.stringify(c, null, 2) + "\n");
+  writeFileSync(CANDIDATE_MD, renderCandidateMarkdown(c));
+  console.log("candidate certification written: docs/certification/candidate.json + candidate.md");
 };
 
 main();

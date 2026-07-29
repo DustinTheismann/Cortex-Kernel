@@ -1,7 +1,7 @@
 {
   "artifact": "gate-inventory",
   "note": "Derived from .github/workflows/ci.yml, the source of truth. Human-readable projections should consume this rather than re-parsing the workflow.",
-  "gateCount": 16,
+  "gateCount": 17,
   "gates": [
     "reference-integrity",
     "oracle-check",
@@ -14,6 +14,7 @@
     "differential-fuzz",
     "conformance",
     "ledger",
+    "release-integrity",
     "frontier-map",
     "dependency-policy",
     "canonicalization-vectors",

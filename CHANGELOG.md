@@ -9,6 +9,12 @@ Corpus growth and cross-language coverage. No frozen behavior changed; every
 pre-existing fixture hash is untouched.
 
 ### Added
+- Release-integrity gate (`test/release-integrity.test.mjs`): eleven negative
+  tests that inject one identity defect at a time into a clone and require the
+  right check to reject for the right reason — absent or invalid entry status, a
+  candidate carrying an existing tag, a released tag that does not resolve to the
+  bound commit, a release record regenerated from later state, and a candidate
+  borrowing a release identity.
 - `shape-compat-boundaries` corpus case (corpus 42 → 43): a 14×14 shape matrix
   reaching what the original 11×11 never did — the `?` wildcard character, the
   `var` and `dynamic` tokens, whitespace trimming, and both sides of the
@@ -48,6 +54,20 @@ pre-existing fixture hash is untouched.
   "universally unreachable" — a denser future registry could make it bind.
 
 ### Changed
+- **Certification is split into two artifacts.** `docs/certification/candidate.json`
+  certifies the *current* tree and carries no release tag;
+  `docs/certification/<tag>.json` is written once at sealing and describes the
+  tree at that tag, verified against `git show <tag>:…`. They were previously one
+  file, which produced a record with no unambiguous temporal subject: named for
+  the shipped `v0.5.1-kernel` tag while its evidence tracked HEAD.
+- **Ledger entries are `candidate` or `released`.** A candidate carries
+  `releaseTag: null` and is restatable; a released entry names an existing tag,
+  binds the commit it resolves to, and can only be succeeded. The previous single
+  entry carried a shipped tag while being restated on every corpus change — an
+  impossible lifecycle state that `--release` could never resolve, because the
+  tag already identified an earlier commit.
+- `v0.5.1-kernel` is reconstructed from its own tagged tree (41 fixtures) and
+  sealed; the 43-fixture evidence is now the unreleased candidate.
 - `conformance/baseline.json`: `subsystemsComplete` renamed to
   `fixtureCompleteSubsystems`. The old name asserted a completeness the field
   cannot support; fixture parity and mutation adequacy are separate claims and
@@ -108,6 +128,20 @@ enforced by CI.
 - Weekly Dependabot updates for the `github-actions` ecosystem.
 
 ### Changed
+- **Certification is split into two artifacts.** `docs/certification/candidate.json`
+  certifies the *current* tree and carries no release tag;
+  `docs/certification/<tag>.json` is written once at sealing and describes the
+  tree at that tag, verified against `git show <tag>:…`. They were previously one
+  file, which produced a record with no unambiguous temporal subject: named for
+  the shipped `v0.5.1-kernel` tag while its evidence tracked HEAD.
+- **Ledger entries are `candidate` or `released`.** A candidate carries
+  `releaseTag: null` and is restatable; a released entry names an existing tag,
+  binds the commit it resolves to, and can only be succeeded. The previous single
+  entry carried a shipped tag while being restated on every corpus change — an
+  impossible lifecycle state that `--release` could never resolve, because the
+  tag already identified an earlier commit.
+- `v0.5.1-kernel` is reconstructed from its own tagged tree (41 fixtures) and
+  sealed; the 43-fixture evidence is now the unreleased candidate.
 - Replaced the earlier, never-oracle-validated TypeScript transcription with
   the JavaScript extraction derived from the frozen reference.
 - Pinned CI actions to immutable commit SHAs so a moved tag cannot change what

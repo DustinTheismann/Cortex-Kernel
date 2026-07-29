@@ -1,11 +1,9 @@
 {
-  "artifact": "behavioral-certification",
+  "artifact": "behavioral-certification-candidate",
   "subject": "@opensource-cortex/kernel",
   "kernelVersion": "0.5.1",
-  "identity": "release",
-  "releaseTag": "v0.5.1-kernel",
-  "immutable": true,
-  "note": "IMMUTABLE. This record describes the tree at its tag and is never regenerated from later repository state. `certify --check` verifies every field below against `git show v0.5.1-kernel:...`. Evidence for the current tree lives in docs/certification/candidate.json.",
+  "identity": "candidate",
+  "releaseTag": null,
   "acceptanceCommand": "npm run kernel:golden -- --check",
   "gates": [
     "reference-integrity",
@@ -14,7 +12,17 @@
     "kernel-golden",
     "kernel-differential",
     "package-smoke",
-    "determinism"
+    "determinism",
+    "certification",
+    "differential-fuzz",
+    "conformance",
+    "ledger",
+    "release-integrity",
+    "frontier-map",
+    "dependency-policy",
+    "canonicalization-vectors",
+    "gate-inventory",
+    "mutation-battery"
   ],
   "evidence": {
     "referenceSource": {
@@ -25,10 +33,10 @@
     "oracleVersion": "v0.5.1",
     "canonicalizationVersion": 1,
     "schemaVersion": 7,
-    "fixtureCount": 41,
+    "fixtureCount": 43,
     "manifest": {
       "path": "test/golden/manifest.json",
-      "sha256": "1a7f8c94ec88e809054b985957ea95ea1f332a47a38c4e1d662c4d42dcfac663"
+      "sha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3"
     },
     "invariantVersion": {
       "set": "test/oracle/invariants.mjs",
@@ -36,16 +44,20 @@
     },
     "canonicalizer": {
       "path": "test/oracle/canonicalize.mjs",
-      "sha256": "7126285d8516f07ee4a29f2547555f57d7fe9c32a785e528ec6cf4c7508e0141"
+      "sha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8"
     }
   },
-  "release": {
-    "releaseCommitSha": "d12e11e7fc156c04a0baef2f5cf49cb33bdb03c6",
-    "kernelMergeCommitSha": "5777134ca3ae07620fb7d00b7653c094f01552a1",
+  "provenance": {
     "referenceCommitSha": "804f767e2b9e9eb292c8368e60e9f3224a6a54f7",
     "workflowName": "kernel",
-    "workflowRunId": "30141097317",
-    "workflowConclusion": "success",
-    "workflowUrl": "https://github.com/DustinTheismann/Cortex-Kernel/actions/runs/30141097317"
-  }
+    "workflowRunId": null,
+    "workflowUrl": null
+  },
+  "buildEnvironment": {
+    "node": "v22.22.2",
+    "npm": "v10.9.7",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "note": "A candidate, not a release. When a release is cut, scripts/ledger.mjs --release copies this evidence into docs/certification/<tag>.json, which is then immutable and verified against the tree at <tag>."
 }
