@@ -1,13 +1,13 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-29T01:59:29.008Z",
+  "generatedAt": "2026-07-31T14:21:41.226Z",
   "ciRun": null,
   "integrity": {
     "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
     "canonicalizationSpecSha256": "5ed64bf745d2e41c8287052859200711f879ba605d8b5c3fa17ee9d91c267d1d",
     "canonicalizerSha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8",
     "verifierSha256": "8e9e9f9de79c326c5bea15370e554433f832088cbfcb00b675f0cbcff3857c24",
-    "baselineSha256": "2de515620e528167593009be1486cb9fe50ed6f18a6a2747827637f59e00ab58",
+    "baselineSha256": "5d389393e23d813a46c5e1bcde68e94c8e49c04f27dee195a098c5b983f8fd44",
     "referenceSourceSha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
   },
   "corpus": {
@@ -25,8 +25,8 @@
       "implementation": "rust",
       "language": "Rust",
       "status": "pass",
-      "fixtures": "13/43",
-      "canonicalHashesIdentical": 13,
+      "fixtures": "30/43",
+      "canonicalHashesIdentical": 30,
       "declaredCasesFailing": 0,
       "cases": [
         "mech-kinds",
@@ -41,40 +41,57 @@
         "synth-test",
         "norm-schema",
         "compute-edges",
-        "compute-edges-boundaries"
+        "compute-edges-boundaries",
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "semanticAreasCovered": [
+        "cascade",
+        "cascade-compatibility",
+        "cascade-planning",
         "compatibility",
+        "contract-instantiation",
         "depth-cap",
         "edge-cost",
         "edge-derivation",
         "group-size-bounds",
         "impossibility",
         "license-screening",
+        "literature-assessment",
         "literature-classification",
         "multipath-planning",
+        "obligations",
         "path-enumeration",
         "property-test-skeleton",
         "ranking",
         "registry",
         "schema-normalization",
         "selected-path-ordering",
+        "stage-advancement",
         "tie-breaking",
         "types",
-        "unclassified"
+        "unclassified",
+        "verdict-derivation"
       ],
       "semanticAreasUncovered": [
-        "cascade",
-        "cascade-compatibility",
-        "cascade-planning",
-        "contract-instantiation",
         "error-handling",
         "import-export",
-        "literature-assessment",
-        "obligations",
-        "serialization",
-        "stage-advancement",
-        "verdict-derivation"
+        "serialization"
       ],
       "coverageMap": [
         {
@@ -211,8 +228,8 @@
         {
           "fixture": "directly-compatible",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "cascade-compatibility",
             "cascade"
@@ -221,8 +238,8 @@
         {
           "fixture": "incompatible",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "cascade-compatibility",
             "cascade"
@@ -231,8 +248,8 @@
         {
           "fixture": "single-conversion-path",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "cascade-planning",
             "ranking",
@@ -242,8 +259,8 @@
         {
           "fixture": "multiple-competing-paths",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "cascade-planning",
             "ranking",
@@ -253,8 +270,8 @@
         {
           "fixture": "equal-cost-path-tie",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "cascade-planning",
             "ranking",
@@ -264,8 +281,8 @@
         {
           "fixture": "soft-precondition-satisfied",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "contract-instantiation",
             "obligations",
@@ -275,8 +292,8 @@
         {
           "fixture": "soft-precondition-unresolved",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "contract-instantiation",
             "obligations",
@@ -286,8 +303,8 @@
         {
           "fixture": "soft-precondition-failed",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "contract-instantiation",
             "obligations",
@@ -297,8 +314,8 @@
         {
           "fixture": "hard-incompatibility",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "cascade-compatibility",
             "cascade"
@@ -307,8 +324,8 @@
         {
           "fixture": "missing-conversion-rule",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "cascade-compatibility",
             "cascade"
@@ -317,8 +334,8 @@
         {
           "fixture": "no-schema",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "cascade-compatibility",
             "cascade"
@@ -327,8 +344,8 @@
         {
           "fixture": "partially-instantiated-obligations",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "obligations",
             "cascade"
@@ -337,8 +354,8 @@
         {
           "fixture": "advancement-through-type-composable",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "stage-advancement",
             "cascade"
@@ -347,8 +364,8 @@
         {
           "fixture": "lit-unexplored",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "literature-assessment",
             "verdict-derivation",
@@ -358,8 +375,8 @@
         {
           "fixture": "lit-emerging",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "literature-assessment",
             "verdict-derivation",
@@ -369,8 +386,8 @@
         {
           "fixture": "lit-known",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "literature-assessment",
             "verdict-derivation",
@@ -380,8 +397,8 @@
         {
           "fixture": "lit-unverified",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "literature-assessment",
             "verdict-derivation",
@@ -521,6 +538,21 @@
       ],
       "subsystems": [
         {
+          "subsystem": "cascade",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
+          "subsystem": "cascade-compatibility",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
+          "subsystem": "cascade-planning",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
           "subsystem": "compatibility",
           "fixtureStatus": "pass",
           "mutationStatus": "qualified",
@@ -528,6 +560,11 @@
           "killedMutants": 11,
           "survivingMutants": 0,
           "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "contract-instantiation",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
         },
         {
           "subsystem": "edge-cost",
@@ -548,6 +585,11 @@
           "inconclusiveMutants": 0
         },
         {
+          "subsystem": "impossibility",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
           "subsystem": "license-screening",
           "fixtureStatus": "pass",
           "mutationStatus": "qualified",
@@ -555,6 +597,11 @@
           "killedMutants": 3,
           "survivingMutants": 0,
           "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "literature-assessment",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
         },
         {
           "subsystem": "literature-classification",
@@ -575,6 +622,11 @@
           "inconclusiveMutants": 0
         },
         {
+          "subsystem": "obligations",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
           "subsystem": "property-test-skeleton",
           "fixtureStatus": "pass",
           "mutationStatus": "qualified",
@@ -582,6 +634,11 @@
           "killedMutants": 2,
           "survivingMutants": 0,
           "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "ranking",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
         },
         {
           "subsystem": "registry",
@@ -602,6 +659,11 @@
           "inconclusiveMutants": 0
         },
         {
+          "subsystem": "stage-advancement",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
+        },
+        {
           "subsystem": "types",
           "fixtureStatus": "pass",
           "mutationStatus": "qualified",
@@ -609,15 +671,20 @@
           "killedMutants": 3,
           "survivingMutants": 0,
           "inconclusiveMutants": 0
+        },
+        {
+          "subsystem": "verdict-derivation",
+          "fixtureStatus": "pass",
+          "mutationStatus": "not-assessed"
         }
       ],
-      "binarySha256": "b41b66ae437d9c638619880772039257a53ac40ff4b30c46631f73c9fec9b0db",
+      "binarySha256": "a2c1aca82ba74b0e7b39ad122a902a2c6f3c991345282a3bdd028b6c88c639d3",
       "toolchain": {
         "compiler": "rustc 1.94.1 (e408947bf 2026-03-25)",
         "targetTriple": "x86_64-unknown-linux-gnu",
         "dependencies": "standard library only (enforced by scripts/dependency-policy.mjs)"
       },
-      "notes": "Dependency-free peer implementation of the deterministic core: registry, edge costs, min-risk multipath planner, and the shape/unit/license predicates. Written against the frozen semantics, certified by corpus reproduction — not a transliteration of the JavaScript."
+      "notes": "Dependency-free peer implementation of the deterministic core: registry, edge costs, min-risk multipath planner, the shape/unit/license predicates, and the full cascade — schema-level port planning, contract instantiation, the ordered proof-obligation vector, the five-stage ladder, and the literature layer. Written against the frozen semantics, certified by corpus reproduction — not a transliteration of the JavaScript."
     }
   ],
   "interpretation": "An implementation conforms when every case it DECLARES reproduces the corpus hash byte-for-byte after canonicalization. Coverage is the fraction of the corpus it declares; partial coverage is legitimate, a failing declared case is not."

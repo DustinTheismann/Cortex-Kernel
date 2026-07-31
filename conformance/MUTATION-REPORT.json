@@ -3,8 +3,8 @@
   "interpretation": "A subsystem is mutation-qualified when every declared semantic mutation of its rules is killed by the corpus case that claims to pin it, with the predicted violation observable in the mutant's own output. A hash mismatch alone is not a kill. Subsystems absent from this report have NOT been assessed, which is a different epistemic state from having zero surviving mutants.",
   "integrity": {
     "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
-    "implementationSourceSha256": "6d10510e85c4ae18038ce545fc502710a17f91a7656824f097f7a8bbc266e117",
-    "registrySha256": "91a0e5f1f91fa364de3323a31474c5a58b0e1330def82abcb2c71a7610494864"
+    "implementationSourceSha256": "72a143d7a829560db21973d55bff9a9175f5d14c6552d044a5ee4b3595ce3753",
+    "registrySha256": "c456312a6c50b0ff29ac158afef2447b427d53ca4a692b0ff908deefc4e22d90"
   },
   "scope": "all",
   "unpinnable": [
@@ -32,7 +32,24 @@
       "corpusScope": [
         "shape-compat",
         "shape-compat-boundaries",
-        "unit-compat"
+        "unit-compat",
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "declaredMutants": 11,
       "killedMutants": 11,
@@ -46,7 +63,24 @@
         "conv-rules",
         "multipath-kind-paths",
         "pair-compat",
-        "synth-test"
+        "synth-test",
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "declaredMutants": 3,
       "killedMutants": 3,
@@ -69,7 +103,24 @@
     {
       "subsystem": "license-screening",
       "corpusScope": [
-        "license-compat"
+        "license-compat",
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "declaredMutants": 3,
       "killedMutants": 3,
@@ -80,7 +131,24 @@
     {
       "subsystem": "literature-classification",
       "corpusScope": [
-        "classify-lit"
+        "classify-lit",
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "declaredMutants": 3,
       "killedMutants": 3,
@@ -93,7 +161,24 @@
       "corpusScope": [
         "multipath-kind-paths",
         "pair-compat",
-        "synth-test"
+        "synth-test",
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "declaredMutants": 7,
       "killedMutants": 7,
@@ -104,7 +189,24 @@
     {
       "subsystem": "property-test-skeleton",
       "corpusScope": [
-        "synth-test"
+        "synth-test",
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "declaredMutants": 2,
       "killedMutants": 2,
@@ -118,7 +220,24 @@
         "conv-rules",
         "multipath-kind-paths",
         "pair-compat",
-        "synth-test"
+        "synth-test",
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "declaredMutants": 5,
       "killedMutants": 5,
@@ -129,7 +248,24 @@
     {
       "subsystem": "schema-normalization",
       "corpusScope": [
-        "norm-schema"
+        "norm-schema",
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "declaredMutants": 4,
       "killedMutants": 4,
@@ -145,7 +281,24 @@
         "multipath-kind-paths",
         "pair-compat",
         "norm-schema",
-        "synth-test"
+        "synth-test",
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "declaredMutants": 3,
       "killedMutants": 3,
@@ -168,11 +321,23 @@
       "actualKillers": [
         "conv-rules",
         "multipath-kind-paths",
-        "pair-compat"
+        "pair-compat",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "CONVERSION_RULE_MISSING observed; killed by conv-rules, multipath-kind-paths, pair-compat"
+      "detail": "CONVERSION_RULE_MISSING observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
     },
     {
       "id": "registry-alter-endpoint",
@@ -187,11 +352,15 @@
       "actualKillers": [
         "conv-rules",
         "multipath-kind-paths",
-        "pair-compat"
+        "pair-compat",
+        "single-conversion-path",
+        "equal-cost-path-tie",
+        "missing-conversion-rule",
+        "partially-instantiated-obligations"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "RULE_ENDPOINT_RETARGETED observed; killed by conv-rules, multipath-kind-paths, pair-compat"
+      "detail": "RULE_ENDPOINT_RETARGETED observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, equal-cost-path-tie, missing-conversion-rule, partially-instantiated-obligations"
     },
     {
       "id": "registry-reorder-rules",
@@ -220,11 +389,22 @@
       "actualKillers": [
         "conv-rules",
         "multipath-kind-paths",
-        "pair-compat"
+        "pair-compat",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "DUPLICATE_RULE_SHADOWED observed; killed by conv-rules, multipath-kind-paths, pair-compat"
+      "detail": "DUPLICATE_RULE_SHADOWED observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
     },
     {
       "id": "registry-flip-authority",
@@ -239,11 +419,12 @@
       "actualKillers": [
         "conv-rules",
         "multipath-kind-paths",
-        "pair-compat"
+        "pair-compat",
+        "partially-instantiated-obligations"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "RULE_AUTHORITY_RECLASSIFIED observed; killed by conv-rules, multipath-kind-paths, pair-compat"
+      "detail": "RULE_AUTHORITY_RECLASSIFIED observed; killed by conv-rules, multipath-kind-paths, pair-compat, partially-instantiated-obligations"
     },
     {
       "id": "types-drop-a-kind",
@@ -397,11 +578,12 @@
         "classify-lit"
       ],
       "actualKillers": [
-        "classify-lit"
+        "classify-lit",
+        "lit-unverified"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "ABSENT_COUNT_REPORTED_AS_SEARCHED observed; killed by classify-lit"
+      "detail": "ABSENT_COUNT_REPORTED_AS_SEARCHED observed; killed by classify-lit, lit-unverified"
     },
     {
       "id": "synth-drop-adapter-composition",
@@ -427,11 +609,24 @@
         "synth-test"
       ],
       "actualKillers": [
-        "synth-test"
+        "synth-test",
+        "directly-compatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "HARNESS_TEMPLATE_ALTERED observed; killed by synth-test"
+      "detail": "HARNESS_TEMPLATE_ALTERED observed; killed by synth-test, directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
     },
     {
       "id": "planner-descending-cost-order",
@@ -445,11 +640,23 @@
       "actualKillers": [
         "multipath-kind-paths",
         "pair-compat",
-        "synth-test"
+        "synth-test",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "PATHS_NOT_RISK_ASCENDING observed; killed by multipath-kind-paths, pair-compat, synth-test"
+      "detail": "PATHS_NOT_RISK_ASCENDING observed; killed by multipath-kind-paths, pair-compat, synth-test, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
     },
     {
       "id": "planner-unstable-tie-order",
@@ -462,11 +669,12 @@
       ],
       "actualKillers": [
         "multipath-kind-paths",
-        "pair-compat"
+        "pair-compat",
+        "equal-cost-path-tie"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "TIED_PATHS_REORDERED observed; killed by multipath-kind-paths, pair-compat"
+      "detail": "TIED_PATHS_REORDERED observed; killed by multipath-kind-paths, pair-compat, equal-cost-path-tie"
     },
     {
       "id": "planner-widen-depth-cap",
@@ -496,11 +704,12 @@
       ],
       "actualKillers": [
         "multipath-kind-paths",
-        "pair-compat"
+        "pair-compat",
+        "partially-instantiated-obligations"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "FIVE_STEP_PATHS_ELIMINATED observed; killed by multipath-kind-paths, pair-compat"
+      "detail": "FIVE_STEP_PATHS_ELIMINATED observed; killed by multipath-kind-paths, pair-compat, partially-instantiated-obligations"
     },
     {
       "id": "planner-retain-four-paths",
@@ -543,11 +752,23 @@
       ],
       "actualKillers": [
         "multipath-kind-paths",
-        "pair-compat"
+        "pair-compat",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "CONVERTED_PAIR_REPORTED_EXACT observed; killed by multipath-kind-paths, pair-compat"
+      "detail": "CONVERTED_PAIR_REPORTED_EXACT observed; killed by multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
     },
     {
       "id": "cost-remove-lossy-penalty",
@@ -563,11 +784,14 @@
         "conv-rules",
         "multipath-kind-paths",
         "pair-compat",
-        "synth-test"
+        "synth-test",
+        "single-conversion-path",
+        "equal-cost-path-tie",
+        "partially-instantiated-obligations"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "LOSSY_PENALTY_REMOVED observed; killed by conv-rules, multipath-kind-paths, pair-compat, synth-test"
+      "detail": "LOSSY_PENALTY_REMOVED observed; killed by conv-rules, multipath-kind-paths, pair-compat, synth-test, single-conversion-path, equal-cost-path-tie, partially-instantiated-obligations"
     },
     {
       "id": "cost-remove-curated-penalty",
@@ -582,11 +806,23 @@
       "actualKillers": [
         "conv-rules",
         "multipath-kind-paths",
-        "pair-compat"
+        "pair-compat",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "CURATED_AUTHORITY_UNPRICED observed; killed by conv-rules, multipath-kind-paths, pair-compat"
+      "detail": "CURATED_AUTHORITY_UNPRICED observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
     },
     {
       "id": "cost-remove-destroyed-penalty",
@@ -602,11 +838,22 @@
         "conv-rules",
         "multipath-kind-paths",
         "pair-compat",
-        "synth-test"
+        "synth-test",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "DESTROYED_PROPERTIES_UNPRICED observed; killed by conv-rules, multipath-kind-paths, pair-compat, synth-test"
+      "detail": "DESTROYED_PROPERTIES_UNPRICED observed; killed by conv-rules, multipath-kind-paths, pair-compat, synth-test, single-conversion-path, multiple-competing-paths, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
     },
     {
       "id": "shape-fail-open-on-absent",
@@ -618,11 +865,25 @@
       ],
       "actualKillers": [
         "shape-compat",
-        "shape-compat-boundaries"
+        "shape-compat-boundaries",
+        "directly-compatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "ABSENT_SHAPE_PROVED observed; killed by shape-compat, shape-compat-boundaries"
+      "detail": "ABSENT_SHAPE_PROVED observed; killed by shape-compat, shape-compat-boundaries, directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
     },
     {
       "id": "shape-invert-predicate",
@@ -725,11 +986,24 @@
         "unit-compat"
       ],
       "actualKillers": [
-        "unit-compat"
+        "unit-compat",
+        "directly-compatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "ABSENT_UNIT_PROVED observed; killed by unit-compat"
+      "detail": "ABSENT_UNIT_PROVED observed; killed by unit-compat, directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
     },
     {
       "id": "unit-drop-contradiction",
@@ -740,11 +1014,12 @@
         "unit-compat"
       ],
       "actualKillers": [
-        "unit-compat"
+        "unit-compat",
+        "hard-incompatibility"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "UNIT_CONTRADICTION_DOWNGRADED observed; killed by unit-compat"
+      "detail": "UNIT_CONTRADICTION_DOWNGRADED observed; killed by unit-compat, hard-incompatibility"
     },
     {
       "id": "unit-dimensionless-proves",

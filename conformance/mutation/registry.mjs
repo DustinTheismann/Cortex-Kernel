@@ -20,30 +20,46 @@ import { MECH_KINDS } from "../../packages/cortex-kernel/src/types.js";
 
 const MECH_KIND_SET = new Set(MECH_KINDS);
 
+// The 17 cascade fixtures. Declaring them (C1) put nearly every deterministic
+// subsystem genuinely upstream of them: the registry supplies the conversion
+// topology the cascade plans over, edge cost ranks its options, the
+// compatibility predicates feed PO-2/PO-3 and the risk term, schema
+// normalization shapes its inputs, and literature classification decides its
+// novelty class. So a mutation to any of those legitimately reaches cascade
+// output. Declaring that reach is honest; pretending the boundary is narrower
+// would make every one of these mutants report killed_incidentally.
+const CASCADE = [
+  "directly-compatible", "incompatible", "single-conversion-path", "multiple-competing-paths",
+  "equal-cost-path-tie", "soft-precondition-satisfied", "soft-precondition-unresolved",
+  "soft-precondition-failed", "hard-incompatibility", "missing-conversion-rule", "no-schema",
+  "partially-instantiated-obligations", "advancement-through-type-composable",
+  "lit-unexplored", "lit-emerging", "lit-known", "lit-unverified",
+];
+
 /** Corpus cases each subsystem's mutants may perturb. A mutant that escapes
  *  its scope means the subsystem boundary is not where we think it is. */
 export const SUBSYSTEM_SCOPE = {
   "edge-derivation": ["compute-edges", "compute-edges-boundaries"],
-  "compatibility": ["shape-compat", "shape-compat-boundaries", "unit-compat"],
-  "license-screening": ["license-compat"],
+  "compatibility": ["shape-compat", "shape-compat-boundaries", "unit-compat", ...CASCADE],
+  "license-screening": ["license-compat", ...CASCADE],
   // `synth-test` belongs to another subsystem but is genuinely downstream: the
   // generated property-test skeleton embeds the SELECTED adapter, so a change
   // to path ranking or cost can reach it. Declaring it here is honest about the
   // coupling; individual mutants still narrow below it where they can, and only
   // three of the ten actually reach that far.
-  "multipath-planning": ["multipath-kind-paths", "pair-compat", "synth-test"],
+  "multipath-planning": ["multipath-kind-paths", "pair-compat", "synth-test", ...CASCADE],
   // Edge cost is shared the same way: published directly by `conv-rules` and
   // consumed by every planner decision.
-  "edge-cost": ["conv-rules", "multipath-kind-paths", "pair-compat", "synth-test"],
+  "edge-cost": ["conv-rules", "multipath-kind-paths", "pair-compat", "synth-test", ...CASCADE],
   // The conversion topology reaches every planner-derived case, and the kind
   // enumeration reaches everything that iterates or validates a kind. These
   // wide scopes are the honest ones: the propagation is real, and individual
   // mutants narrow below them where they can.
-  "registry": ["conv-rules", "multipath-kind-paths", "pair-compat", "synth-test"],
-  "types": ["mech-kinds", "conv-rules", "multipath-kind-paths", "pair-compat", "norm-schema", "synth-test"],
-  "schema-normalization": ["norm-schema"],
-  "literature-classification": ["classify-lit"],
-  "property-test-skeleton": ["synth-test"],
+  "registry": ["conv-rules", "multipath-kind-paths", "pair-compat", "synth-test", ...CASCADE],
+  "types": ["mech-kinds", "conv-rules", "multipath-kind-paths", "pair-compat", "norm-schema", "synth-test", ...CASCADE],
+  "schema-normalization": ["norm-schema", ...CASCADE],
+  "literature-classification": ["classify-lit", ...CASCADE],
+  "property-test-skeleton": ["synth-test", ...CASCADE],
 };
 
 // Rules that no corpus can pin OVER THIS STATE SPACE, recorded rather than
@@ -271,8 +287,10 @@ export const MUTATIONS = [
     id: "norm-widen-port-cap",
     subsystem: "schema-normalization",
     rule: "each port list is truncated to four entries",
-    find: ".take(4)",
-    replace: ".take(5)",
+    // Anchored to normSchema's port loop: the cascade code introduced further
+    // `.take(4)` sites, so the bare fragment no longer isolates this boundary.
+    find: "J::A(items.iter().take(4).map(|p| {",
+    replace: "J::A(items.iter().take(5).map(|p| {",
     expectedOccurrences: 1,
     expectedKillers: ["norm-schema"],
     expectedFailure: "PORT_CAP_WIDENED",
@@ -363,8 +381,16 @@ export const MUTATIONS = [
     id: "synth-alter-template",
     subsystem: "property-test-skeleton",
     rule: "the harness text is observable output, not a comment — its wording is part of the contract",
-    find: "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)",
-    replace: "// generated property-test harness",
+    // The deterministic surface and the cascade share one template site, so the
+    // scope is every declared case that emits a harness. The four cascade cases
+    // omitted here reach no adapter chain and emit no synthTest at all; they are
+    // the controls that must stay reproducing.
+    scope: ["synth-test", "directly-compatible", "single-conversion-path", "multiple-competing-paths",
+      "equal-cost-path-tie", "soft-precondition-satisfied", "soft-precondition-unresolved",
+      "soft-precondition-failed", "partially-instantiated-obligations", "advancement-through-type-composable",
+      "lit-unexplored", "lit-emerging", "lit-known", "lit-unverified"],
+    find: "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\\nproperty(",
+    replace: "// generated property-test harness\\nproperty(",
     expectedOccurrences: 1,
     expectedKillers: ["synth-test"],
     expectedFailure: "HARNESS_TEMPLATE_ALTERED",
@@ -375,7 +401,6 @@ export const MUTATIONS = [
   {
     id: "planner-descending-cost-order",
     subsystem: "multipath-planning",
-    scope: ["multipath-kind-paths", "pair-compat", "synth-test"],
     rule: "retained paths are ordered by ascending cumulative risk — the cheapest is selected",
     find: "pq.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());",
     replace: "pq.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());",
@@ -387,7 +412,6 @@ export const MUTATIONS = [
   {
     id: "planner-unstable-tie-order",
     subsystem: "multipath-planning",
-    scope: ["multipath-kind-paths", "pair-compat"],
     rule: "equal-cost candidates keep insertion order — the sort must be stable",
     find: "pq.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());",
     replace: "pq.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap().then(b.1.cmp(&a.1)));",
@@ -419,7 +443,6 @@ export const MUTATIONS = [
   {
     id: "planner-cap-before-goal",
     subsystem: "multipath-planning",
-    scope: ["multipath-kind-paths", "pair-compat"],
     rule: "a node is accepted as the goal BEFORE the depth cap is applied, so a five-step path is reachable",
     find: "if node == to { results.push(PathResult { path, exact: false, cost: c }); continue; }\n        if path.len() > 4 { continue; }",
     replace: "if path.len() > 4 { continue; }\n        if node == to { results.push(PathResult { path, exact: false, cost: c }); continue; }",
@@ -459,7 +482,6 @@ export const MUTATIONS = [
   {
     id: "planner-goal-marked-exact",
     subsystem: "multipath-planning",
-    scope: ["multipath-kind-paths", "pair-compat"],
     rule: "only the identity pair is `exact`; a converted pair is `convertible`",
     find: "if node == to { results.push(PathResult { path, exact: false, cost: c }); continue; }",
     replace: "if node == to { results.push(PathResult { path, exact: true, cost: c }); continue; }",
@@ -473,7 +495,6 @@ export const MUTATIONS = [
   {
     id: "cost-remove-lossy-penalty",
     subsystem: "edge-cost",
-    scope: ["conv-rules", "multipath-kind-paths", "pair-compat", "synth-test"],
     rule: "a lossy conversion costs two more than a lossless one",
     find: "1.0 + if e.lossy.unwrap_or(false) { 2.0 } else { 0.0 }",
     replace: "1.0 + if e.lossy.unwrap_or(false) { 0.0 } else { 0.0 }",
@@ -485,7 +506,6 @@ export const MUTATIONS = [
   {
     id: "cost-remove-curated-penalty",
     subsystem: "edge-cost",
-    scope: ["conv-rules", "multipath-kind-paths", "pair-compat"],
     rule: "a curated rule costs one more than an axiomatic one — authority is priced",
     find: 'if e.auth.unwrap_or("cur") == "cur" { 1.0 } else { 0.0 }',
     replace: 'if e.auth.unwrap_or("cur") == "cur" { 0.0 } else { 0.0 }',
@@ -498,7 +518,6 @@ export const MUTATIONS = [
   {
     id: "cost-remove-destroyed-penalty",
     subsystem: "edge-cost",
-    scope: ["conv-rules", "multipath-kind-paths", "pair-compat", "synth-test"],
     rule: "each destroyed property adds half a unit of risk",
     find: "(e.lose.map(|l| l.len()).unwrap_or(0) as f64) * 0.5",
     replace: "(e.lose.map(|l| l.len()).unwrap_or(0) as f64) * 0.0",
@@ -513,7 +532,6 @@ export const MUTATIONS = [
   {
     id: "shape-fail-open-on-absent",
     subsystem: "compatibility",
-    scope: ["shape-compat", "shape-compat-boundaries"],
     rule: "an absent shape is unresolved — never proved. The predicate fails closed",
     find: 'fn shape_compat(a: &str, b: &str) -> &\'static str {\n    if a.is_empty() || b.is_empty() { return "unresolved"; }',
     replace: 'fn shape_compat(a: &str, b: &str) -> &\'static str {\n    if a.is_empty() || b.is_empty() { return "proved"; }',
@@ -525,7 +543,6 @@ export const MUTATIONS = [
   {
     id: "shape-invert-predicate",
     subsystem: "compatibility",
-    scope: ["shape-compat", "shape-compat-boundaries"],
     rule: "matching or wildcard shapes are proved; anything else is unresolved",
     find: 'if x == y || wild(&x) || wild(&y) { "proved" } else { "unresolved" }',
     replace: 'if x == y || wild(&x) || wild(&y) { "unresolved" } else { "proved" }',
@@ -537,7 +554,6 @@ export const MUTATIONS = [
   {
     id: "shape-require-both-wildcards",
     subsystem: "compatibility",
-    scope: ["shape-compat", "shape-compat-boundaries"],
     rule: "a wildcard on EITHER side is enough to prove shape compatibility",
     find: "if x == y || wild(&x) || wild(&y)",
     replace: "if x == y || (wild(&x) && wild(&y))",
@@ -603,7 +619,6 @@ export const MUTATIONS = [
   {
     id: "unit-fail-open-on-absent",
     subsystem: "compatibility",
-    scope: ["unit-compat"],
     rule: "an absent unit is unresolved — never proved",
     find: 'fn unit_compat(a: &str, b: &str) -> &\'static str {\n    if a.is_empty() || b.is_empty() { return "unresolved"; }',
     replace: 'fn unit_compat(a: &str, b: &str) -> &\'static str {\n    if a.is_empty() || b.is_empty() { return "proved"; }',
@@ -615,7 +630,10 @@ export const MUTATIONS = [
   {
     id: "unit-drop-contradiction",
     subsystem: "compatibility",
-    scope: ["unit-compat"],
+    // `hard-incompatibility` is the cascade fixture whose entire subject is a
+    // unit contradiction, so this rule governs it too: perturbing it is the
+    // mutation working, not leaking. The other 28 declared cases stay controls.
+    scope: ["unit-compat", "hard-incompatibility"],
     rule: "two different, non-dimensionless units are REFUTED — a contradiction, not merely unproven",
     find: 'if x == "dimensionless" || y == "dimensionless" { return "unresolved"; }\n    "refuted"',
     replace: 'if x == "dimensionless" || y == "dimensionless" { return "unresolved"; }\n    "unresolved"',

@@ -14,7 +14,7 @@
     "kernel:golden": "npm --prefix packages/cortex-kernel run kernel:golden -- --check",
     "kernel:test": "npm --prefix packages/cortex-kernel test",
     "fuzz": "node test/differential/fuzz.mjs --cases=2000",
-    "verify": "npm run oracle:check && npm run kernel:test && npm run kernel:golden && npm run fuzz && npm run certify:check && npm run mutants && npm run conformance && npm run ledger:verify && npm run release:integrity && npm run frontier:check && npm run deps:policy && npm run vectors && npm run gates",
+    "verify": "npm run oracle:check && npm run kernel:test && npm run kernel:golden && npm run fuzz && npm run certify:check && npm run mutants && npm run conformance && npm run cascade:parity && npm run ledger:verify && npm run release:integrity && npm run frontier:check && npm run deps:policy && npm run vectors && npm run gates",
     "conformance": "node conformance/verify.mjs",
     "mutants": "npm run mutants:selftest && node conformance/mutants.mjs",
     "mutants:check": "npm run mutants:selftest && node conformance/mutants.mjs --check",
@@ -30,6 +30,7 @@
     "deps:policy": "node scripts/dependency-policy.mjs",
     "vectors": "node conformance/vectors/verify-vectors.mjs",
     "gates": "node scripts/gate-inventory.mjs",
-    "release:integrity": "node --test test/release-integrity.test.mjs"
+    "release:integrity": "node --test test/release-integrity.test.mjs",
+    "cascade:parity": "node --test test/cascade-parity.test.mjs"
   }
 }

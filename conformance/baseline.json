@@ -12,17 +12,34 @@
   "implementations": {
     "rust": {
       "declared": [
+        "advancement-through-type-composable",
         "classify-lit",
         "compute-edges",
         "compute-edges-boundaries",
         "conv-rules",
+        "directly-compatible",
+        "equal-cost-path-tie",
+        "hard-incompatibility",
+        "incompatible",
         "license-compat",
+        "lit-emerging",
+        "lit-known",
+        "lit-unexplored",
+        "lit-unverified",
         "mech-kinds",
+        "missing-conversion-rule",
         "multipath-kind-paths",
+        "multiple-competing-paths",
+        "no-schema",
         "norm-schema",
         "pair-compat",
+        "partially-instantiated-obligations",
         "shape-compat",
         "shape-compat-boundaries",
+        "single-conversion-path",
+        "soft-precondition-failed",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
         "synth-test",
         "unit-compat"
       ],
@@ -30,16 +47,26 @@
       "authorizedReduction": null,
       "justification": null,
       "fixtureCompleteSubsystems": [
+        "cascade",
+        "cascade-compatibility",
+        "cascade-planning",
         "compatibility",
+        "contract-instantiation",
         "edge-cost",
         "edge-derivation",
+        "impossibility",
         "license-screening",
+        "literature-assessment",
         "literature-classification",
         "multipath-planning",
+        "obligations",
         "property-test-skeleton",
+        "ranking",
         "registry",
         "schema-normalization",
-        "types"
+        "stage-advancement",
+        "types",
+        "verdict-derivation"
       ]
     }
   }
