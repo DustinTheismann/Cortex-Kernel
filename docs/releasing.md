@@ -71,11 +71,56 @@ available — it adds cryptographic provenance to the release.
 Tag the commit that contains the certification artifact and the CI configuration
 the release was verified under.
 
+### The tag must exist on the REMOTE before sealing
+
+`ledger --release` checks the *local* tag. The `certification` gate on `main`
+resolves `git show <tag>:…` on a CI runner. A tag that exists only in your
+working copy therefore produces a green seal and a red `main` — the same
+failure that took `c1334e1` down, where the tag the certificate named had
+never been published.
+
+Push the tag and confirm `git ls-remote --tags origin` lists it before
+continuing. If the tag push is rejected, stop: do not seal, and do not
+substitute a local-only tag. A release record naming a tag no third party can
+resolve is not independently verifiable, which is the one property the record
+exists to have.
+
+### No commit may land on `main` between the tag and the seal
+
+Sealing requires the tag to point at `HEAD`. Any commit merged to `main` after
+tagging moves `HEAD` past the tag, and `--release` refuses with
+`tag <t> points at <a>, but HEAD is <b>`. Recovering means retagging at the new
+commit, which changes the release target that was reviewed and approved.
+
+So between step 5 and step 5b, **every** pull request stays unmerged — not only
+ones that touch release-sensitive files. Merge them after the seal commit is
+pushed.
+
 ## 5a. Seal the ledger entry
 
+Build the peer first. `--release` runs `npm run verify` then and there, and in
+a fresh clone the Rust binary does not exist yet:
+
 ```bash
-node scripts/ledger.mjs --release --tag=v<version>-kernel
+npm run conformance:build
+npm run conformance      # require the expected N/43; never proceed past "binary not built"
 ```
+
+Gate order currently makes this fail-closed — `mutants` exits 2 when the peer
+is absent, before `conformance` is reached — and since the unbuilt case became
+a hard failure, `conformance` refuses on its own rather than warning and
+passing. Both matter, because the release statement asserts corroboration by an
+independent implementation, and that sentence becomes immutable at sealing.
+
+```bash
+node scripts/ledger.mjs --release --tag=v<version>-kernel --statement="<release-specific wording>"
+```
+
+**Always pass `--statement` explicitly.** It falls back to the candidate's
+wording, and a candidate's wording describes an *unreleased* state — ours
+literally said `NOTHING HAS BEEN RELEASED: no git tag exists on the repository`.
+Inheriting it freezes a sentence that is false the instant it becomes
+immutable. The fallback exists for continuity, not as the intended path.
 
 **A release identity is never reused.** Certification has two artifacts because
 there are two claims:
@@ -112,6 +157,35 @@ Thereafter `certify --check` verifies that record against `git show <tag>:…`,
 not against `HEAD` — so a release record re-derived from later state fails
 rather than silently rewriting history. `npm run release:integrity` negative-tests
 every one of these rejections.
+
+### 5b. The tag does not contain its own release record
+
+This surprises every first reader, so it is stated plainly:
+
+- the tag binds the **pre-seal** commit;
+- `docs/certification/<tag>.json` and the sealed ledger entry are created
+  *after* that commit, and land in the push that follows;
+- `git show <tag>:docs/certification/` therefore lists only `candidate.json`.
+
+That is structural, not an oversight. A record that binds a commit cannot be
+inside the commit it binds — the record contains `releaseCommitSha`, and
+writing it into the tree would change the tree, hence the SHA, hence the
+record. Any scheme that tried would either loop or record a commit that is not
+the released one.
+
+Verification is arranged around this. `certify --check` reads a release record
+from the working tree and checks it against the **hashed evidence files as they
+existed at the tag** — the manifest, the frozen reference, the canonicalizer,
+the invariant set — none of which the seal commit touches. So the record is
+anchored to the tagged tree without needing to live in it. Do not "fix" this by
+tagging the seal commit instead: that tag would name a tree whose certificate
+describes a different commit.
+
+```bash
+git push origin main      # publishes the seal commit
+```
+
+Confirm `main` CI is green before merging anything else.
 
 ## 6. GitHub Release
 
