@@ -10,12 +10,13 @@
       "command": [
         "./impl/rust/target/release/cortex-conformance"
       ],
-      "notes": "Dependency-free peer implementation of the deterministic core: registry, edge costs, min-risk multipath planner, and the shape/unit/license predicates. Written against the frozen semantics, certified by corpus reproduction \u2014 not a transliteration of the JavaScript.",
+      "notes": "Dependency-free peer implementation of the deterministic core: registry, edge costs, min-risk multipath planner, the shape/unit/license predicates, and the full cascade \u2014 schema-level port planning, contract instantiation, the ordered proof-obligation vector, the five-stage ladder, and the literature layer. Written against the frozen semantics, certified by corpus reproduction \u2014 not a transliteration of the JavaScript.",
       "toolchain": {
         "compiler": "rustc 1.94.1 (e408947bf 2026-03-25)",
         "targetTriple": "x86_64-unknown-linux-gnu",
         "dependencies": "standard library only (enforced by scripts/dependency-policy.mjs)"
       },
+      "coverageSubject": "Every claim below is about THIS IMPLEMENTATION, not about the corpus. `notReproduced` is the implementation's boundary — cases it does not declare at all — and is deliberately separate from the planner claim's scope, which the two fields previously conflated.",
       "plannerCoverage": {
         "claim": "Complete 16x16 multipath-planner surface",
         "meansExactly": [
@@ -29,14 +30,23 @@
           "per-step field presence and defaults (from/to/op/ruleId/lossy/auth/pre/lose)",
           "selected-path ordering and the exact/convertible distinction",
           "impossibility output for unreachable pairs (empty result; cost sentinel 99 via pair-compat)"
-        ],
-        "notCovered": [
-          "schema-level option build (selection risk with shape/unit penalties)",
-          "contract instantiation, obligations, ladder advancement",
-          "literature assessment and verdict derivation",
-          "schemaVersion 7 import/export"
         ]
-      }
+      },
+      "cascadeCoverage": {
+        "claim": "All 17 cascade fixtures reproduce (C1)",
+        "meansExactly": [
+          "schema-level option build, including the selection-risk term (cost + shape penalty + unit penalty)",
+          "contract instantiation over the selected adapter chain and its soft preconditions",
+          "the ordered proof-obligation vector PO-1..PO-8, with mapSoft failing closed to UNRESOLVED",
+          "five-stage ladder advancement: PROPOSED, PATH_FOUND, TYPE_COMPOSABLE, CONTRACT_ADMISSIBLE, EPISTEMICALLY_SUPPORTED",
+          "impossibility codes, and the distinction between an ABSENT bridge and a null one",
+          "the post-ladder literature layer: novelty class, final verdict, and prize candidacy"
+        ],
+        "isNotAMutationAdequacyClaim": "PARITY ONLY. These fixtures agree with this implementation; nothing here shows they would catch a WRONG cascade implementation. No cascade subsystem appears in the mutation registry, so conformance/REPORT.json reports every one of them as `not-assessed` — which is a different epistemic state from zero surviving mutants."
+      },
+      "notReproduced": [
+        "schemaVersion 7 import/export — 13 corpus cases (import-*, malformed-*, export-*, roundtrip-repo-edge), not declared by this implementation"
+      ]
     }
   ]
 }

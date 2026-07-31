@@ -1,6 +1,6 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-29T12:27:17.171Z",
+  "generatedAt": "2026-07-31T14:21:41.226Z",
   "ciRun": null,
   "integrity": {
     "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
@@ -684,7 +684,7 @@
         "targetTriple": "x86_64-unknown-linux-gnu",
         "dependencies": "standard library only (enforced by scripts/dependency-policy.mjs)"
       },
-      "notes": "Dependency-free peer implementation of the deterministic core: registry, edge costs, min-risk multipath planner, and the shape/unit/license predicates. Written against the frozen semantics, certified by corpus reproduction — not a transliteration of the JavaScript."
+      "notes": "Dependency-free peer implementation of the deterministic core: registry, edge costs, min-risk multipath planner, the shape/unit/license predicates, and the full cascade — schema-level port planning, contract instantiation, the ordered proof-obligation vector, the five-stage ladder, and the literature layer. Written against the frozen semantics, certified by corpus reproduction — not a transliteration of the JavaScript."
     }
   ],
   "interpretation": "An implementation conforms when every case it DECLARES reproduces the corpus hash byte-for-byte after canonicalization. Coverage is the fraction of the corpus it declares; partial coverage is legitimate, a failing declared case is not."
