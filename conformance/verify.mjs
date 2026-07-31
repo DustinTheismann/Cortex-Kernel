@@ -17,6 +17,7 @@
 //
 //   node conformance/verify.mjs                 # verify every registered implementation
 //   node conformance/verify.mjs --impl=rust     # just one
+//   node conformance/verify.mjs --registry=<p>  # an alternate registry (used by the gate's own test)
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -27,7 +28,14 @@ import { sha256 } from "../test/oracle/canonicalize.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(readFileSync(join(root, "test/golden/manifest.json"), "utf8"));
-const registry = JSON.parse(readFileSync(join(root, "conformance/implementations.json"), "utf8"));
+// The registry path is overridable so this gate can be tested the way it tests
+// implementations — by running it for real against a declared implementation
+// and asserting the outcome. A gate whose own failure modes are only reasoned
+// about is in exactly the position this repository refuses to accept from the
+// code it verifies.
+const registryArg = process.argv.find((a) => a.startsWith("--registry="));
+const registryPath = registryArg ? resolve(root, registryArg.slice(11)) : join(root, "conformance/implementations.json");
+const registry = JSON.parse(readFileSync(registryPath, "utf8"));
 const baseline = JSON.parse(readFileSync(join(root, "conformance/baseline.json"), "utf8"));
 
 const byCase = new Map(manifest.cases.map((c) => [c.caseId, c]));
@@ -193,7 +201,20 @@ const results = new Map();
 for (const impl of targets) {
   const r = verifyImplementation(impl);
   results.set(impl.id, r);
-  if (r.status === "unbuilt") { console.log(`  ⚠ ${r.message}`); continue; }
+  // An unbuilt implementation used to warn and pass. That made this gate
+  // capable of reporting success having verified nothing: the run is green, the
+  // report records `unbuilt`, and no cross-language claim was tested at all.
+  // The seal depends on this — `ledger --release` runs `npm run verify` and a
+  // release statement asserting corroboration by an independent peer must not
+  // rest on a peer that never executed. Today the ordering saves it (`mutants`
+  // exits 2 first), but that is an accident of gate order, not a guarantee this
+  // gate makes about itself. A check that silently skips is not a check.
+  if (r.status === "unbuilt") {
+    console.error(`  ✘ ${r.message}`);
+    console.error("        A declared implementation that was not built verifies nothing. Build it, or remove it from conformance/implementations.json.");
+    hardFailure = true;
+    continue;
+  }
   if (r.status === "error") { console.error(`  ✘ ${r.message}`); hardFailure = true; continue; }
 
   const icon = r.status === "pass" ? "✔" : "✘";

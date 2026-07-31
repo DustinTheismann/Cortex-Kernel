@@ -80,9 +80,16 @@ jobs:
       # Gate 10: cross-language conformance. Every registered implementation
       # must reproduce the corpus hashes it declares support for. This is what
       # keeps the contract portable rather than a JavaScript artifact.
+      #
+      # The gate's own failure modes run first, against a temporary registry.
+      # It is the same argument the gate makes about implementations: this one
+      # reported success while verifying nothing whenever a declared peer went
+      # unbuilt. Kept inside this step rather than promoted to a gate of its
+      # own, because it is a test OF gate 10, not an eleventh obligation.
       - name: conformance
         run: |
           npm run conformance:build
+          npm run conformance:gate-test
           npm run conformance
 
       # Gate 11: the certification chain is intact — links unbroken,
