@@ -39,9 +39,9 @@
           "units": "unspecified"
         },
         {
-          "kind": "dataset",
-          "name": "d",
-          "semantics": "dataset mechanism",
+          "kind": "scalar",
+          "name": "s",
+          "semantics": "scalar mechanism",
           "shape": "unspecified",
           "units": "unspecified"
         }
@@ -59,23 +59,27 @@
         {
           "auth": "ax",
           "from": "tensor",
-          "lose": [],
-          "lossy": false,
-          "op": "materialize",
+          "lose": [
+            "structure"
+          ],
+          "lossy": true,
+          "op": "reduce",
           "pre": "",
-          "ruleId": "tensor>dataset:materialize",
-          "to": "dataset"
+          "ruleId": "tensor>scalar:reduce",
+          "to": "scalar"
         }
       ],
-      "destroyedProperties": [],
+      "destroyedProperties": [
+        "structure"
+      ],
       "dir": "A→B",
-      "executableTest": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('tensor→dataset preserves semantics', () => {\n  const x = sample_tensor();          // tensor mechanism\n  const y = materialize(x);\n  assert isValid_dataset(y);            // dataset mechanism\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});",
+      "executableTest": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('tensor→scalar preserves semantics', () => {\n  const x = sample_tensor();          // tensor mechanism\n  const y = reduce(x);\n  assert isValid_scalar(y);            // scalar mechanism\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});",
       "preservedInvariants": [
         "invariant-y"
       ],
       "proofObligations": [
         {
-          "detail": "tensor → dataset via materialize",
+          "detail": "tensor → scalar via reduce",
           "id": "PO-1",
           "method": "deterministic",
           "name": "Kind path",
@@ -110,7 +114,7 @@
           "status": "PROVED"
         },
         {
-          "detail": "no properties destroyed on path",
+          "detail": "destroys: structure",
           "id": "PO-6",
           "method": "model-assisted",
           "name": "Invariant preservation",
@@ -122,12 +126,19 @@
           "method": "model-assisted",
           "name": "Metric measures outcome",
           "status": "CONDITIONALLY-SATISFIED"
+        },
+        {
+          "detail": "lossy hops: reduce — adapter must bound loss",
+          "id": "PO-8",
+          "method": "deterministic",
+          "name": "Bounded information loss",
+          "status": "CONDITIONALLY-SATISFIED"
         }
       ],
       "requiredAssumptions": [
         "assumption-x"
       ],
-      "riskCost": 2,
+      "riskCost": 4.5,
       "ruleInstantiations": [],
       "sourcePort": {
         "kind": "tensor",
@@ -137,9 +148,9 @@
         "units": ""
       },
       "targetPort": {
-        "kind": "dataset",
-        "name": "d",
-        "semantics": "dataset mechanism",
+        "kind": "scalar",
+        "name": "s",
+        "semantics": "scalar mechanism",
         "shape": "",
         "units": ""
       }
@@ -151,42 +162,11 @@
     "litNote": "␀undefined",
     "mechClass": {
       "sourceKind": "tensor",
-      "targetKind": "dataset"
+      "targetKind": "scalar"
     },
     "mechCompat": {
       "consideredPaths": 3,
       "matchedPorts": [
-        {
-          "adapter": [
-            {
-              "auth": "ax",
-              "from": "tensor",
-              "lose": [],
-              "lossy": false,
-              "op": "materialize",
-              "pre": "",
-              "ruleId": "tensor>dataset:materialize",
-              "to": "dataset"
-            }
-          ],
-          "compatibility": "convertible",
-          "dir": "A→B",
-          "lossy": false,
-          "sourceOutput": {
-            "kind": "tensor",
-            "name": "t",
-            "semantics": "tensor mechanism",
-            "shape": "",
-            "units": ""
-          },
-          "targetInput": {
-            "kind": "dataset",
-            "name": "d",
-            "semantics": "dataset mechanism",
-            "shape": "",
-            "units": ""
-          }
-        },
         {
           "adapter": [
             {
@@ -260,6 +240,39 @@
             "shape": "",
             "units": ""
           }
+        },
+        {
+          "adapter": [
+            {
+              "auth": "ax",
+              "from": "tensor",
+              "lose": [
+                "structure"
+              ],
+              "lossy": true,
+              "op": "reduce",
+              "pre": "",
+              "ruleId": "tensor>scalar:reduce",
+              "to": "scalar"
+            }
+          ],
+          "compatibility": "convertible",
+          "dir": "A→B",
+          "lossy": true,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": ""
+          },
+          "targetInput": {
+            "kind": "scalar",
+            "name": "s",
+            "semantics": "scalar mechanism",
+            "shape": "",
+            "units": ""
+          }
         }
       ],
       "prunedPaths": 0,
@@ -270,7 +283,7 @@
     "modelEstimated": false,
     "obligations": [
       {
-        "detail": "tensor → dataset via materialize",
+        "detail": "tensor → scalar via reduce",
         "id": "PO-1",
         "method": "deterministic",
         "name": "Kind path",
@@ -305,7 +318,7 @@
         "status": "PROVED"
       },
       {
-        "detail": "no properties destroyed on path",
+        "detail": "destroys: structure",
         "id": "PO-6",
         "method": "model-assisted",
         "name": "Invariant preservation",
@@ -317,42 +330,16 @@
         "method": "model-assisted",
         "name": "Metric measures outcome",
         "status": "CONDITIONALLY-SATISFIED"
+      },
+      {
+        "detail": "lossy hops: reduce — adapter must bound loss",
+        "id": "PO-8",
+        "method": "deterministic",
+        "name": "Bounded information loss",
+        "status": "CONDITIONALLY-SATISFIED"
       }
     ],
     "options": [
-      {
-        "adapters": [
-          {
-            "auth": "ax",
-            "from": "tensor",
-            "lose": [],
-            "lossy": false,
-            "op": "materialize",
-            "pre": "",
-            "ruleId": "tensor>dataset:materialize",
-            "to": "dataset"
-          }
-        ],
-        "dir": "A→B",
-        "exact": false,
-        "risk": 2,
-        "sourceOutput": {
-          "kind": "tensor",
-          "name": "t",
-          "semantics": "tensor mechanism",
-          "shape": "",
-          "units": ""
-        },
-        "staticRisk": 1,
-        "targetInput": {
-          "kind": "dataset",
-          "name": "d",
-          "semantics": "dataset mechanism",
-          "shape": "",
-          "units": ""
-        },
-        "unit": "unresolved"
-      },
       {
         "adapters": [
           {
@@ -430,6 +417,41 @@
           "units": ""
         },
         "unit": "unresolved"
+      },
+      {
+        "adapters": [
+          {
+            "auth": "ax",
+            "from": "tensor",
+            "lose": [
+              "structure"
+            ],
+            "lossy": true,
+            "op": "reduce",
+            "pre": "",
+            "ruleId": "tensor>scalar:reduce",
+            "to": "scalar"
+          }
+        ],
+        "dir": "A→B",
+        "exact": false,
+        "risk": 4.5,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "staticRisk": 3.5,
+        "targetInput": {
+          "kind": "scalar",
+          "name": "s",
+          "semantics": "scalar mechanism",
+          "shape": "",
+          "units": ""
+        },
+        "unit": "unresolved"
       }
     ],
     "preregId": "prereg:<id>",
@@ -441,7 +463,7 @@
       "mechClasses": [
         {
           "sourceKind": "tensor",
-          "targetKind": "dataset"
+          "targetKind": "scalar"
         }
       ],
       "paperCount": null,
@@ -452,7 +474,7 @@
     "typeCheck": {
       "pass": true,
       "reason": "composable via adapter — reached EPISTEMICALLY_SUPPORTED · 3 paths considered, 0 pruned",
-      "sharedObject": "tensor → dataset (materialize)",
+      "sharedObject": "tensor → scalar (reduce)",
       "stage": "EPISTEMICALLY_SUPPORTED",
       "verdict": "conversion_required"
     },
@@ -460,7 +482,7 @@
       {
         "instrument": "typecheck",
         "result": "pass",
-        "sharedObject": "tensor → dataset (materialize)"
+        "sharedObject": "tensor → scalar (reduce)"
       },
       {
         "count": null,

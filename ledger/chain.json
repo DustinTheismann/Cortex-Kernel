@@ -6,7 +6,7 @@
       "status": "candidate",
       "releaseTag": null,
       "certificatePath": "docs/certification/candidate.json",
-      "certificateSha256": "040f5c13b51a10d6dd8856e9aaff2272a4591fa6631231030a61b75001681210",
+      "certificateSha256": "5a38240046bbaa95e542c3355b87d427dc9f94dc312fb6cb8645ab410600610c",
       "fixtureCount": 52,
       "fixtureHashes": {
         "mech-kinds": "d8a99f3fd101bbc55a233bcc2a246dbdd2cc22439db7978bff9ef888c77d8ac6",
@@ -41,8 +41,8 @@
         "lit-unverified": "71c87fa299c52414c8c5289ede46df1c8009dfa22b17c95c3ce501f0f2735c5c",
         "reverse-direction-bridge": "248a3fac315024dd9ad2bdd2e65664af8fba6cb2735ce24fc71048ed3a7c3f19",
         "option-cap-saturated": "86067da74a7bd5057b9785806d2ccd2d91bcb74964985f8bf4672d2d571656eb",
-        "refuted-option-pruned": "79d13a63e922d04a91f08c67f1dec0e7540fef6d3aa530c8dfccebc62021f9e0",
-        "unresolved-option-outranked": "8f02c4a5a278b790ae0d2c31a3a29f97101fd71ad63f89b2124ff5799e2c431a",
+        "refuted-option-pruned": "aaa67404d6a22b0e89ce6213c2a87b7b25c01c9911653633fc2072682babdfe3",
+        "unresolved-option-outranked": "fad19638f02ea925ab55b3d5d906b1c72253ebe666136866b85f65adb342c044",
         "dimensionless-unit-pairing": "1e80c60e67d6d66acb20f0ca17b56933580241d36abd0e583719ff90a0c238f4",
         "metric-obligation-ungraded": "513adcc19adb9a45bb909920e0b968bcef42aea3ccbe9cf22b899399ff7d7f32",
         "refuted-outranks-unresolved": "90adf8ad1b608034b656ec980bc25210eb8d9535b580a7f42ef835afa409ded6",
@@ -69,11 +69,11 @@
         "changedFixtures": [],
         "unchangedFixtures": 0,
         "baselineFixtures": 52,
-        "statement": "Genesis candidate, restated for C3: the v0.5.1 behavioral baseline grows from 43 to 52 fixtures. All nine additions are boundary cases written because a semantic mutation of the cascade SURVIVED the previous corpus — reverse-direction pairing, option-cap saturation, refuted-path pruning, unresolved-precondition weighting, a dimensionless unit note, an ungraded metric obligation, a refuted precondition outranking an unresolved one, a literature count supplied without grounding, and novelty below the top stage. No existing fixture changed and none was removed, so this is coverage growth rather than a behavioral change: every one of the original 43 hashes is byte-identical. Prepared for release as kernel 0.5.2 certified against reference 0.5.1. NOTHING HAS BEEN RELEASED: no git tag exists on the repository, so this chain has no released entry yet."
+        "statement": "Genesis candidate, restated for C3: the v0.5.1 behavioral baseline grows from 43 to 52 fixtures, and the Rust peer's declared support from 30 to 39. All nine additions are boundary cases written because a semantic mutation of the cascade SURVIVED the previous corpus. Nine of the ten declared corpus gaps are now closed and the mutants that named them are killed; the tenth is unpinnable by construction, since every rule carrying a precondition in the frozen v0.5.1 registry is also curated. No existing fixture changed and none was removed, so this is coverage growth rather than a behavioral change: every one of the original 43 hashes is byte-identical. Prepared for release as kernel 0.5.2 certified against reference 0.5.1. NOTHING HAS BEEN RELEASED: no git tag exists on the repository, so this chain has no released entry yet."
       },
       "previousEntrySha256": null,
-      "restatements": 2,
-      "entrySha256": "52ea86a79a5bdd32a6bb44f96bc377251fd8bd03b1993e6832f5e3f9dbef7ede"
+      "restatements": 3,
+      "entrySha256": "aa835cedcb7545792c797bcadc92463fde5c6e9479e3d127d60e854ae8cc81a4"
     }
   ]
 }

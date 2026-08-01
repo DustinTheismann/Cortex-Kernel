@@ -298,7 +298,7 @@
       "caseId": "refuted-option-pruned",
       "category": "preconditions",
       "fixture": "fixtures/refuted-option-pruned.json",
-      "sha256": "79d13a63e922d04a91f08c67f1dec0e7540fef6d3aa530c8dfccebc62021f9e0",
+      "sha256": "aaa67404d6a22b0e89ce6213c2a87b7b25c01c9911653633fc2072682babdfe3",
       "expectedStage": "EPISTEMICALLY_SUPPORTED",
       "expectedVerdict": "conversion_required",
       "oracleSource": "reference/src/cortex-v0.5.1.jsx"
@@ -307,7 +307,7 @@
       "caseId": "unresolved-option-outranked",
       "category": "preconditions",
       "fixture": "fixtures/unresolved-option-outranked.json",
-      "sha256": "8f02c4a5a278b790ae0d2c31a3a29f97101fd71ad63f89b2124ff5799e2c431a",
+      "sha256": "fad19638f02ea925ab55b3d5d906b1c72253ebe666136866b85f65adb342c044",
       "expectedStage": "EPISTEMICALLY_SUPPORTED",
       "expectedVerdict": "conversion_required",
       "oracleSource": "reference/src/cortex-v0.5.1.jsx"

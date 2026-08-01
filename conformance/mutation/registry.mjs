@@ -34,6 +34,10 @@ const CASCADE = [
   "soft-precondition-failed", "hard-incompatibility", "missing-conversion-rule", "no-schema",
   "partially-instantiated-obligations", "advancement-through-type-composable",
   "lit-unexplored", "lit-emerging", "lit-known", "lit-unverified",
+  // C3 boundary cases — each added because a mutation below survived without it.
+  "reverse-direction-bridge", "option-cap-saturated", "refuted-option-pruned",
+  "unresolved-option-outranked", "dimensionless-unit-pairing", "metric-obligation-ungraded",
+  "refuted-outranks-unresolved", "count-without-grounding", "novel-below-top-stage",
 ];
 
 /** Corpus cases each subsystem's mutants may perturb. A mutant that escapes
@@ -430,7 +434,11 @@ export const MUTATIONS = [
     scope: ["synth-test", "directly-compatible", "single-conversion-path", "multiple-competing-paths",
       "equal-cost-path-tie", "soft-precondition-satisfied", "soft-precondition-unresolved",
       "soft-precondition-failed", "partially-instantiated-obligations", "advancement-through-type-composable",
-      "lit-unexplored", "lit-emerging", "lit-known", "lit-unverified"],
+      "lit-unexplored", "lit-emerging", "lit-known", "lit-unverified",
+      // The nine C3 boundary cases all reach a bridge, so all nine emit a harness.
+      "reverse-direction-bridge", "option-cap-saturated", "refuted-option-pruned",
+      "unresolved-option-outranked", "dimensionless-unit-pairing", "metric-obligation-ungraded",
+      "refuted-outranks-unresolved", "count-without-grounding", "novel-below-top-stage"],
     find: "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\\nproperty(",
     replace: "// generated property-test harness\\nproperty(",
     expectedOccurrences: 1,
@@ -687,7 +695,9 @@ export const MUTATIONS = [
   {
     id: "unit-dimensionless-proves",
     subsystem: "compatibility",
-    scope: ["unit-compat"],
+    // dimensionless-unit-pairing exists to pin exactly this rule at the cascade
+    // level, so perturbing it is the mutation working rather than leaking.
+    scope: ["unit-compat", "dimensionless-unit-pairing"],
     rule: "dimensionless against a real unit is unresolved, not proved — it carries no dimensional claim",
     find: 'if x == "dimensionless" || y == "dimensionless" { return "unresolved"; }',
     replace: 'if x == "dimensionless" || y == "dimensionless" { return "proved"; }',
@@ -891,16 +901,12 @@ export const MUTATIONS = [
   // ---- cascade: cross-cutting ---------------------------------------------
   {
     id: "cascade-one-directional-pairing",
-    knownUnpinned: {
-      why: "every cascade fixture puts the producing schema on side A, so no fixture ever selects a B→A bridge and the reverse enumeration is never load-bearing",
-      closedBy: "a fixture whose schemaA only CONSUMES and whose schemaB produces the matching kind",
-    },
     subsystem: "cascade",
     rule: "candidate port pairs are enumerated in BOTH directions — B's outputs into A's inputs are considered too",
     find: `        for po in &b.produces { for ci in &a.consumes { pairs.push(("B→A", po.clone(), ci.clone())); } }`,
     replace: "",
     expectedOccurrences: 1,
-    expectedKillers: ["multiple-competing-paths"],
+    expectedKillers: ["reverse-direction-bridge"],
     expectedFailure: "REVERSE_DIRECTION_NOT_ENUMERATED",
     assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
       (want.options || []).length > (d.options || []).length),
@@ -1003,43 +1009,34 @@ export const MUTATIONS = [
   },
   {
     id: "cascade-unresolved-precondition-free",
-    knownUnpinned: {
-      why: "no fixture has two viable options that differ in UNRESOLVED-precondition count, so the 10x term never changes which option is selected",
-      closedBy: "a fixture with a cheaper-by-risk option carrying more unresolved preconditions than a costlier rival",
-    },
     subsystem: "cascade-planning",
     rule: "each UNRESOLVED precondition costs 10 in option scoring — unproven is not the same as proven",
     find: "score: o.risk + unresolved as f64 * 10.0 + if refuted { 1000.0 } else { 0.0 }",
     replace: "score: o.risk + unresolved as f64 * 0.0 + if refuted { 1000.0 } else { 0.0 }",
     expectedOccurrences: 1,
-    expectedKillers: ["multiple-competing-paths"],
+    expectedKillers: ["unresolved-option-outranked"],
     expectedFailure: "UNRESOLVED_PRECONDITION_UNPRICED",
     // Scoring is internal; its effect is observable as a different selection.
     // Compare against the corpus-correct bridge rather than an absolute.
-    assert: (out, inp, refs) => {
-      const got = bridgeOf(out, "multiple-competing-paths");
-      const want = ((refs["multiple-competing-paths"] || {}).output || {}).bridge;
-      return Boolean(want) && JSON.stringify(got) !== JSON.stringify(want);
-    },
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      Boolean(want.bridge) && JSON.stringify(d.bridge) !== JSON.stringify(want.bridge)),
   },
   {
     id: "cascade-selects-refuted-path",
-    knownUnpinned: {
-      why: "in the one fixture with a refuted precondition the refuted option is also the only option, so pruning it changes nothing",
-      closedBy: "a fixture with at least two options where the lowest-risk one is REFUTED and another survives",
-    },
     subsystem: "cascade-planning",
-    rule: "options with a REFUTED precondition are pruned from selection, and chosen only if nothing else survives",
-    find: "let mut order: Vec<usize> = (0..scored.len()).filter(|&i| !scored[i].refuted).collect();",
-    replace: "let mut order: Vec<usize> = (0..scored.len()).collect();",
+    // Refuted-path exclusion is implemented TWICE — a +1000 score penalty and a
+    // prune filter — so neither site alone is observable: remove one and the
+    // other still holds. That redundancy is why the first two attempts at this
+    // mutant survived against a corpus that does reach the boundary. The rule
+    // lives in the flag both guards read, so that is what gets violated.
+    rule: "a REFUTED precondition excludes its option from selection — enforced by both the score penalty and the prune filter",
+    find: `let refuted = inst.iter().any(|x| x.status == "REFUTED");`,
+    replace: "let refuted = false;",
     expectedOccurrences: 1,
-    expectedKillers: ["soft-precondition-failed"],
+    expectedKillers: ["refuted-option-pruned"],
     expectedFailure: "REFUTED_PATH_NOT_PRUNED",
-    assert: (out, inp, refs) => {
-      const got = dec(out, "soft-precondition-failed");
-      const want = (refs["soft-precondition-failed"] || {}).output || {};
-      return got.stage !== want.stage || JSON.stringify(got.bridge) !== JSON.stringify(want.bridge);
-    },
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      Boolean(want.bridge) && JSON.stringify(d.bridge) !== JSON.stringify(want.bridge)),
   },
 
   // ---- ranking: option order and retention --------------------------------
@@ -1057,16 +1054,12 @@ export const MUTATIONS = [
   },
   {
     id: "cascade-widen-option-retention",
-    knownUnpinned: {
-      why: "no fixture produces more than three candidate options, so the retention cap never binds",
-      closedBy: "a fixture with multiple produces/consumes ports yielding four or more admissible options",
-    },
     subsystem: "ranking",
     rule: "exactly three options are retained — the cap is part of the published decision, not a display limit",
     find: "opts.truncate(3);",
     replace: "opts.truncate(4);",
     expectedOccurrences: 1,
-    expectedKillers: ["multiple-competing-paths"],
+    expectedKillers: ["option-cap-saturated"],
     expectedFailure: "OPTION_RETENTION_CAP_WIDENED",
     assert: (out) => everyDecision(out).some((d) => (d.options || []).length > 3),
   },
@@ -1144,16 +1137,12 @@ export const MUTATIONS = [
   },
   {
     id: "po3-drops-dimensionless-note",
-    knownUnpinned: {
-      why: "no fixture selects a bridge whose units are dimensionless on one side and dimensional on the other, so the explanatory clause is never emitted",
-      closedBy: "a fixture pairing a dimensionless output port with a dimensioned input port",
-    },
     subsystem: "obligations",
     rule: "an unresolved dimensionless comparison says WHY — the note is observable output, not commentary",
     find: `if unit == "unresolved" && dimensionless { " (dimensionless ≠ dimensional — not auto-proved)" } else { "" }`,
     replace: `if unit == "unresolved" && dimensionless { "" } else { "" }`,
     expectedOccurrences: 1,
-    expectedKillers: ["soft-precondition-satisfied"],
+    expectedKillers: ["dimensionless-unit-pairing"],
     expectedFailure: "DIMENSIONLESS_RATIONALE_DROPPED",
     assert: (out, inp, refs) => diverged(out, refs, (d, want) => {
       const g = (d.obligations || []).find((o) => o.id === "PO-3") || {};
@@ -1200,16 +1189,12 @@ export const MUTATIONS = [
   },
   {
     id: "ladder-epistemic-ignores-metric",
-    knownUnpinned: {
-      why: "no fixture grades the invariant obligation satisfied while leaving the metric obligation ungraded, so PO-7 never independently decides the top stage",
-      closedBy: "a fixture with model.invariant satisfied and model.metric unknown",
-    },
     subsystem: "stage-advancement",
     rule: "EPISTEMICALLY_SUPPORTED requires BOTH the invariant (PO-6) and the metric (PO-7) obligations",
     find: `let epistemic_ok = contract_ok && po6 == "CONDITIONALLY-SATISFIED" && po7 == "CONDITIONALLY-SATISFIED";`,
     replace: `let epistemic_ok = contract_ok && po6 == "CONDITIONALLY-SATISFIED";`,
     expectedOccurrences: 1,
-    expectedKillers: ["directly-compatible"],
+    expectedKillers: ["metric-obligation-ungraded"],
     expectedFailure: "LADDER_ADVANCED_WITHOUT_METRIC_OBLIGATION",
     assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
       want.stage === "CONTRACT_ADMISSIBLE" && d.stage === "EPISTEMICALLY_SUPPORTED"),
@@ -1232,10 +1217,6 @@ export const MUTATIONS = [
   },
   {
     id: "verdict-block-reason-priority",
-    knownUnpinned: {
-      why: "no fixture carries a REFUTED and an UNRESOLVED precondition at once, so the two branches are never in contention",
-      closedBy: "a fixture with preOverrides grading one curated step violated and another unknown",
-    },
     subsystem: "verdict-derivation",
     rule: "a REFUTED precondition outranks an UNRESOLVED one when naming the blocking reason",
     find: `        else if any_refuted { J::s("PRECONDITION_UNSATISFIED") }
@@ -1243,7 +1224,7 @@ export const MUTATIONS = [
     replace: `        else if any_unresolved { J::s("PRECONDITION_UNRESOLVED") }
         else if any_refuted { J::s("PRECONDITION_UNSATISFIED") }`,
     expectedOccurrences: 1,
-    expectedKillers: ["soft-precondition-failed"],
+    expectedKillers: ["refuted-outranks-unresolved"],
     expectedFailure: "BLOCK_REASON_PRIORITY_INVERTED",
     assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
       want.blockReason === "PRECONDITION_UNSATISFIED" && d.blockReason === "PRECONDITION_UNRESOLVED"),
@@ -1275,10 +1256,6 @@ export const MUTATIONS = [
   },
   {
     id: "lit-invents-a-count-when-ungrounded",
-    knownUnpinned: {
-      why: "no fixture supplies a literature count while grounding is off, so there is no count available to leak",
-      closedBy: "a fixture carrying litCount with litGround absent",
-    },
     subsystem: "literature-assessment",
     rule: "with grounding OFF no count is reported — the kernel never invents evidence it did not gather",
     find: `        ("OFF", None)
@@ -1286,22 +1263,18 @@ export const MUTATIONS = [
     replace: `        ("OFF", c.lit_count)
     } else {`,
     expectedOccurrences: 1,
-    expectedKillers: ["directly-compatible"],
+    expectedKillers: ["count-without-grounding"],
     expectedFailure: "LITERATURE_COUNT_INVENTED_WITHOUT_GROUNDING",
     assert: (out) => everyDecision(out).some((d) => d.litClass === "OFF" && d.litCount !== null),
   },
   {
     id: "prize-ignores-ladder-stage",
-    knownUnpinned: {
-      why: "every UNEXPLORED fixture also reaches EPISTEMICALLY_SUPPORTED, so the stage test never independently withholds candidacy",
-      closedBy: "a fixture with an UNEXPLORED literature class stopping below the top stage",
-    },
     subsystem: "literature-assessment",
     rule: "prize candidacy requires EPISTEMICALLY_SUPPORTED — novelty alone never nominates a candidate",
     find: `let prize = pass && stage.as_deref() == Some("EPISTEMICALLY_SUPPORTED") && grounded && lit_class == "UNEXPLORED";`,
     replace: `let prize = pass && grounded && lit_class == "UNEXPLORED";`,
     expectedOccurrences: 1,
-    expectedKillers: ["lit-unexplored"],
+    expectedKillers: ["novel-below-top-stage"],
     expectedFailure: "PRIZE_NOMINATED_BELOW_TOP_STAGE",
     assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
       !want.prizeCandidate && Boolean(d.prizeCandidate)),

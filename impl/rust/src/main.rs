@@ -1403,6 +1403,36 @@ fn cascade_cases() -> Vec<CascadeCase> {
         mk("lit-emerging", a_prod("tensor"), b_cons("distribution"), all(), true, Some(100.0)),
         mk("lit-known", a_prod("tensor"), b_cons("distribution"), all(), true, Some(5000.0)),
         mk("lit-unverified", a_prod("tensor"), b_cons("distribution"), all(), true, None),
+
+        // C3 boundary cases. Each exists because a semantic mutation of the
+        // cascade survived the seventeen above.
+        mk("reverse-direction-bridge",
+            Some(cschema(vec![], vec![cport("distribution")])), Some(cschema(vec![cport("tensor")], vec![])),
+            all(), false, None),
+        mk("option-cap-saturated",
+            Some(cschema(vec![cport("tensor"), cport("graph")], vec![])),
+            Some(cschema(vec![], vec![cport("dataset"), cport("scalar")])), all(), false, None),
+        mk("refuted-option-pruned", a_prod("tensor"),
+            Some(cschema(vec![], vec![cport("distribution"), cport("scalar")])),
+            Soft { pre: None, pre_overrides: vec![("tensor>distribution:normalize", "violated")],
+                   invariant: Some("satisfied"), metric: Some("satisfied") }, false, None),
+        mk("unresolved-option-outranked", a_prod("tensor"),
+            Some(cschema(vec![], vec![cport("distribution"), cport("scalar")])),
+            soft(None, Some("satisfied"), Some("satisfied")), false, None),
+        mk("dimensionless-unit-pairing",
+            Some(cschema(vec![cport_with("tensor", None, Some("dimensionless"))], vec![])),
+            Some(cschema(vec![], vec![cport_with("tensor", None, Some("probability"))])), all(), false, None),
+        mk("metric-obligation-ungraded", a_prod("tensor"), b_cons("distribution"),
+            soft(Some("satisfied"), Some("satisfied"), None), false, None),
+        mk("refuted-outranks-unresolved", a_prod("tensor"), b_cons("certificate"),
+            Soft { pre: None, pre_overrides: vec![("scalar>bound:threshold", "violated"), ("bound>certificate:wrap", "unknown")],
+                   invariant: Some("unknown"), metric: Some("unknown") }, false, None),
+        // litCount supplied while grounding is OFF: the count must appear in the
+        // INPUT and be absent from the result. Present-in-input and
+        // reported-as-evidence are different facts.
+        mk("count-without-grounding", a_prod("tensor"), b_cons("distribution"), all(), false, Some(10.0)),
+        mk("novel-below-top-stage", a_prod("tensor"), b_cons("distribution"),
+            soft(Some("satisfied"), Some("satisfied"), None), true, Some(10.0)),
     ]
 }
 
@@ -1420,8 +1450,10 @@ fn cascade_payload(rules: &[(&'static str, Vec<Rule>)], c: &CascadeCase) -> J {
         ("schemaB", c.schema_b.as_ref().map(|s| s.raw_json()).unwrap_or(J::Null)),
         ("model", obj(model)),
     ];
-    if c.lit_ground {
-        input.push(("litGround", J::B(true)));
+    if c.lit_ground { input.push(("litGround", J::B(true))); }
+    // A count may be supplied WITHOUT grounding. It belongs in the input
+    // either way — what must not happen is the kernel reporting it as evidence.
+    if c.lit_ground || c.lit_count.is_some() {
         input.push(("litCount", c.lit_count.map(J::N).unwrap_or(J::Null)));
     }
     obj(vec![("input", obj(input)), ("output", evaluate_cascade(rules, c))])

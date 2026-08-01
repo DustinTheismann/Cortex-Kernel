@@ -37,7 +37,7 @@
     "fixtureCount": 52,
     "manifest": {
       "path": "test/golden/manifest.json",
-      "sha256": "b86f1a17fe3507f496057d8794d945a86b547d643d76c7b2f2473a91034fb176"
+      "sha256": "c9b333c89e82c911ab6ca3575ff148eb9607a8b0fc5b3fe877addfb60028a583"
     },
     "invariantVersion": {
       "set": "test/oracle/invariants.mjs",
@@ -51,8 +51,8 @@
   "provenance": {
     "referenceCommitSha": "804f767e2b9e9eb292c8368e60e9f3224a6a54f7",
     "workflowName": "kernel",
-    "workflowRunId": "c3-corpus",
-    "workflowUrl": "https://github.com/DustinTheismann/Cortex-Kernel/actions/runs/c3-corpus"
+    "workflowRunId": "c3-rust",
+    "workflowUrl": "https://github.com/DustinTheismann/Cortex-Kernel/actions/runs/c3-rust"
   },
   "buildEnvironment": {
     "node": "v22.22.2",

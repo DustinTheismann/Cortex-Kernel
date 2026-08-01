@@ -6,11 +6,11 @@ Corpus: oracle **v0.5.1**, schemaVersion **7**, canonicalization **v1**, **52** 
 
 | Implementation | Language | Fixtures | Canonical hashes identical | Declared failing | Status |
 |---|---|---|---|---|---|
-| `rust` | Rust | 30/52 | 30 | 0 | **PASS** |
+| `rust` | Rust | 39/52 | 39 | 0 | **PASS** |
 
 | Implementation | Cases reproduced |
 |---|---|
-| `rust` | mech-kinds, conv-rules, multipath-kind-paths, pair-compat, shape-compat, shape-compat-boundaries, unit-compat, license-compat, classify-lit, synth-test, norm-schema, compute-edges, compute-edges-boundaries, directly-compatible, incompatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, missing-conversion-rule, no-schema, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified |
+| `rust` | mech-kinds, conv-rules, multipath-kind-paths, pair-compat, shape-compat, shape-compat-boundaries, unit-compat, license-compat, classify-lit, synth-test, norm-schema, compute-edges, compute-edges-boundaries, directly-compatible, incompatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, missing-conversion-rule, no-schema, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, dimensionless-unit-pairing, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage |
 
 | Implementation | Semantic areas covered | Not yet covered |
 |---|---|---|
@@ -25,26 +25,26 @@ mutants have been declared for it — which is *not* the same as zero survivors.
 
 | Implementation | Subsystem | Fixtures | Mutation adequacy | Killed / declared | Surviving |
 |---|---|---|---|---|---|
-| `rust` | cascade | incomplete | unqualified | 2/3 | 1 |
+| `rust` | cascade | pass | **qualified** | 3/3 | 0 |
 | `rust` | cascade-compatibility | pass | **qualified** | 3/3 | 0 |
-| `rust` | cascade-planning | incomplete | unqualified | 2/4 | 2 |
+| `rust` | cascade-planning | pass | **qualified** | 4/4 | 0 |
 | `rust` | compatibility | pass | **qualified** | 11/11 | 0 |
-| `rust` | contract-instantiation | incomplete | unqualified | 2/3 | 1 |
+| `rust` | contract-instantiation | pass | unqualified | 2/3 | 1 |
 | `rust` | edge-cost | pass | **qualified** | 3/3 | 0 |
 | `rust` | edge-derivation | pass | **qualified** | 10/10 | 0 |
 | `rust` | impossibility | pass | **qualified** | 3/3 | 0 |
 | `rust` | license-screening | pass | **qualified** | 3/3 | 0 |
-| `rust` | literature-assessment | incomplete | unqualified | 1/3 | 2 |
+| `rust` | literature-assessment | pass | **qualified** | 3/3 | 0 |
 | `rust` | literature-classification | pass | **qualified** | 3/3 | 0 |
 | `rust` | multipath-planning | pass | **qualified** | 7/7 | 0 |
-| `rust` | obligations | incomplete | unqualified | 3/4 | 1 |
+| `rust` | obligations | pass | **qualified** | 4/4 | 0 |
 | `rust` | property-test-skeleton | pass | **qualified** | 2/2 | 0 |
-| `rust` | ranking | incomplete | unqualified | 1/2 | 1 |
+| `rust` | ranking | pass | **qualified** | 2/2 | 0 |
 | `rust` | registry | pass | **qualified** | 5/5 | 0 |
 | `rust` | schema-normalization | pass | **qualified** | 4/4 | 0 |
-| `rust` | stage-advancement | incomplete | unqualified | 2/3 | 1 |
+| `rust` | stage-advancement | pass | **qualified** | 3/3 | 0 |
 | `rust` | types | pass | **qualified** | 3/3 | 0 |
-| `rust` | verdict-derivation | incomplete | unqualified | 3/4 | 1 |
+| `rust` | verdict-derivation | pass | **qualified** | 4/4 | 0 |
 
 ## How to read this
 

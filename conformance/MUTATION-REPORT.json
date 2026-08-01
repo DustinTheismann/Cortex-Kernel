@@ -2,9 +2,9 @@
   "artifact": "mutation-report",
   "interpretation": "A subsystem is mutation-qualified when every declared semantic mutation of its rules is killed by the corpus case that claims to pin it, with the predicted violation observable in the mutant's own output. A hash mismatch alone is not a kill. Subsystems absent from this report have NOT been assessed, which is a different epistemic state from having zero surviving mutants.",
   "integrity": {
-    "manifestSha256": "b86f1a17fe3507f496057d8794d945a86b547d643d76c7b2f2473a91034fb176",
-    "implementationSourceSha256": "72a143d7a829560db21973d55bff9a9175f5d14c6552d044a5ee4b3595ce3753",
-    "registrySha256": "d60d2f26e732e9311c4cb64e12bcef9f0d2051a9f896a84165edff5e747f145f"
+    "manifestSha256": "c9b333c89e82c911ab6ca3575ff148eb9607a8b0fc5b3fe877addfb60028a583",
+    "implementationSourceSha256": "28ade0e7840abf8fb221d1a4299f717f7c47021b8d2b40c56067bfda56b0612e",
+    "registrySha256": "5269db834a3435afce48c8d0285cb451ee6313492133fc6654907d972ef1ef7e"
   },
   "scope": "all",
   "unpinnable": [
@@ -46,13 +46,22 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 3,
-      "killedMutants": 2,
-      "survivingMutants": 1,
+      "killedMutants": 3,
+      "survivingMutants": 0,
       "inconclusiveMutants": 0,
-      "mutationStatus": "unqualified"
+      "mutationStatus": "qualified"
     },
     {
       "subsystem": "cascade-compatibility",
@@ -73,7 +82,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 3,
       "killedMutants": 3,
@@ -100,13 +118,22 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 4,
-      "killedMutants": 2,
-      "survivingMutants": 2,
+      "killedMutants": 4,
+      "survivingMutants": 0,
       "inconclusiveMutants": 0,
-      "mutationStatus": "unqualified"
+      "mutationStatus": "qualified"
     },
     {
       "subsystem": "compatibility",
@@ -130,7 +157,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 11,
       "killedMutants": 11,
@@ -157,7 +193,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 3,
       "killedMutants": 2,
@@ -188,7 +233,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 3,
       "killedMutants": 3,
@@ -227,7 +281,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 3,
       "killedMutants": 3,
@@ -255,7 +318,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 3,
       "killedMutants": 3,
@@ -282,13 +354,22 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 3,
-      "killedMutants": 1,
-      "survivingMutants": 2,
+      "killedMutants": 3,
+      "survivingMutants": 0,
       "inconclusiveMutants": 0,
-      "mutationStatus": "unqualified"
+      "mutationStatus": "qualified"
     },
     {
       "subsystem": "literature-classification",
@@ -310,7 +391,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 3,
       "killedMutants": 3,
@@ -340,7 +430,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 7,
       "killedMutants": 7,
@@ -367,13 +466,22 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 4,
-      "killedMutants": 3,
-      "survivingMutants": 1,
+      "killedMutants": 4,
+      "survivingMutants": 0,
       "inconclusiveMutants": 0,
-      "mutationStatus": "unqualified"
+      "mutationStatus": "qualified"
     },
     {
       "subsystem": "property-test-skeleton",
@@ -395,7 +503,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 2,
       "killedMutants": 2,
@@ -422,13 +539,22 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 2,
-      "killedMutants": 1,
-      "survivingMutants": 1,
+      "killedMutants": 2,
+      "survivingMutants": 0,
       "inconclusiveMutants": 0,
-      "mutationStatus": "unqualified"
+      "mutationStatus": "qualified"
     },
     {
       "subsystem": "registry",
@@ -453,7 +579,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 5,
       "killedMutants": 5,
@@ -481,7 +616,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 4,
       "killedMutants": 4,
@@ -508,13 +652,22 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 3,
-      "killedMutants": 2,
-      "survivingMutants": 1,
+      "killedMutants": 3,
+      "survivingMutants": 0,
       "inconclusiveMutants": 0,
-      "mutationStatus": "unqualified"
+      "mutationStatus": "qualified"
     },
     {
       "subsystem": "types",
@@ -541,7 +694,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 3,
       "killedMutants": 3,
@@ -568,13 +730,22 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "declaredMutants": 4,
-      "killedMutants": 3,
-      "survivingMutants": 1,
+      "killedMutants": 4,
+      "survivingMutants": 0,
       "inconclusiveMutants": 0,
-      "mutationStatus": "unqualified"
+      "mutationStatus": "qualified"
     }
   ],
   "mutants": [
@@ -603,11 +774,19 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "CONVERSION_RULE_MISSING observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "CONVERSION_RULE_MISSING observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "registry-alter-endpoint",
@@ -626,11 +805,13 @@
         "single-conversion-path",
         "equal-cost-path-tie",
         "missing-conversion-rule",
-        "partially-instantiated-obligations"
+        "partially-instantiated-obligations",
+        "option-cap-saturated",
+        "refuted-outranks-unresolved"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "RULE_ENDPOINT_RETARGETED observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, equal-cost-path-tie, missing-conversion-rule, partially-instantiated-obligations"
+      "detail": "RULE_ENDPOINT_RETARGETED observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, equal-cost-path-tie, missing-conversion-rule, partially-instantiated-obligations, option-cap-saturated, refuted-outranks-unresolved"
     },
     {
       "id": "registry-reorder-rules",
@@ -670,11 +851,18 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "DUPLICATE_RULE_SHADOWED observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "DUPLICATE_RULE_SHADOWED observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "registry-flip-authority",
@@ -690,11 +878,14 @@
         "conv-rules",
         "multipath-kind-paths",
         "pair-compat",
-        "partially-instantiated-obligations"
+        "partially-instantiated-obligations",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "refuted-outranks-unresolved"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "RULE_AUTHORITY_RECLASSIFIED observed; killed by conv-rules, multipath-kind-paths, pair-compat, partially-instantiated-obligations"
+      "detail": "RULE_AUTHORITY_RECLASSIFIED observed; killed by conv-rules, multipath-kind-paths, pair-compat, partially-instantiated-obligations, refuted-option-pruned, unresolved-option-outranked, refuted-outranks-unresolved"
     },
     {
       "id": "types-drop-a-kind",
@@ -892,11 +1083,20 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "HARNESS_TEMPLATE_ALTERED observed; killed by synth-test, directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "HARNESS_TEMPLATE_ALTERED observed; killed by synth-test, directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, dimensionless-unit-pairing, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "planner-descending-cost-order",
@@ -922,11 +1122,19 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "PATHS_NOT_RISK_ASCENDING observed; killed by multipath-kind-paths, pair-compat, synth-test, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "PATHS_NOT_RISK_ASCENDING observed; killed by multipath-kind-paths, pair-compat, synth-test, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "planner-unstable-tie-order",
@@ -975,11 +1183,12 @@
       "actualKillers": [
         "multipath-kind-paths",
         "pair-compat",
-        "partially-instantiated-obligations"
+        "partially-instantiated-obligations",
+        "refuted-outranks-unresolved"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "FIVE_STEP_PATHS_ELIMINATED observed; killed by multipath-kind-paths, pair-compat, partially-instantiated-obligations"
+      "detail": "FIVE_STEP_PATHS_ELIMINATED observed; killed by multipath-kind-paths, pair-compat, partially-instantiated-obligations, refuted-outranks-unresolved"
     },
     {
       "id": "planner-retain-four-paths",
@@ -1034,11 +1243,19 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "CONVERTED_PAIR_REPORTED_EXACT observed; killed by multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "CONVERTED_PAIR_REPORTED_EXACT observed; killed by multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "cost-remove-lossy-penalty",
@@ -1057,11 +1274,15 @@
         "synth-test",
         "single-conversion-path",
         "equal-cost-path-tie",
-        "partially-instantiated-obligations"
+        "partially-instantiated-obligations",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "refuted-outranks-unresolved"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "LOSSY_PENALTY_REMOVED observed; killed by conv-rules, multipath-kind-paths, pair-compat, synth-test, single-conversion-path, equal-cost-path-tie, partially-instantiated-obligations"
+      "detail": "LOSSY_PENALTY_REMOVED observed; killed by conv-rules, multipath-kind-paths, pair-compat, synth-test, single-conversion-path, equal-cost-path-tie, partially-instantiated-obligations, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, refuted-outranks-unresolved"
     },
     {
       "id": "cost-remove-curated-penalty",
@@ -1088,11 +1309,19 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "CURATED_AUTHORITY_UNPRICED observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "CURATED_AUTHORITY_UNPRICED observed; killed by conv-rules, multipath-kind-paths, pair-compat, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "cost-remove-destroyed-penalty",
@@ -1119,11 +1348,18 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "DESTROYED_PROPERTIES_UNPRICED observed; killed by conv-rules, multipath-kind-paths, pair-compat, synth-test, single-conversion-path, multiple-competing-paths, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "DESTROYED_PROPERTIES_UNPRICED observed; killed by conv-rules, multipath-kind-paths, pair-compat, synth-test, single-conversion-path, multiple-competing-paths, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "shape-fail-open-on-absent",
@@ -1149,11 +1385,20 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "ABSENT_SHAPE_PROVED observed; killed by shape-compat, shape-compat-boundaries, directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "ABSENT_SHAPE_PROVED observed; killed by shape-compat, shape-compat-boundaries, directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, dimensionless-unit-pairing, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "shape-invert-predicate",
@@ -1269,11 +1514,19 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "ABSENT_UNIT_PROVED observed; killed by unit-compat, directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "ABSENT_UNIT_PROVED observed; killed by unit-compat, directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "unit-drop-contradiction",
@@ -1300,11 +1553,12 @@
         "unit-compat"
       ],
       "actualKillers": [
-        "unit-compat"
+        "unit-compat",
+        "dimensionless-unit-pairing"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "DIMENSIONLESS_TREATED_AS_MATCH observed; killed by unit-compat"
+      "detail": "DIMENSIONLESS_TREATED_AS_MATCH observed; killed by unit-compat, dimensionless-unit-pairing"
     },
     {
       "id": "unit-case-sensitive",
@@ -1526,16 +1780,14 @@
       "rule": "candidate port pairs are enumerated in BOTH directions — B's outputs into A's inputs are considered too",
       "expectedFailure": "REVERSE_DIRECTION_NOT_ENUMERATED",
       "expectedKillers": [
-        "multiple-competing-paths"
+        "reverse-direction-bridge"
       ],
-      "actualKillers": [],
+      "actualKillers": [
+        "reverse-direction-bridge"
+      ],
       "collateralDivergence": [],
-      "outcome": "survived",
-      "detail": "\"candidate port pairs are enumerated in BOTH directions — B's outputs into A's inputs are considered too\" can be violated without any corpus case in scope noticing",
-      "knownUnpinned": {
-        "why": "every cascade fixture puts the producing schema on side A, so no fixture ever selects a B→A bridge and the reverse enumeration is never load-bearing",
-        "closedBy": "a fixture whose schemaA only CONSUMES and whose schemaB produces the matching kind"
-      }
+      "outcome": "killed_correctly",
+      "detail": "REVERSE_DIRECTION_NOT_ENUMERATED observed; killed by reverse-direction-bridge"
     },
     {
       "id": "cascade-probe-miscounts-kills",
@@ -1563,11 +1815,20 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "PROBE_LOG_KILL_FLAG_INVERTED observed; killed by directly-compatible, incompatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, missing-conversion-rule, no-schema, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "PROBE_LOG_KILL_FLAG_INVERTED observed; killed by directly-compatible, incompatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, missing-conversion-rule, no-schema, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, dimensionless-unit-pairing, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "cascade-hollow-check-fails-open",
@@ -1595,11 +1856,20 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "UNGROUNDED_MECHANISM_ACCEPTED observed; killed by directly-compatible, incompatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, missing-conversion-rule, no-schema, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "UNGROUNDED_MECHANISM_ACCEPTED observed; killed by directly-compatible, incompatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, missing-conversion-rule, no-schema, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, dimensionless-unit-pairing, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "impossibility-swap-codes",
@@ -1674,11 +1944,20 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "UNPROVED_SHAPE_NOT_PENALIZED observed; killed by directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "UNPROVED_SHAPE_NOT_PENALIZED observed; killed by directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, dimensionless-unit-pairing, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "cascade-unit-contradiction-cheap",
@@ -1701,33 +1980,32 @@
       "rule": "each UNRESOLVED precondition costs 10 in option scoring — unproven is not the same as proven",
       "expectedFailure": "UNRESOLVED_PRECONDITION_UNPRICED",
       "expectedKillers": [
-        "multiple-competing-paths"
+        "unresolved-option-outranked"
       ],
-      "actualKillers": [],
+      "actualKillers": [
+        "refuted-option-pruned",
+        "unresolved-option-outranked"
+      ],
       "collateralDivergence": [],
-      "outcome": "survived",
-      "detail": "\"each UNRESOLVED precondition costs 10 in option scoring — unproven is not the same as proven\" can be violated without any corpus case in scope noticing",
-      "knownUnpinned": {
-        "why": "no fixture has two viable options that differ in UNRESOLVED-precondition count, so the 10x term never changes which option is selected",
-        "closedBy": "a fixture with a cheaper-by-risk option carrying more unresolved preconditions than a costlier rival"
-      }
+      "outcome": "killed_correctly",
+      "detail": "UNRESOLVED_PRECONDITION_UNPRICED observed; killed by refuted-option-pruned, unresolved-option-outranked"
     },
     {
       "id": "cascade-selects-refuted-path",
       "subsystem": "cascade-planning",
-      "rule": "options with a REFUTED precondition are pruned from selection, and chosen only if nothing else survives",
+      "rule": "a REFUTED precondition excludes its option from selection — enforced by both the score penalty and the prune filter",
       "expectedFailure": "REFUTED_PATH_NOT_PRUNED",
       "expectedKillers": [
-        "soft-precondition-failed"
+        "refuted-option-pruned"
       ],
-      "actualKillers": [],
+      "actualKillers": [
+        "soft-precondition-failed",
+        "refuted-option-pruned",
+        "refuted-outranks-unresolved"
+      ],
       "collateralDivergence": [],
-      "outcome": "survived",
-      "detail": "\"options with a REFUTED precondition are pruned from selection, and chosen only if nothing else survives\" can be violated without any corpus case in scope noticing",
-      "knownUnpinned": {
-        "why": "in the one fixture with a refuted precondition the refuted option is also the only option, so pruning it changes nothing",
-        "closedBy": "a fixture with at least two options where the lowest-risk one is REFUTED and another survives"
-      }
+      "outcome": "killed_correctly",
+      "detail": "REFUTED_PATH_NOT_PRUNED observed; killed by soft-precondition-failed, refuted-option-pruned, refuted-outranks-unresolved"
     },
     {
       "id": "cascade-options-unranked",
@@ -1749,11 +2027,19 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "CASCADE_OPTIONS_NOT_RISK_ASCENDING observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "CASCADE_OPTIONS_NOT_RISK_ASCENDING observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "cascade-widen-option-retention",
@@ -1761,16 +2047,16 @@
       "rule": "exactly three options are retained — the cap is part of the published decision, not a display limit",
       "expectedFailure": "OPTION_RETENTION_CAP_WIDENED",
       "expectedKillers": [
-        "multiple-competing-paths"
+        "option-cap-saturated"
       ],
-      "actualKillers": [],
+      "actualKillers": [
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked"
+      ],
       "collateralDivergence": [],
-      "outcome": "survived",
-      "detail": "\"exactly three options are retained — the cap is part of the published decision, not a display limit\" can be violated without any corpus case in scope noticing",
-      "knownUnpinned": {
-        "why": "no fixture produces more than three candidate options, so the retention cap never binds",
-        "closedBy": "a fixture with multiple produces/consumes ports yielding four or more admissible options"
-      }
+      "outcome": "killed_correctly",
+      "detail": "OPTION_RETENTION_CAP_WIDENED observed; killed by option-cap-saturated, refuted-option-pruned, unresolved-option-outranked"
     },
     {
       "id": "contract-instantiates-axiomatic",
@@ -1799,11 +2085,13 @@
         "partially-instantiated-obligations"
       ],
       "actualKillers": [
-        "partially-instantiated-obligations"
+        "partially-instantiated-obligations",
+        "refuted-option-pruned",
+        "refuted-outranks-unresolved"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "PER_RULE_OVERRIDE_DISCARDED observed; killed by partially-instantiated-obligations"
+      "detail": "PER_RULE_OVERRIDE_DISCARDED observed; killed by partially-instantiated-obligations, refuted-option-pruned, refuted-outranks-unresolved"
     },
     {
       "id": "contract-mapsoft-fails-open",
@@ -1821,11 +2109,16 @@
         "soft-precondition-unresolved",
         "soft-precondition-failed",
         "hard-incompatibility",
-        "partially-instantiated-obligations"
+        "partially-instantiated-obligations",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "UNGRADED_PRECONDITION_TREATED_AS_SATISFIED observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations"
+      "detail": "UNGRADED_PRECONDITION_TREATED_AS_SATISFIED observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, refuted-outranks-unresolved, novel-below-top-stage"
     },
     {
       "id": "po4-license-fails-open",
@@ -1849,11 +2142,20 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "ABSENT_LICENSE_METADATA_PROVED observed; killed by directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "ABSENT_LICENSE_METADATA_PROVED observed; killed by directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, dimensionless-unit-pairing, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "po-vector-reordered",
@@ -1877,11 +2179,20 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "PROOF_OBLIGATION_ORDER_CHANGED observed; killed by directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "PROOF_OBLIGATION_ORDER_CHANGED observed; killed by directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, dimensionless-unit-pairing, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "po3-drops-dimensionless-note",
@@ -1889,16 +2200,14 @@
       "rule": "an unresolved dimensionless comparison says WHY — the note is observable output, not commentary",
       "expectedFailure": "DIMENSIONLESS_RATIONALE_DROPPED",
       "expectedKillers": [
-        "soft-precondition-satisfied"
+        "dimensionless-unit-pairing"
       ],
-      "actualKillers": [],
+      "actualKillers": [
+        "dimensionless-unit-pairing"
+      ],
       "collateralDivergence": [],
-      "outcome": "survived",
-      "detail": "\"an unresolved dimensionless comparison says WHY — the note is observable output, not commentary\" can be violated without any corpus case in scope noticing",
-      "knownUnpinned": {
-        "why": "no fixture selects a bridge whose units are dimensionless on one side and dimensional on the other, so the explanatory clause is never emitted",
-        "closedBy": "a fixture pairing a dimensionless output port with a dimensioned input port"
-      }
+      "outcome": "killed_correctly",
+      "detail": "DIMENSIONLESS_RATIONALE_DROPPED observed; killed by dimensionless-unit-pairing"
     },
     {
       "id": "po8-omitted-on-lossy-path",
@@ -1909,11 +2218,14 @@
         "partially-instantiated-obligations"
       ],
       "actualKillers": [
-        "partially-instantiated-obligations"
+        "partially-instantiated-obligations",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "refuted-outranks-unresolved"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "LOSSY_PATH_CARRIES_NO_PO8 observed; killed by partially-instantiated-obligations"
+      "detail": "LOSSY_PATH_CARRIES_NO_PO8 observed; killed by partially-instantiated-obligations, refuted-option-pruned, unresolved-option-outranked, refuted-outranks-unresolved"
     },
     {
       "id": "ladder-unit-contradiction-advances",
@@ -1952,16 +2264,15 @@
       "rule": "EPISTEMICALLY_SUPPORTED requires BOTH the invariant (PO-6) and the metric (PO-7) obligations",
       "expectedFailure": "LADDER_ADVANCED_WITHOUT_METRIC_OBLIGATION",
       "expectedKillers": [
-        "directly-compatible"
+        "metric-obligation-ungraded"
       ],
-      "actualKillers": [],
+      "actualKillers": [
+        "metric-obligation-ungraded",
+        "novel-below-top-stage"
+      ],
       "collateralDivergence": [],
-      "outcome": "survived",
-      "detail": "\"EPISTEMICALLY_SUPPORTED requires BOTH the invariant (PO-6) and the metric (PO-7) obligations\" can be violated without any corpus case in scope noticing",
-      "knownUnpinned": {
-        "why": "no fixture grades the invariant obligation satisfied while leaving the metric obligation ungraded, so PO-7 never independently decides the top stage",
-        "closedBy": "a fixture with model.invariant satisfied and model.metric unknown"
-      }
+      "outcome": "killed_correctly",
+      "detail": "LADDER_ADVANCED_WITHOUT_METRIC_OBLIGATION observed; killed by metric-obligation-ungraded, novel-below-top-stage"
     },
     {
       "id": "verdict-conversion-claims-shared-object",
@@ -1983,11 +2294,19 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "CONVERTIBLE_PAIR_CLAIMED_AS_SHARED_OBJECT observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "CONVERTIBLE_PAIR_CLAIMED_AS_SHARED_OBJECT observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "verdict-block-reason-priority",
@@ -1995,16 +2314,14 @@
       "rule": "a REFUTED precondition outranks an UNRESOLVED one when naming the blocking reason",
       "expectedFailure": "BLOCK_REASON_PRIORITY_INVERTED",
       "expectedKillers": [
-        "soft-precondition-failed"
+        "refuted-outranks-unresolved"
       ],
-      "actualKillers": [],
+      "actualKillers": [
+        "refuted-outranks-unresolved"
+      ],
       "collateralDivergence": [],
-      "outcome": "survived",
-      "detail": "\"a REFUTED precondition outranks an UNRESOLVED one when naming the blocking reason\" can be violated without any corpus case in scope noticing",
-      "knownUnpinned": {
-        "why": "no fixture carries a REFUTED and an UNRESOLVED precondition at once, so the two branches are never in contention",
-        "closedBy": "a fixture with preOverrides grading one curated step violated and another unknown"
-      }
+      "outcome": "killed_correctly",
+      "detail": "BLOCK_REASON_PRIORITY_INVERTED observed; killed by refuted-outranks-unresolved"
     },
     {
       "id": "verdict-supported-still-blocks",
@@ -2020,11 +2337,17 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "count-without-grounding"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "SUPPORTED_DECISION_CARRIES_BLOCK_REASON observed; killed by directly-compatible, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "SUPPORTED_DECISION_CARRIES_BLOCK_REASON observed; killed by directly-compatible, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, dimensionless-unit-pairing, count-without-grounding"
     },
     {
       "id": "lit-classifies-a-killed-decision",
@@ -2051,16 +2374,14 @@
       "rule": "with grounding OFF no count is reported — the kernel never invents evidence it did not gather",
       "expectedFailure": "LITERATURE_COUNT_INVENTED_WITHOUT_GROUNDING",
       "expectedKillers": [
-        "directly-compatible"
+        "count-without-grounding"
       ],
-      "actualKillers": [],
+      "actualKillers": [
+        "count-without-grounding"
+      ],
       "collateralDivergence": [],
-      "outcome": "survived",
-      "detail": "\"with grounding OFF no count is reported — the kernel never invents evidence it did not gather\" can be violated without any corpus case in scope noticing",
-      "knownUnpinned": {
-        "why": "no fixture supplies a literature count while grounding is off, so there is no count available to leak",
-        "closedBy": "a fixture carrying litCount with litGround absent"
-      }
+      "outcome": "killed_correctly",
+      "detail": "LITERATURE_COUNT_INVENTED_WITHOUT_GROUNDING observed; killed by count-without-grounding"
     },
     {
       "id": "prize-ignores-ladder-stage",
@@ -2068,16 +2389,14 @@
       "rule": "prize candidacy requires EPISTEMICALLY_SUPPORTED — novelty alone never nominates a candidate",
       "expectedFailure": "PRIZE_NOMINATED_BELOW_TOP_STAGE",
       "expectedKillers": [
-        "lit-unexplored"
+        "novel-below-top-stage"
       ],
-      "actualKillers": [],
+      "actualKillers": [
+        "novel-below-top-stage"
+      ],
       "collateralDivergence": [],
-      "outcome": "survived",
-      "detail": "\"prize candidacy requires EPISTEMICALLY_SUPPORTED — novelty alone never nominates a candidate\" can be violated without any corpus case in scope noticing",
-      "knownUnpinned": {
-        "why": "every UNEXPLORED fixture also reaches EPISTEMICALLY_SUPPORTED, so the stage test never independently withholds candidacy",
-        "closedBy": "a fixture with an UNEXPLORED literature class stopping below the top stage"
-      }
+      "outcome": "killed_correctly",
+      "detail": "PRIZE_NOMINATED_BELOW_TOP_STAGE observed; killed by novel-below-top-stage"
     },
     {
       "id": "lit-unexplored-not-promising",
@@ -2088,11 +2407,12 @@
         "lit-unexplored"
       ],
       "actualKillers": [
-        "lit-unexplored"
+        "lit-unexplored",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "NOVELTY_CLASS_LEAKED_INTO_VERDICT observed; killed by lit-unexplored"
+      "detail": "NOVELTY_CLASS_LEAKED_INTO_VERDICT observed; killed by lit-unexplored, novel-below-top-stage"
     },
     {
       "id": "cascade-compat-verdict-always-valid",
@@ -2114,11 +2434,19 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "CONVERSION_REPORTED_AS_TYPE_VALID observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+      "detail": "CONVERSION_REPORTED_AS_TYPE_VALID observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified, reverse-direction-bridge, option-cap-saturated, refuted-option-pruned, unresolved-option-outranked, metric-obligation-ungraded, refuted-outranks-unresolved, count-without-grounding, novel-below-top-stage"
     },
     {
       "id": "cascade-compat-hides-pruning",
@@ -2129,11 +2457,13 @@
         "soft-precondition-failed"
       ],
       "actualKillers": [
-        "soft-precondition-failed"
+        "soft-precondition-failed",
+        "refuted-option-pruned",
+        "refuted-outranks-unresolved"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "PRUNED_PATH_COUNT_SUPPRESSED observed; killed by soft-precondition-failed"
+      "detail": "PRUNED_PATH_COUNT_SUPPRESSED observed; killed by soft-precondition-failed, refuted-option-pruned, refuted-outranks-unresolved"
     },
     {
       "id": "cascade-compat-lossy-flag-dropped",
@@ -2144,11 +2474,14 @@
         "partially-instantiated-obligations"
       ],
       "actualKillers": [
-        "partially-instantiated-obligations"
+        "partially-instantiated-obligations",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "refuted-outranks-unresolved"
       ],
       "collateralDivergence": [],
       "outcome": "killed_correctly",
-      "detail": "LOSSY_ADAPTER_REPORTED_AS_LOSSLESS observed; killed by partially-instantiated-obligations"
+      "detail": "LOSSY_ADAPTER_REPORTED_AS_LOSSLESS observed; killed by partially-instantiated-obligations, refuted-option-pruned, unresolved-option-outranked, refuted-outranks-unresolved"
     }
   ]
 }

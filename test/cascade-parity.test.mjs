@@ -36,9 +36,10 @@ const built = existsSync(BINARY);
 const run = (args) => JSON.parse(execFileSync(BINARY, args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
 
 // C3 added nine boundary cases, each written because a semantic mutation of the
-// cascade survived the original seventeen. The Rust peer does not implement them
-// yet, so this file states that boundary explicitly rather than quietly
-// narrowing what it checks — an undeclared case is pending work, not a pass.
+// cascade survived the original seventeen. The Rust peer now implements all of
+// them, so the pending set is empty — but the list stays, because the assertion
+// below is EXACT: it names what may legitimately be undeclared, and an empty
+// list is the strongest form of that claim.
 const C3_BOUNDARY_CASES = [
   "count-without-grounding", "dimensionless-unit-pairing", "metric-obligation-ungraded",
   "novel-below-top-stage", "option-cap-saturated", "refuted-option-pruned",
@@ -51,20 +52,18 @@ test("the corpus contains 26 cascade fixtures: 17 from C1 plus 9 C3 boundary cas
   assert.deepEqual(C3_BOUNDARY_CASES.filter((id) => !ids.has(id)), []);
 });
 
-test("the Rust peer declares every cascade fixture except the pending C3 boundary cases",
+test("the Rust peer declares every cascade fixture, including the nine C3 boundary cases",
   { skip: built ? false : "run: npm run conformance:build" }, () => {
     const declared = new Set(run(["--cases"]));
     const missing = cascadeCases.filter((c) => !declared.has(c.caseId)).map((c) => c.caseId).sort();
-    // Exact, not a subset: a C1 case silently dropping out would otherwise hide
-    // inside a "some cases are pending" allowance.
-    assert.deepEqual(missing, [...C3_BOUNDARY_CASES].sort(),
-      "the only undeclared cascade fixtures may be the pending C3 boundary cases");
+    assert.deepEqual(missing, [], "every cascade fixture must be declared, not silently omitted");
+    assert.deepEqual(C3_BOUNDARY_CASES.filter((id) => !declared.has(id)), [],
+      "the C3 boundary cases are the ones that pin the cascade's mutation adequacy");
   });
 
-test("the Rust peer reproduces every cascade fixture it declares", { skip: built ? false : "run: npm run conformance:build" }, () => {
-  const declared = new Set(run(["--cases"]));
+test("the Rust peer reproduces every cascade fixture hash", { skip: built ? false : "run: npm run conformance:build" }, () => {
   const failures = [];
-  for (const c of cascadeCases.filter((x) => declared.has(x.caseId))) {
+  for (const c of cascadeCases) {
     const payload = run([c.caseId]);
     const fixture = JSON.parse(readFileSync(join(root, "test/golden", c.fixture), "utf8"));
     // The conformance wrapping, verbatim: the verifier re-canonicalizes, so

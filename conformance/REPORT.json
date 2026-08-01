@@ -1,13 +1,13 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-08-01T01:44:12.530Z",
+  "generatedAt": "2026-08-01T02:03:54.256Z",
   "ciRun": null,
   "integrity": {
-    "manifestSha256": "b86f1a17fe3507f496057d8794d945a86b547d643d76c7b2f2473a91034fb176",
+    "manifestSha256": "c9b333c89e82c911ab6ca3575ff148eb9607a8b0fc5b3fe877addfb60028a583",
     "canonicalizationSpecSha256": "5ed64bf745d2e41c8287052859200711f879ba605d8b5c3fa17ee9d91c267d1d",
     "canonicalizerSha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8",
     "verifierSha256": "8e9e9f9de79c326c5bea15370e554433f832088cbfcb00b675f0cbcff3857c24",
-    "baselineSha256": "c71bea01ee003d33349468d6a579eed578f3075090a412b928cfb0ffb930a286",
+    "baselineSha256": "25bd6cf5f7f096769df0462ed349e37e0ddd216a64f60d88771a870669e71215",
     "referenceSourceSha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
   },
   "corpus": {
@@ -25,8 +25,8 @@
       "implementation": "rust",
       "language": "Rust",
       "status": "pass",
-      "fixtures": "30/52",
-      "canonicalHashesIdentical": 30,
+      "fixtures": "39/52",
+      "canonicalHashesIdentical": 39,
       "declaredCasesFailing": 0,
       "cases": [
         "mech-kinds",
@@ -58,7 +58,16 @@
         "lit-unexplored",
         "lit-emerging",
         "lit-known",
-        "lit-unverified"
+        "lit-unverified",
+        "reverse-direction-bridge",
+        "option-cap-saturated",
+        "refuted-option-pruned",
+        "unresolved-option-outranked",
+        "dimensionless-unit-pairing",
+        "metric-obligation-ungraded",
+        "refuted-outranks-unresolved",
+        "count-without-grounding",
+        "novel-below-top-stage"
       ],
       "semanticAreasCovered": [
         "cascade",
@@ -408,8 +417,8 @@
         {
           "fixture": "reverse-direction-bridge",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "cascade-planning",
             "ranking",
@@ -419,8 +428,8 @@
         {
           "fixture": "option-cap-saturated",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "cascade-planning",
             "ranking",
@@ -430,8 +439,8 @@
         {
           "fixture": "refuted-option-pruned",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "contract-instantiation",
             "obligations",
@@ -441,8 +450,8 @@
         {
           "fixture": "unresolved-option-outranked",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "contract-instantiation",
             "obligations",
@@ -452,8 +461,8 @@
         {
           "fixture": "dimensionless-unit-pairing",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "obligations",
             "cascade"
@@ -462,8 +471,8 @@
         {
           "fixture": "metric-obligation-ungraded",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "stage-advancement",
             "cascade"
@@ -472,8 +481,8 @@
         {
           "fixture": "refuted-outranks-unresolved",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "obligations",
             "cascade"
@@ -482,8 +491,8 @@
         {
           "fixture": "count-without-grounding",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "literature-assessment",
             "verdict-derivation",
@@ -493,8 +502,8 @@
         {
           "fixture": "novel-below-top-stage",
           "implementation": "rust",
-          "status": "not_implemented",
-          "hashMatch": false,
+          "status": "supported",
+          "hashMatch": true,
           "semanticAreas": [
             "literature-assessment",
             "verdict-derivation",
@@ -635,11 +644,11 @@
       "subsystems": [
         {
           "subsystem": "cascade",
-          "fixtureStatus": "incomplete",
-          "mutationStatus": "unqualified",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
           "declaredMutants": 3,
-          "killedMutants": 2,
-          "survivingMutants": 1,
+          "killedMutants": 3,
+          "survivingMutants": 0,
           "inconclusiveMutants": 0
         },
         {
@@ -653,11 +662,11 @@
         },
         {
           "subsystem": "cascade-planning",
-          "fixtureStatus": "incomplete",
-          "mutationStatus": "unqualified",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
           "declaredMutants": 4,
-          "killedMutants": 2,
-          "survivingMutants": 2,
+          "killedMutants": 4,
+          "survivingMutants": 0,
           "inconclusiveMutants": 0
         },
         {
@@ -671,7 +680,7 @@
         },
         {
           "subsystem": "contract-instantiation",
-          "fixtureStatus": "incomplete",
+          "fixtureStatus": "pass",
           "mutationStatus": "unqualified",
           "declaredMutants": 3,
           "killedMutants": 2,
@@ -716,11 +725,11 @@
         },
         {
           "subsystem": "literature-assessment",
-          "fixtureStatus": "incomplete",
-          "mutationStatus": "unqualified",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
           "declaredMutants": 3,
-          "killedMutants": 1,
-          "survivingMutants": 2,
+          "killedMutants": 3,
+          "survivingMutants": 0,
           "inconclusiveMutants": 0
         },
         {
@@ -743,11 +752,11 @@
         },
         {
           "subsystem": "obligations",
-          "fixtureStatus": "incomplete",
-          "mutationStatus": "unqualified",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
           "declaredMutants": 4,
-          "killedMutants": 3,
-          "survivingMutants": 1,
+          "killedMutants": 4,
+          "survivingMutants": 0,
           "inconclusiveMutants": 0
         },
         {
@@ -761,11 +770,11 @@
         },
         {
           "subsystem": "ranking",
-          "fixtureStatus": "incomplete",
-          "mutationStatus": "unqualified",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
           "declaredMutants": 2,
-          "killedMutants": 1,
-          "survivingMutants": 1,
+          "killedMutants": 2,
+          "survivingMutants": 0,
           "inconclusiveMutants": 0
         },
         {
@@ -788,11 +797,11 @@
         },
         {
           "subsystem": "stage-advancement",
-          "fixtureStatus": "incomplete",
-          "mutationStatus": "unqualified",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
           "declaredMutants": 3,
-          "killedMutants": 2,
-          "survivingMutants": 1,
+          "killedMutants": 3,
+          "survivingMutants": 0,
           "inconclusiveMutants": 0
         },
         {
@@ -806,15 +815,15 @@
         },
         {
           "subsystem": "verdict-derivation",
-          "fixtureStatus": "incomplete",
-          "mutationStatus": "unqualified",
+          "fixtureStatus": "pass",
+          "mutationStatus": "qualified",
           "declaredMutants": 4,
-          "killedMutants": 3,
-          "survivingMutants": 1,
+          "killedMutants": 4,
+          "survivingMutants": 0,
           "inconclusiveMutants": 0
         }
       ],
-      "binarySha256": "a2c1aca82ba74b0e7b39ad122a902a2c6f3c991345282a3bdd028b6c88c639d3",
+      "binarySha256": "3f89c92a3b5fb25facdea725183ffb38a3205ce7192eecf61d4b1aa237076a5f",
       "toolchain": {
         "compiler": "rustc 1.94.1 (e408947bf 2026-03-25)",
         "targetTriple": "x86_64-unknown-linux-gnu",

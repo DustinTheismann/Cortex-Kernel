@@ -27,10 +27,10 @@ verification works in a shallow checkout, from a tarball, or with no git at all.
 | Canonicalization version | `1` |
 | schemaVersion | `7` |
 | Fixture count | `52` |
-| Manifest hash (sha256 of `test/golden/manifest.json`) | `b86f1a17fe3507f496057d8794d945a86b547d643d76c7b2f2473a91034fb176` |
+| Manifest hash (sha256 of `test/golden/manifest.json`) | `c9b333c89e82c911ab6ca3575ff148eb9607a8b0fc5b3fe877addfb60028a583` |
 | Invariant-set hash (sha256 of `test/oracle/invariants.mjs`) | `1028978d419a76061111d1207093542d409c7459abf285e2a3594535d88ddde4` |
 | Canonicalizer hash (sha256 of `test/oracle/canonicalize.mjs`) | `9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8` |
-| Verifying workflow run | `c3-corpus` |
+| Verifying workflow run | `c3-rust` |
 | Build environment | see JSON `buildEnvironment` (Node, npm, platform, arch) |
 
 ## Acceptance

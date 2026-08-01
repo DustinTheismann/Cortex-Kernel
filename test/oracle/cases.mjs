@@ -214,15 +214,21 @@ export const CASCADE_CASES = [
 
   // kills cascade-selects-refuted-path: two viable options where the curated
   // one is REFUTED by name, so pruning it decides the selection.
+  // Same schemas as unresolved-option-outranked, so the ONLY difference is how
+  // the cheapest curated step is graded. normalize is the lowest-risk option;
+  // refuting it must cost enough to lose to the costlier axiomatic reduce.
   { caseId: "refuted-option-pruned", category: "preconditions",
-    input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("distribution"), port("dataset")]),
+    input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("distribution"), port("scalar")]),
              model: { preOverrides: { "tensor>distribution:normalize": "violated" }, invariant: "satisfied", metric: "satisfied" } },
     expect: { stage: "EPISTEMICALLY_SUPPORTED", verdict: "conversion_required", block: null, code: null } },
 
   // kills cascade-unresolved-precondition-free: same shape, but the curated
   // step is merely UNGRADED. Only the 10x unresolved weight separates them.
+  // normalize (curated, one ungraded precondition) is CHEAPER than reduce
+  // (axiomatic, lossy). Only the 10x unresolved weight reverses that order —
+  // pairing it against a costlier curated option would prove nothing.
   { caseId: "unresolved-option-outranked", category: "preconditions",
-    input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("distribution"), port("dataset")]),
+    input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("distribution"), port("scalar")]),
              model: { invariant: "satisfied", metric: "satisfied" } },
     expect: { stage: "EPISTEMICALLY_SUPPORTED", verdict: "conversion_required", block: null, code: null } },
 
