@@ -2,7 +2,7 @@
   "artifact": "mutation-report",
   "interpretation": "A subsystem is mutation-qualified when every declared semantic mutation of its rules is killed by the corpus case that claims to pin it, with the predicted violation observable in the mutant's own output. A hash mismatch alone is not a kill. Subsystems absent from this report have NOT been assessed, which is a different epistemic state from having zero surviving mutants.",
   "integrity": {
-    "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
+    "manifestSha256": "b86f1a17fe3507f496057d8794d945a86b547d643d76c7b2f2473a91034fb176",
     "implementationSourceSha256": "72a143d7a829560db21973d55bff9a9175f5d14c6552d044a5ee4b3595ce3753",
     "registrySha256": "d60d2f26e732e9311c4cb64e12bcef9f0d2051a9f896a84165edff5e747f145f"
   },

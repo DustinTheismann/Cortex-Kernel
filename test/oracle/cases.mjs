@@ -189,6 +189,73 @@ export const CASCADE_CASES = [
   { caseId: "lit-unverified", category: "literature",
     input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("distribution")]), model: allSat, litGround: true, litCount: null },
     expect: { stage: "EPISTEMICALLY_SUPPORTED", verdict: "conversion_required", block: null, code: null, litClass: "UNVERIFIED", finalVerdict: "UNVERIFIED", prize: false } },
+
+  // ---- C3: boundary cases ------------------------------------------------
+  // Each of these exists because a semantic mutation of the cascade SURVIVED
+  // the corpus above. The seventeen cases before this point are discriminating
+  // about what they touch and silent about what they do not: they never place
+  // the producing schema on side B, never saturate the option cap, never put a
+  // refuted and an unresolved precondition in contention, and never pair a
+  // dimensionless port with a dimensioned one. Every case below reaches exactly
+  // one of those boundaries, and each names the mutant it kills. Nothing here
+  // changes an existing fixture — the corpus grows, it does not move.
+
+  // kills cascade-one-directional-pairing: A only CONSUMES, so every candidate
+  // pair comes from the B→A enumeration.
+  { caseId: "reverse-direction-bridge", category: "planning",
+    input: { schemaA: schema([], [port("distribution")]), schemaB: schema([port("tensor")]), model: allSat },
+    expect: { stage: "EPISTEMICALLY_SUPPORTED", verdict: "conversion_required", block: null, code: null } },
+
+  // kills cascade-widen-option-retention: two produces against two consumes
+  // yields more admissible options than the retention cap keeps.
+  { caseId: "option-cap-saturated", category: "planning",
+    input: { schemaA: schema([port("tensor"), port("graph")]), schemaB: schema([], [port("dataset"), port("scalar")]), model: allSat },
+    expect: { stage: "EPISTEMICALLY_SUPPORTED", verdict: "conversion_required", block: null, code: null } },
+
+  // kills cascade-selects-refuted-path: two viable options where the curated
+  // one is REFUTED by name, so pruning it decides the selection.
+  { caseId: "refuted-option-pruned", category: "preconditions",
+    input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("distribution"), port("dataset")]),
+             model: { preOverrides: { "tensor>distribution:normalize": "violated" }, invariant: "satisfied", metric: "satisfied" } },
+    expect: { stage: "EPISTEMICALLY_SUPPORTED", verdict: "conversion_required", block: null, code: null } },
+
+  // kills cascade-unresolved-precondition-free: same shape, but the curated
+  // step is merely UNGRADED. Only the 10x unresolved weight separates them.
+  { caseId: "unresolved-option-outranked", category: "preconditions",
+    input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("distribution"), port("dataset")]),
+             model: { invariant: "satisfied", metric: "satisfied" } },
+    expect: { stage: "EPISTEMICALLY_SUPPORTED", verdict: "conversion_required", block: null, code: null } },
+
+  // kills po3-drops-dimensionless-note: dimensionless carries no dimensional
+  // claim, so PO-3 is UNRESOLVED and must say why.
+  { caseId: "dimensionless-unit-pairing", category: "obligations",
+    input: { schemaA: schema([port("tensor", { units: "dimensionless" })]), schemaB: schema([], [port("tensor", { units: "probability" })]), model: allSat },
+    expect: { stage: "EPISTEMICALLY_SUPPORTED", verdict: "type_valid", block: null, code: null } },
+
+  // kills ladder-epistemic-ignores-metric: the invariant obligation is graded
+  // and the metric one is not, so PO-7 alone withholds the top stage.
+  { caseId: "metric-obligation-ungraded", category: "ladder",
+    input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("distribution")]), model: { pre: "satisfied", invariant: "satisfied" } },
+    expect: { stage: "CONTRACT_ADMISSIBLE", verdict: "conversion_required", block: "EVIDENCE_PENDING", code: null } },
+
+  // kills verdict-block-reason-priority: one curated step violated and another
+  // ungraded, so the two blockReason branches are in contention.
+  { caseId: "refuted-outranks-unresolved", category: "obligations",
+    input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("certificate")]),
+             model: { preOverrides: { "scalar>bound:threshold": "violated", "bound>certificate:wrap": "unknown" }, invariant: "unknown", metric: "unknown" } },
+    expect: { stage: "TYPE_COMPOSABLE", verdict: "conversion_required", block: "PRECONDITION_UNSATISFIED", code: null } },
+
+  // kills lit-invents-a-count-when-ungrounded: a count is supplied while
+  // grounding is OFF. The kernel must not report evidence it did not gather.
+  { caseId: "count-without-grounding", category: "literature",
+    input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("distribution")]), model: allSat, litCount: 10 },
+    expect: { stage: "EPISTEMICALLY_SUPPORTED", verdict: "conversion_required", block: null, code: null, litClass: "OFF", finalVerdict: "PLAUSIBLE", prize: false } },
+
+  // kills prize-ignores-ladder-stage: UNEXPLORED novelty stopping below the top
+  // stage. Novelty alone never nominates a candidate.
+  { caseId: "novel-below-top-stage", category: "literature",
+    input: { schemaA: schema([port("tensor")]), schemaB: schema([], [port("distribution")]), model: { pre: "satisfied", invariant: "satisfied" }, litGround: true, litCount: 10 },
+    expect: { stage: "CONTRACT_ADMISSIBLE", verdict: "conversion_required", block: "EVIDENCE_PENDING", code: null, litClass: "UNEXPLORED", finalVerdict: "PROMISING", prize: false } },
 ];
 
 // Cross-case behavioral claims (checked by the harness): identical ladder

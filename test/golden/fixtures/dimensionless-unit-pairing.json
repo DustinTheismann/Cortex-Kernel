@@ -1,0 +1,282 @@
+{
+  "caseId": "dimensionless-unit-pairing",
+  "category": "obligations",
+  "input": {
+    "model": {
+      "invariant": "satisfied",
+      "metric": "satisfied",
+      "pre": "satisfied"
+    },
+    "schemaA": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "dimensionless"
+        }
+      ]
+    },
+    "schemaB": {
+      "assumptions": [
+        "assumption-x"
+      ],
+      "certifies": [],
+      "consumes": [
+        {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "unspecified",
+          "units": "probability"
+        }
+      ],
+      "invariants": [
+        "invariant-y"
+      ],
+      "produces": []
+    }
+  },
+  "output": {
+    "blockReason": null,
+    "bridge": {
+      "adapters": [],
+      "destroyedProperties": [],
+      "dir": "A→B",
+      "executableTest": "// generated property-test harness (unexecuted in-artifact — a RunPack for a real backend)\nproperty('tensor→tensor preserves semantics', () => {\n  const x = sample_tensor();          // tensor mechanism\n  const y = x;\n  assert isValid_tensor(y);            // tensor mechanism\n  assert approxPreserves(semantics(x), semantics(y), eps);\n});",
+      "preservedInvariants": [
+        "invariant-y"
+      ],
+      "proofObligations": [
+        {
+          "detail": "tensor ≡ tensor",
+          "id": "PO-1",
+          "method": "deterministic",
+          "name": "Kind path",
+          "status": "PROVED"
+        },
+        {
+          "detail": "unspecified ⟶ unspecified",
+          "id": "PO-2",
+          "method": "deterministic",
+          "name": "Shape compatibility",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "dimensionless ⟶ probability (dimensionless ≠ dimensional — not auto-proved)",
+          "id": "PO-3",
+          "method": "deterministic",
+          "name": "Unit preservation",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "? / ? — license metadata absent",
+          "id": "PO-4",
+          "method": "deterministic",
+          "name": "License metadata screening",
+          "status": "UNRESOLVED"
+        },
+        {
+          "detail": "path is fully axiomatic — no semantic precondition",
+          "id": "PO-5",
+          "method": "deterministic",
+          "name": "Preconditions",
+          "status": "PROVED"
+        },
+        {
+          "detail": "no properties destroyed on path",
+          "id": "PO-6",
+          "method": "model-assisted",
+          "name": "Invariant preservation",
+          "status": "CONDITIONALLY-SATISFIED"
+        },
+        {
+          "detail": "",
+          "id": "PO-7",
+          "method": "model-assisted",
+          "name": "Metric measures outcome",
+          "status": "CONDITIONALLY-SATISFIED"
+        }
+      ],
+      "requiredAssumptions": [
+        "assumption-x"
+      ],
+      "riskCost": 1,
+      "ruleInstantiations": [],
+      "sourcePort": {
+        "kind": "tensor",
+        "name": "t",
+        "semantics": "tensor mechanism",
+        "shape": "",
+        "units": "dimensionless"
+      },
+      "targetPort": {
+        "kind": "tensor",
+        "name": "t",
+        "semantics": "tensor mechanism",
+        "shape": "",
+        "units": "probability"
+      }
+    },
+    "finalVerdict": "PLAUSIBLE",
+    "impossibility": null,
+    "litClass": "OFF",
+    "litCount": null,
+    "litNote": "␀undefined",
+    "mechClass": {
+      "sourceKind": "tensor",
+      "targetKind": "tensor"
+    },
+    "mechCompat": {
+      "consideredPaths": 1,
+      "matchedPorts": [
+        {
+          "adapter": [],
+          "compatibility": "exact",
+          "dir": "A→B",
+          "lossy": false,
+          "sourceOutput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": "dimensionless"
+          },
+          "targetInput": {
+            "kind": "tensor",
+            "name": "t",
+            "semantics": "tensor mechanism",
+            "shape": "",
+            "units": "probability"
+          }
+        }
+      ],
+      "prunedPaths": 0,
+      "sharedFormalObject": true,
+      "verdict": "type_valid"
+    },
+    "mechanismGrounded": true,
+    "modelEstimated": false,
+    "obligations": [
+      {
+        "detail": "tensor ≡ tensor",
+        "id": "PO-1",
+        "method": "deterministic",
+        "name": "Kind path",
+        "status": "PROVED"
+      },
+      {
+        "detail": "unspecified ⟶ unspecified",
+        "id": "PO-2",
+        "method": "deterministic",
+        "name": "Shape compatibility",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "dimensionless ⟶ probability (dimensionless ≠ dimensional — not auto-proved)",
+        "id": "PO-3",
+        "method": "deterministic",
+        "name": "Unit preservation",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "? / ? — license metadata absent",
+        "id": "PO-4",
+        "method": "deterministic",
+        "name": "License metadata screening",
+        "status": "UNRESOLVED"
+      },
+      {
+        "detail": "path is fully axiomatic — no semantic precondition",
+        "id": "PO-5",
+        "method": "deterministic",
+        "name": "Preconditions",
+        "status": "PROVED"
+      },
+      {
+        "detail": "no properties destroyed on path",
+        "id": "PO-6",
+        "method": "model-assisted",
+        "name": "Invariant preservation",
+        "status": "CONDITIONALLY-SATISFIED"
+      },
+      {
+        "detail": "",
+        "id": "PO-7",
+        "method": "model-assisted",
+        "name": "Metric measures outcome",
+        "status": "CONDITIONALLY-SATISFIED"
+      }
+    ],
+    "options": [
+      {
+        "adapters": [],
+        "dir": "A→B",
+        "exact": true,
+        "risk": 1,
+        "sourceOutput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": "dimensionless"
+        },
+        "staticRisk": 0,
+        "targetInput": {
+          "kind": "tensor",
+          "name": "t",
+          "semantics": "tensor mechanism",
+          "shape": "",
+          "units": "probability"
+        },
+        "unit": "unresolved"
+      }
+    ],
+    "preregId": "prereg:<id>",
+    "prizeCandidate": null,
+    "probeLogEntry": {
+      "cellName": "cellA×cellB",
+      "density": 0,
+      "killedByType": 0,
+      "mechClasses": [
+        {
+          "sourceKind": "tensor",
+          "targetKind": "tensor"
+        }
+      ],
+      "paperCount": null,
+      "prize": false,
+      "verdict": "INCOHERENT"
+    },
+    "stage": "EPISTEMICALLY_SUPPORTED",
+    "typeCheck": {
+      "pass": true,
+      "reason": "shared formal object — reached EPISTEMICALLY_SUPPORTED",
+      "sharedObject": "tensor: tensor mechanism",
+      "stage": "EPISTEMICALLY_SUPPORTED",
+      "verdict": "type_valid"
+    },
+    "verifications": [
+      {
+        "instrument": "typecheck",
+        "result": "pass",
+        "sharedObject": "tensor: tensor mechanism"
+      },
+      {
+        "count": null,
+        "instrument": "openalex",
+        "preregId": "prereg:<id>",
+        "result": "OFF"
+      }
+    ]
+  }
+}
