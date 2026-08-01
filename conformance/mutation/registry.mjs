@@ -60,6 +60,22 @@ export const SUBSYSTEM_SCOPE = {
   "schema-normalization": ["norm-schema", ...CASCADE],
   "literature-classification": ["classify-lit", ...CASCADE],
   "property-test-skeleton": ["synth-test", ...CASCADE],
+
+  // C2. The cascade subsystems scope to the cascade fixtures ALONE. That is a
+  // much stronger confinement claim than the deterministic subsystems above can
+  // make: the cascade sits downstream of them, so nothing it does should reach
+  // `conv-rules`, `shape-compat`, `compute-edges` or any other declared case.
+  // The 13 non-cascade declared cases are controls for every mutant here.
+  "cascade": [...CASCADE],
+  "cascade-compatibility": [...CASCADE],
+  "cascade-planning": [...CASCADE],
+  "ranking": [...CASCADE],
+  "contract-instantiation": [...CASCADE],
+  "obligations": [...CASCADE],
+  "stage-advancement": [...CASCADE],
+  "verdict-derivation": [...CASCADE],
+  "literature-assessment": [...CASCADE],
+  "impossibility": [...CASCADE],
 };
 
 // Rules that no corpus can pin OVER THIS STATE SPACE, recorded rather than
@@ -176,6 +192,32 @@ const normRows = (out) => out["norm-schema"] || [];
 const litRows = (out) => out["classify-lit"] || [];
 const synthRows = (out) => out["synth-test"] || [];
 const allPorts = (out) => normRows(out).flatMap((r) => [...((r.out || {}).consumes || []), ...((r.out || {}).produces || [])]);
+
+// ---- cascade helpers -------------------------------------------------------
+// A cascade payload is { input, output }; `output` is the decision object. Only
+// in-scope cases reach an assertion, so `everyDecision` iterates exactly the
+// cascade fixtures.
+
+const dec = (out, caseId) => (out[caseId] || {}).output || {};
+const everyDecision = (out) => Object.values(out).filter((v) => v && v.output).map((v) => v.output);
+const obligationsOf = (out, caseId) => dec(out, caseId).obligations || [];
+/** One proof obligation by id, e.g. PO-3. PO-5 splits into PO-5.1, PO-5.2… */
+const po = (out, caseId, id) => obligationsOf(out, caseId).find((o) => o.id === id) || {};
+const poIds = (out, caseId) => obligationsOf(out, caseId).map((o) => o.id);
+const bridgeOf = (out, caseId) => dec(out, caseId).bridge;
+const optionsOf = (out, caseId) => dec(out, caseId).options || [];
+const instOf = (out, caseId) => (bridgeOf(out, caseId) || {}).ruleInstantiations || [];
+/** The three impossibility cases: no bridge key at all, not a null one. */
+const IMPOSSIBLE = ["incompatible", "missing-conversion-rule", "no-schema"];
+/**
+ * Compare each in-scope decision against the CORPUS-CORRECT one for the same
+ * case, keyed by caseId. Some cascade rules are only violable relative to the
+ * right answer — "a cheaper option was selected" has no absolute form — and
+ * pairing them up positionally silently compares one case against another's
+ * reference the moment the two collections differ in shape.
+ */
+const diverged = (out, refs, fn) => Object.keys(out).some((id) =>
+  fn(dec(out, id), ((refs[id] || {}).output) || {}, id));
 
 export const MUTATIONS = [
   // ---- registry: conversion topology --------------------------------------
@@ -830,5 +872,487 @@ export const MUTATIONS = [
       const e = edgesOf(out, "compute-edges-boundaries", "duplicate-names");
       return e.length !== 1 || e[0].target !== "dup-b";
     },
+  },
+
+  // ==========================================================================
+  // C2 — the cascade.
+  //
+  // C1 established that the Rust peer reproduces the 17 cascade fixtures. That
+  // is agreement, not adequacy: it says nothing about whether those fixtures
+  // would notice a WRONG cascade. Everything below asks the second question,
+  // one semantic boundary at a time.
+  //
+  // Every mutant here scopes to the cascade fixtures alone. The cascade sits
+  // downstream of the deterministic subsystems, so none of these edits should
+  // reach `conv-rules`, `shape-compat`, `compute-edges` or any other declared
+  // case — all 13 non-cascade declared cases are collateral controls.
+  // ==========================================================================
+
+  // ---- cascade: cross-cutting ---------------------------------------------
+  {
+    id: "cascade-one-directional-pairing",
+    knownUnpinned: {
+      why: "every cascade fixture puts the producing schema on side A, so no fixture ever selects a B→A bridge and the reverse enumeration is never load-bearing",
+      closedBy: "a fixture whose schemaA only CONSUMES and whose schemaB produces the matching kind",
+    },
+    subsystem: "cascade",
+    rule: "candidate port pairs are enumerated in BOTH directions — B's outputs into A's inputs are considered too",
+    find: `        for po in &b.produces { for ci in &a.consumes { pairs.push(("B→A", po.clone(), ci.clone())); } }`,
+    replace: "",
+    expectedOccurrences: 1,
+    expectedKillers: ["multiple-competing-paths"],
+    expectedFailure: "REVERSE_DIRECTION_NOT_ENUMERATED",
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      (want.options || []).length > (d.options || []).length),
+  },
+  {
+    id: "cascade-probe-miscounts-kills",
+    subsystem: "cascade",
+    rule: "the probe log records whether the pairing was killed by typecheck — every decision publishes this",
+    find: `("killedByType", J::N(if pass { 0.0 } else { 1.0 })),`,
+    replace: `("killedByType", J::N(if pass { 1.0 } else { 0.0 })),`,
+    expectedOccurrences: 1,
+    expectedKillers: ["directly-compatible", "incompatible"],
+    expectedFailure: "PROBE_LOG_KILL_FLAG_INVERTED",
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      (d.probeLogEntry || {}).killedByType !== (want.probeLogEntry || {}).killedByType),
+  },
+  {
+    id: "cascade-hollow-check-fails-open",
+    subsystem: "cascade",
+    rule: "mechanismGrounded is reported, and an ungrounded mechanism is INCOHERENT regardless of the ladder",
+    find: "let grounded = true; // hollow verdict is PLAUSIBLE in every cascade case",
+    replace: "let grounded = false; // hollow verdict is PLAUSIBLE in every cascade case",
+    expectedOccurrences: 1,
+    expectedKillers: ["directly-compatible", "lit-unexplored"],
+    expectedFailure: "UNGROUNDED_MECHANISM_ACCEPTED",
+    assert: (out) => everyDecision(out).some((d) => d.mechanismGrounded === false),
+  },
+
+  // ---- impossibility -------------------------------------------------------
+  {
+    id: "impossibility-swap-codes",
+    subsystem: "impossibility",
+    rule: "NO_KIND_PATH means ports paired but no conversion exists; NO_SHARED_PORTS means nothing paired at all",
+    find: 'if both { if n_pairs > 0 { "NO_KIND_PATH" } else { "NO_SHARED_PORTS" } } else { "NO_SCHEMA" }',
+    replace: 'if both { if n_pairs > 0 { "NO_SHARED_PORTS" } else { "NO_KIND_PATH" } } else { "NO_SCHEMA" }',
+    expectedOccurrences: 1,
+    expectedKillers: ["incompatible", "missing-conversion-rule"],
+    expectedFailure: "IMPOSSIBILITY_CODE_MISATTRIBUTED",
+    assert: (out) => IMPOSSIBLE.some((id) => {
+      const i = dec(out, id).impossibility;
+      return i && i.code === "NO_SHARED_PORTS" && /no admissible conversion/.test(i.detail || "");
+    }),
+  },
+  {
+    id: "impossibility-one-schema-suffices",
+    subsystem: "impossibility",
+    rule: "a missing schema on EITHER side is NO_SCHEMA — fail-closed, not one-sided planning",
+    find: "let both = a_present && b_present;",
+    replace: "let both = a_present || b_present;",
+    expectedOccurrences: 1,
+    expectedKillers: ["no-schema"],
+    expectedFailure: "ABSENT_SCHEMA_NOT_FAIL_CLOSED",
+    assert: (out) => (dec(out, "no-schema").impossibility || {}).code !== "NO_SCHEMA",
+  },
+  {
+    id: "impossibility-nulls-the-bridge",
+    subsystem: "impossibility",
+    rule: "a structurally impossible pair carries NO bridge key at all — absent and null are different facts",
+    find: `        d.set("impossibility", obj(vec![("code", J::s(code)), ("from", J::Null), ("to", J::Null), ("detail", J::s(detail))]));`,
+    replace: `        d.set("impossibility", obj(vec![("code", J::s(code)), ("from", J::Null), ("to", J::Null), ("detail", J::s(detail))]));
+        d.set("bridge", J::Null);`,
+    expectedOccurrences: 1,
+    expectedKillers: ["incompatible", "missing-conversion-rule", "no-schema"],
+    expectedFailure: "ABSENT_BRIDGE_EMITTED_AS_NULL",
+    // The distinction C1 asserts directly. This proves the CORPUS pins it too,
+    // rather than only the parity test.
+    assert: (out) => IMPOSSIBLE.some((id) => "bridge" in dec(out, id)),
+  },
+
+  // ---- cascade-planning: the risk term ------------------------------------
+  {
+    id: "cascade-drop-shape-penalty",
+    subsystem: "cascade-planning",
+    rule: "an unproved shape adds 0.5 to selection risk — an unproved match is not a free one",
+    find: `risk: o.cost + if sh == "proved" { 0.0 } else { 0.5 }`,
+    replace: `risk: o.cost + if sh == "proved" { 0.0 } else { 0.0 }`,
+    expectedOccurrences: 1,
+    expectedKillers: ["single-conversion-path"],
+    expectedFailure: "UNPROVED_SHAPE_NOT_PENALIZED",
+    // Shape is UNRESOLVED in every cascade fixture, so the penalty applies
+    // uniformly and never decides BETWEEN options. It is still observable: every
+    // published risk drops by exactly the penalty. Comparing against the corpus
+    // is what makes a uniform shift detectable at all.
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      (want.options || []).some((w, i) => {
+        const g = (d.options || [])[i];
+        return g && Math.abs((w.risk - g.risk) - 0.5) < 1e-9;
+      })),
+  },
+  {
+    id: "cascade-unit-contradiction-cheap",
+    subsystem: "cascade-planning",
+    rule: "a refuted unit adds 90 to risk, which is what keeps a contradicting pair from being selected",
+    find: `+ if u == "refuted" { 90.0 } else if u == "proved" { 0.0 } else { 0.5 },`,
+    replace: `+ if u == "refuted" { 0.5 } else if u == "proved" { 0.0 } else { 0.5 },`,
+    expectedOccurrences: 1,
+    expectedKillers: ["hard-incompatibility"],
+    expectedFailure: "UNIT_CONTRADICTION_NOT_RISK_WEIGHTED",
+    assert: (out) => optionsOf(out, "hard-incompatibility").some((o) => o.unit === "refuted" && o.risk < 90),
+  },
+  {
+    id: "cascade-unresolved-precondition-free",
+    knownUnpinned: {
+      why: "no fixture has two viable options that differ in UNRESOLVED-precondition count, so the 10x term never changes which option is selected",
+      closedBy: "a fixture with a cheaper-by-risk option carrying more unresolved preconditions than a costlier rival",
+    },
+    subsystem: "cascade-planning",
+    rule: "each UNRESOLVED precondition costs 10 in option scoring — unproven is not the same as proven",
+    find: "score: o.risk + unresolved as f64 * 10.0 + if refuted { 1000.0 } else { 0.0 }",
+    replace: "score: o.risk + unresolved as f64 * 0.0 + if refuted { 1000.0 } else { 0.0 }",
+    expectedOccurrences: 1,
+    expectedKillers: ["multiple-competing-paths"],
+    expectedFailure: "UNRESOLVED_PRECONDITION_UNPRICED",
+    // Scoring is internal; its effect is observable as a different selection.
+    // Compare against the corpus-correct bridge rather than an absolute.
+    assert: (out, inp, refs) => {
+      const got = bridgeOf(out, "multiple-competing-paths");
+      const want = ((refs["multiple-competing-paths"] || {}).output || {}).bridge;
+      return Boolean(want) && JSON.stringify(got) !== JSON.stringify(want);
+    },
+  },
+  {
+    id: "cascade-selects-refuted-path",
+    knownUnpinned: {
+      why: "in the one fixture with a refuted precondition the refuted option is also the only option, so pruning it changes nothing",
+      closedBy: "a fixture with at least two options where the lowest-risk one is REFUTED and another survives",
+    },
+    subsystem: "cascade-planning",
+    rule: "options with a REFUTED precondition are pruned from selection, and chosen only if nothing else survives",
+    find: "let mut order: Vec<usize> = (0..scored.len()).filter(|&i| !scored[i].refuted).collect();",
+    replace: "let mut order: Vec<usize> = (0..scored.len()).collect();",
+    expectedOccurrences: 1,
+    expectedKillers: ["soft-precondition-failed"],
+    expectedFailure: "REFUTED_PATH_NOT_PRUNED",
+    assert: (out, inp, refs) => {
+      const got = dec(out, "soft-precondition-failed");
+      const want = (refs["soft-precondition-failed"] || {}).output || {};
+      return got.stage !== want.stage || JSON.stringify(got.bridge) !== JSON.stringify(want.bridge);
+    },
+  },
+
+  // ---- ranking: option order and retention --------------------------------
+  {
+    id: "cascade-options-unranked",
+    subsystem: "ranking",
+    rule: "cascade options are ordered by ascending risk — the retained three are the three cheapest",
+    find: "opts.sort_by(|x, y| x.risk.partial_cmp(&y.risk).unwrap());",
+    replace: "opts.sort_by(|x, y| y.risk.partial_cmp(&x.risk).unwrap());",
+    expectedOccurrences: 1,
+    expectedKillers: ["multiple-competing-paths"],
+    expectedFailure: "CASCADE_OPTIONS_NOT_RISK_ASCENDING",
+    assert: (out) => everyDecision(out).some((d) =>
+      (d.options || []).some((o, i, a) => i > 0 && o.risk < a[i - 1].risk)),
+  },
+  {
+    id: "cascade-widen-option-retention",
+    knownUnpinned: {
+      why: "no fixture produces more than three candidate options, so the retention cap never binds",
+      closedBy: "a fixture with multiple produces/consumes ports yielding four or more admissible options",
+    },
+    subsystem: "ranking",
+    rule: "exactly three options are retained — the cap is part of the published decision, not a display limit",
+    find: "opts.truncate(3);",
+    replace: "opts.truncate(4);",
+    expectedOccurrences: 1,
+    expectedKillers: ["multiple-competing-paths"],
+    expectedFailure: "OPTION_RETENTION_CAP_WIDENED",
+    assert: (out) => everyDecision(out).some((d) => (d.options || []).length > 3),
+  },
+
+  // ---- contract-instantiation ---------------------------------------------
+  {
+    id: "contract-instantiates-axiomatic",
+    knownUnpinned: {
+      why: "in the frozen v0.5.1 registry every rule carrying a precondition is also curated, so the auth test is redundant BY CONSTRUCTION rather than merely unreached — no fixture over this registry can separate the two clauses",
+      closedBy: "not a fixture: a MAJOR registry version introducing an axiomatic rule with a precondition. Re-probe then",
+    },
+    subsystem: "contract-instantiation",
+    rule: "only CURATED steps become rule instantiations — an axiomatic step carries no semantic precondition to grade",
+    find: `adapters.iter().filter(|s| s.auth == "cur" && !s.pre.is_empty()).map(|s| {`,
+    replace: `adapters.iter().filter(|s| !s.pre.is_empty()).map(|s| {`,
+    expectedOccurrences: 1,
+    expectedKillers: ["single-conversion-path", "soft-precondition-satisfied"],
+    expectedFailure: "AXIOMATIC_STEP_INSTANTIATED",
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      ((d.bridge || {}).ruleInstantiations || []).length > ((want.bridge || {}).ruleInstantiations || []).length),
+  },
+  {
+    id: "contract-ignores-per-rule-override",
+    subsystem: "contract-instantiation",
+    rule: "a per-ruleId soft judgment overrides the blanket one — grading is per precondition, not per case",
+    find: "let raw = soft.pre_overrides.iter().find(|(k, _)| *k == s.rule_id.as_str()).map(|(_, v)| *v).or(soft.pre);",
+    replace: "let raw = soft.pre;",
+    expectedOccurrences: 1,
+    expectedKillers: ["partially-instantiated-obligations"],
+    expectedFailure: "PER_RULE_OVERRIDE_DISCARDED",
+    assert: (out, inp, refs) => {
+      const got = instOf(out, "partially-instantiated-obligations").map((x) => x.status);
+      const want = (((refs["partially-instantiated-obligations"] || {}).output || {}).bridge || {})
+        .ruleInstantiations || [];
+      return JSON.stringify(got) !== JSON.stringify(want.map((x) => x.status));
+    },
+  },
+  {
+    id: "contract-mapsoft-fails-open",
+    subsystem: "contract-instantiation",
+    rule: "mapSoft fails CLOSED: anything unrecognised, including absent, is UNRESOLVED — never satisfied by default",
+    find: `        _ => "UNRESOLVED",`,
+    replace: `        _ => "CONDITIONALLY-SATISFIED",`,
+    expectedOccurrences: 1,
+    expectedKillers: ["soft-precondition-unresolved"],
+    expectedFailure: "UNGRADED_PRECONDITION_TREATED_AS_SATISFIED",
+    assert: (out) => !instOf(out, "soft-precondition-unresolved").some((x) => x.status === "UNRESOLVED"),
+  },
+
+  // ---- obligations: the PO vector -----------------------------------------
+  {
+    id: "po4-license-fails-open",
+    subsystem: "obligations",
+    rule: "PO-4 is UNRESOLVED when license metadata is absent — absent evidence is not evidence of compatibility",
+    find: `("status", J::s("UNRESOLVED")), ("detail", J::s("? / ? — license metadata absent"))`,
+    replace: `("status", J::s("PROVED")), ("detail", J::s("? / ? — license metadata absent"))`,
+    expectedOccurrences: 1,
+    expectedKillers: ["directly-compatible"],
+    expectedFailure: "ABSENT_LICENSE_METADATA_PROVED",
+    assert: (out) => po(out, "directly-compatible", "PO-4").status === "PROVED",
+  },
+  {
+    id: "po-vector-reordered",
+    subsystem: "obligations",
+    rule: "the proof-obligation vector is ORDERED — PO-1 precedes PO-2, and the order is part of the contract",
+    find: `    o.push(obj(vec![("id", J::s("PO-2")), ("name", J::s("Shape compatibility")), ("method", J::s("deterministic")),`,
+    replace: `    o.insert(0, obj(vec![("id", J::s("PO-2")), ("name", J::s("Shape compatibility")), ("method", J::s("deterministic")),`,
+    expectedOccurrences: 1,
+    expectedKillers: ["directly-compatible"],
+    expectedFailure: "PROOF_OBLIGATION_ORDER_CHANGED",
+    assert: (out) => {
+      const ids = poIds(out, "directly-compatible");
+      return ids.indexOf("PO-2") !== -1 && ids.indexOf("PO-2") < ids.indexOf("PO-1");
+    },
+  },
+  {
+    id: "po3-drops-dimensionless-note",
+    knownUnpinned: {
+      why: "no fixture selects a bridge whose units are dimensionless on one side and dimensional on the other, so the explanatory clause is never emitted",
+      closedBy: "a fixture pairing a dimensionless output port with a dimensioned input port",
+    },
+    subsystem: "obligations",
+    rule: "an unresolved dimensionless comparison says WHY — the note is observable output, not commentary",
+    find: `if unit == "unresolved" && dimensionless { " (dimensionless ≠ dimensional — not auto-proved)" } else { "" }`,
+    replace: `if unit == "unresolved" && dimensionless { "" } else { "" }`,
+    expectedOccurrences: 1,
+    expectedKillers: ["soft-precondition-satisfied"],
+    expectedFailure: "DIMENSIONLESS_RATIONALE_DROPPED",
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) => {
+      const g = (d.obligations || []).find((o) => o.id === "PO-3") || {};
+      const w = (want.obligations || []).find((o) => o.id === "PO-3") || {};
+      return w.detail !== undefined && g.detail !== w.detail;
+    }),
+  },
+  {
+    id: "po8-omitted-on-lossy-path",
+    subsystem: "obligations",
+    rule: "a lossy adapter chain adds PO-8 — bounded information loss is an obligation, not a footnote",
+    find: "if adapters.iter().any(|s| s.lossy) {",
+    replace: "if adapters.iter().filter(|s| s.lossy).count() > 1 {",
+    expectedOccurrences: 1,
+    expectedKillers: ["partially-instantiated-obligations"],
+    expectedFailure: "LOSSY_PATH_CARRIES_NO_PO8",
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      (want.obligations || []).some((o) => o.id === "PO-8")
+      && !(d.obligations || []).some((o) => o.id === "PO-8")),
+  },
+
+  // ---- stage-advancement: the five-stage ladder ---------------------------
+  {
+    id: "ladder-unit-contradiction-advances",
+    subsystem: "stage-advancement",
+    rule: "a unit contradiction stops the ladder at PATH_FOUND — a path exists but does not typecheck",
+    find: "let type_composable = !unit_contra;",
+    replace: "let type_composable = true;",
+    expectedOccurrences: 1,
+    expectedKillers: ["hard-incompatibility"],
+    expectedFailure: "UNIT_CONTRADICTION_ADVANCED_PAST_PATH_FOUND",
+    assert: (out) => dec(out, "hard-incompatibility").stage !== "PATH_FOUND",
+  },
+  {
+    id: "ladder-unresolved-precondition-admissible",
+    subsystem: "stage-advancement",
+    rule: "CONTRACT_ADMISSIBLE requires every precondition graded satisfied or proved — UNRESOLVED does not advance",
+    find: `let pre_ok = inst.is_empty() || inst.iter().all(|x| x.status == "CONDITIONALLY-SATISFIED" || x.status == "PROVED");`,
+    replace: `let pre_ok = inst.is_empty() || inst.iter().all(|x| x.status != "REFUTED");`,
+    expectedOccurrences: 1,
+    expectedKillers: ["soft-precondition-unresolved"],
+    expectedFailure: "UNRESOLVED_PRECONDITION_ADVANCED_LADDER",
+    assert: (out) => dec(out, "soft-precondition-unresolved").stage !== "TYPE_COMPOSABLE",
+  },
+  {
+    id: "ladder-epistemic-ignores-metric",
+    knownUnpinned: {
+      why: "no fixture grades the invariant obligation satisfied while leaving the metric obligation ungraded, so PO-7 never independently decides the top stage",
+      closedBy: "a fixture with model.invariant satisfied and model.metric unknown",
+    },
+    subsystem: "stage-advancement",
+    rule: "EPISTEMICALLY_SUPPORTED requires BOTH the invariant (PO-6) and the metric (PO-7) obligations",
+    find: `let epistemic_ok = contract_ok && po6 == "CONDITIONALLY-SATISFIED" && po7 == "CONDITIONALLY-SATISFIED";`,
+    replace: `let epistemic_ok = contract_ok && po6 == "CONDITIONALLY-SATISFIED";`,
+    expectedOccurrences: 1,
+    expectedKillers: ["directly-compatible"],
+    expectedFailure: "LADDER_ADVANCED_WITHOUT_METRIC_OBLIGATION",
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      want.stage === "CONTRACT_ADMISSIBLE" && d.stage === "EPISTEMICALLY_SUPPORTED"),
+  },
+
+  // ---- verdict-derivation --------------------------------------------------
+  {
+    id: "verdict-conversion-claims-shared-object",
+    subsystem: "verdict-derivation",
+    rule: "sharedFormalObject is true only for an EXACT match — a conversion is composable, not shared",
+    find: `("sharedFormalObject", J::B(best.exact)),`,
+    replace: `("sharedFormalObject", J::B(true)),`,
+    expectedOccurrences: 1,
+    expectedKillers: ["single-conversion-path"],
+    expectedFailure: "CONVERTIBLE_PAIR_CLAIMED_AS_SHARED_OBJECT",
+    assert: (out) => {
+      const m = dec(out, "single-conversion-path").mechCompat || {};
+      return m.sharedFormalObject === true && m.verdict === "conversion_required";
+    },
+  },
+  {
+    id: "verdict-block-reason-priority",
+    knownUnpinned: {
+      why: "no fixture carries a REFUTED and an UNRESOLVED precondition at once, so the two branches are never in contention",
+      closedBy: "a fixture with preOverrides grading one curated step violated and another unknown",
+    },
+    subsystem: "verdict-derivation",
+    rule: "a REFUTED precondition outranks an UNRESOLVED one when naming the blocking reason",
+    find: `        else if any_refuted { J::s("PRECONDITION_UNSATISFIED") }
+        else if any_unresolved { J::s("PRECONDITION_UNRESOLVED") }`,
+    replace: `        else if any_unresolved { J::s("PRECONDITION_UNRESOLVED") }
+        else if any_refuted { J::s("PRECONDITION_UNSATISFIED") }`,
+    expectedOccurrences: 1,
+    expectedKillers: ["soft-precondition-failed"],
+    expectedFailure: "BLOCK_REASON_PRIORITY_INVERTED",
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      want.blockReason === "PRECONDITION_UNSATISFIED" && d.blockReason === "PRECONDITION_UNRESOLVED"),
+  },
+  {
+    id: "verdict-supported-still-blocks",
+    subsystem: "verdict-derivation",
+    rule: "a decision that reached EPISTEMICALLY_SUPPORTED carries no blockReason — nothing is blocking it",
+    find: `d.set("blockReason", if stage == "EPISTEMICALLY_SUPPORTED" { J::Null }`,
+    replace: `d.set("blockReason", if false { J::Null }`,
+    expectedOccurrences: 1,
+    expectedKillers: ["lit-unexplored"],
+    expectedFailure: "SUPPORTED_DECISION_CARRIES_BLOCK_REASON",
+    assert: (out) => everyDecision(out).some((d) => d.stage === "EPISTEMICALLY_SUPPORTED" && d.blockReason !== null),
+  },
+
+  // ---- literature-assessment ----------------------------------------------
+  {
+    id: "lit-classifies-a-killed-decision",
+    subsystem: "literature-assessment",
+    rule: "a type-killed decision SKIPS literature entirely — novelty of an incoherent pairing is not a question",
+    find: `        ("SKIPPED", None)`,
+    replace: `        ("OFF", None)`,
+    expectedOccurrences: 1,
+    expectedKillers: ["incompatible", "hard-incompatibility"],
+    expectedFailure: "KILLED_DECISION_GIVEN_A_LITERATURE_CLASS",
+    assert: (out) => IMPOSSIBLE.concat("hard-incompatibility")
+      .some((id) => dec(out, id).litClass !== undefined && dec(out, id).litClass !== "SKIPPED"),
+  },
+  {
+    id: "lit-invents-a-count-when-ungrounded",
+    knownUnpinned: {
+      why: "no fixture supplies a literature count while grounding is off, so there is no count available to leak",
+      closedBy: "a fixture carrying litCount with litGround absent",
+    },
+    subsystem: "literature-assessment",
+    rule: "with grounding OFF no count is reported — the kernel never invents evidence it did not gather",
+    find: `        ("OFF", None)
+    } else {`,
+    replace: `        ("OFF", c.lit_count)
+    } else {`,
+    expectedOccurrences: 1,
+    expectedKillers: ["directly-compatible"],
+    expectedFailure: "LITERATURE_COUNT_INVENTED_WITHOUT_GROUNDING",
+    assert: (out) => everyDecision(out).some((d) => d.litClass === "OFF" && d.litCount !== null),
+  },
+  {
+    id: "prize-ignores-ladder-stage",
+    knownUnpinned: {
+      why: "every UNEXPLORED fixture also reaches EPISTEMICALLY_SUPPORTED, so the stage test never independently withholds candidacy",
+      closedBy: "a fixture with an UNEXPLORED literature class stopping below the top stage",
+    },
+    subsystem: "literature-assessment",
+    rule: "prize candidacy requires EPISTEMICALLY_SUPPORTED — novelty alone never nominates a candidate",
+    find: `let prize = pass && stage.as_deref() == Some("EPISTEMICALLY_SUPPORTED") && grounded && lit_class == "UNEXPLORED";`,
+    replace: `let prize = pass && grounded && lit_class == "UNEXPLORED";`,
+    expectedOccurrences: 1,
+    expectedKillers: ["lit-unexplored"],
+    expectedFailure: "PRIZE_NOMINATED_BELOW_TOP_STAGE",
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      !want.prizeCandidate && Boolean(d.prizeCandidate)),
+  },
+  {
+    id: "lit-unexplored-not-promising",
+    subsystem: "verdict-derivation",
+    rule: "UNEXPLORED yields the verdict PROMISING — the novelty class and the verdict are distinct vocabularies",
+    find: `else if lit_class == "UNEXPLORED" { "PROMISING" } else { lit_class };`,
+    replace: `else { lit_class };`,
+    expectedOccurrences: 1,
+    expectedKillers: ["lit-unexplored"],
+    expectedFailure: "NOVELTY_CLASS_LEAKED_INTO_VERDICT",
+    assert: (out) => everyDecision(out).some((d) => d.litClass === "UNEXPLORED" && d.finalVerdict === "UNEXPLORED"),
+  },
+
+  // ---- cascade-compatibility ----------------------------------------------
+  {
+    id: "cascade-compat-verdict-always-valid",
+    subsystem: "cascade-compatibility",
+    rule: "the mechCompat verdict distinguishes type_valid, conversion_required and type_killed",
+    find: `let verdict = if unit_contra { "type_killed" } else if best.exact { "type_valid" } else { "conversion_required" };`,
+    replace: `let verdict = if unit_contra { "type_killed" } else { "type_valid" };`,
+    expectedOccurrences: 1,
+    expectedKillers: ["single-conversion-path"],
+    expectedFailure: "CONVERSION_REPORTED_AS_TYPE_VALID",
+    assert: (out) => (dec(out, "single-conversion-path").mechCompat || {}).verdict === "type_valid",
+  },
+  {
+    id: "cascade-compat-hides-pruning",
+    subsystem: "cascade-compatibility",
+    rule: "prunedPaths counts the options removed for a refuted precondition — the search is reported, not just its result",
+    find: "let pruned = scored.iter().filter(|s| s.refuted).count();",
+    replace: "let pruned = 0;",
+    expectedOccurrences: 1,
+    expectedKillers: ["soft-precondition-failed"],
+    expectedFailure: "PRUNED_PATH_COUNT_SUPPRESSED",
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      ((want.mechCompat || {}).prunedPaths || 0) > 0 && (d.mechCompat || {}).prunedPaths === 0),
+  },
+  {
+    id: "cascade-compat-lossy-flag-dropped",
+    subsystem: "cascade-compatibility",
+    rule: "each matched port records whether its adapter chain is lossy",
+    find: `("lossy", J::B(o.adapters.iter().any(|s| s.lossy))),`,
+    replace: `("lossy", J::B(false)),`,
+    expectedOccurrences: 1,
+    expectedKillers: ["partially-instantiated-obligations"],
+    expectedFailure: "LOSSY_ADAPTER_REPORTED_AS_LOSSLESS",
+    assert: (out, inp, refs) => diverged(out, refs, (d, want) =>
+      ((want.mechCompat || {}).matchedPorts || []).some((p) => p.lossy)
+      && !((d.mechCompat || {}).matchedPorts || []).some((p) => p.lossy)),
   },
 ];

@@ -25,26 +25,26 @@ mutants have been declared for it — which is *not* the same as zero survivors.
 
 | Implementation | Subsystem | Fixtures | Mutation adequacy | Killed / declared | Surviving |
 |---|---|---|---|---|---|
-| `rust` | cascade | pass | not-assessed | — | — |
-| `rust` | cascade-compatibility | pass | not-assessed | — | — |
-| `rust` | cascade-planning | pass | not-assessed | — | — |
+| `rust` | cascade | pass | unqualified | 2/3 | 1 |
+| `rust` | cascade-compatibility | pass | **qualified** | 3/3 | 0 |
+| `rust` | cascade-planning | pass | unqualified | 2/4 | 2 |
 | `rust` | compatibility | pass | **qualified** | 11/11 | 0 |
-| `rust` | contract-instantiation | pass | not-assessed | — | — |
+| `rust` | contract-instantiation | pass | unqualified | 2/3 | 1 |
 | `rust` | edge-cost | pass | **qualified** | 3/3 | 0 |
 | `rust` | edge-derivation | pass | **qualified** | 10/10 | 0 |
-| `rust` | impossibility | pass | not-assessed | — | — |
+| `rust` | impossibility | pass | **qualified** | 3/3 | 0 |
 | `rust` | license-screening | pass | **qualified** | 3/3 | 0 |
-| `rust` | literature-assessment | pass | not-assessed | — | — |
+| `rust` | literature-assessment | pass | unqualified | 1/3 | 2 |
 | `rust` | literature-classification | pass | **qualified** | 3/3 | 0 |
 | `rust` | multipath-planning | pass | **qualified** | 7/7 | 0 |
-| `rust` | obligations | pass | not-assessed | — | — |
+| `rust` | obligations | pass | unqualified | 3/4 | 1 |
 | `rust` | property-test-skeleton | pass | **qualified** | 2/2 | 0 |
-| `rust` | ranking | pass | not-assessed | — | — |
+| `rust` | ranking | pass | unqualified | 1/2 | 1 |
 | `rust` | registry | pass | **qualified** | 5/5 | 0 |
 | `rust` | schema-normalization | pass | **qualified** | 4/4 | 0 |
-| `rust` | stage-advancement | pass | not-assessed | — | — |
+| `rust` | stage-advancement | pass | unqualified | 2/3 | 1 |
 | `rust` | types | pass | **qualified** | 3/3 | 0 |
-| `rust` | verdict-derivation | pass | not-assessed | — | — |
+| `rust` | verdict-derivation | pass | unqualified | 3/4 | 1 |
 
 ## How to read this
 

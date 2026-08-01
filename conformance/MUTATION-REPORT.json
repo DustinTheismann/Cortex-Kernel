@@ -4,7 +4,7 @@
   "integrity": {
     "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
     "implementationSourceSha256": "72a143d7a829560db21973d55bff9a9175f5d14c6552d044a5ee4b3595ce3753",
-    "registrySha256": "c456312a6c50b0ff29ac158afef2447b427d53ca4a692b0ff908deefc4e22d90"
+    "registrySha256": "d60d2f26e732e9311c4cb64e12bcef9f0d2051a9f896a84165edff5e747f145f"
   },
   "scope": "all",
   "unpinnable": [
@@ -27,6 +27,87 @@
     }
   ],
   "subsystems": [
+    {
+      "subsystem": "cascade",
+      "corpusScope": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "declaredMutants": 3,
+      "killedMutants": 2,
+      "survivingMutants": 1,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "unqualified"
+    },
+    {
+      "subsystem": "cascade-compatibility",
+      "corpusScope": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "declaredMutants": 3,
+      "killedMutants": 3,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "cascade-planning",
+      "corpusScope": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "declaredMutants": 4,
+      "killedMutants": 2,
+      "survivingMutants": 2,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "unqualified"
+    },
     {
       "subsystem": "compatibility",
       "corpusScope": [
@@ -56,6 +137,33 @@
       "survivingMutants": 0,
       "inconclusiveMutants": 0,
       "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "contract-instantiation",
+      "corpusScope": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "declaredMutants": 3,
+      "killedMutants": 2,
+      "survivingMutants": 1,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "unqualified"
     },
     {
       "subsystem": "edge-cost",
@@ -101,6 +209,33 @@
       "mutationStatus": "qualified"
     },
     {
+      "subsystem": "impossibility",
+      "corpusScope": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "declaredMutants": 3,
+      "killedMutants": 3,
+      "survivingMutants": 0,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "qualified"
+    },
+    {
       "subsystem": "license-screening",
       "corpusScope": [
         "license-compat",
@@ -127,6 +262,33 @@
       "survivingMutants": 0,
       "inconclusiveMutants": 0,
       "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "literature-assessment",
+      "corpusScope": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "declaredMutants": 3,
+      "killedMutants": 1,
+      "survivingMutants": 2,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "unqualified"
     },
     {
       "subsystem": "literature-classification",
@@ -187,6 +349,33 @@
       "mutationStatus": "qualified"
     },
     {
+      "subsystem": "obligations",
+      "corpusScope": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "declaredMutants": 4,
+      "killedMutants": 3,
+      "survivingMutants": 1,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "unqualified"
+    },
+    {
       "subsystem": "property-test-skeleton",
       "corpusScope": [
         "synth-test",
@@ -213,6 +402,33 @@
       "survivingMutants": 0,
       "inconclusiveMutants": 0,
       "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "ranking",
+      "corpusScope": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "declaredMutants": 2,
+      "killedMutants": 1,
+      "survivingMutants": 1,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "unqualified"
     },
     {
       "subsystem": "registry",
@@ -274,6 +490,33 @@
       "mutationStatus": "qualified"
     },
     {
+      "subsystem": "stage-advancement",
+      "corpusScope": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "declaredMutants": 3,
+      "killedMutants": 2,
+      "survivingMutants": 1,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "unqualified"
+    },
+    {
       "subsystem": "types",
       "corpusScope": [
         "mech-kinds",
@@ -305,6 +548,33 @@
       "survivingMutants": 0,
       "inconclusiveMutants": 0,
       "mutationStatus": "qualified"
+    },
+    {
+      "subsystem": "verdict-derivation",
+      "corpusScope": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "declaredMutants": 4,
+      "killedMutants": 3,
+      "survivingMutants": 1,
+      "inconclusiveMutants": 0,
+      "mutationStatus": "unqualified"
     }
   ],
   "mutants": [
@@ -1249,6 +1519,636 @@
       "collateralDivergence": [],
       "outcome": "killed_correctly",
       "detail": "NAME_INDEX_RESOLVED_TO_WRONG_REPOSITORY observed; killed by compute-edges-boundaries"
+    },
+    {
+      "id": "cascade-one-directional-pairing",
+      "subsystem": "cascade",
+      "rule": "candidate port pairs are enumerated in BOTH directions — B's outputs into A's inputs are considered too",
+      "expectedFailure": "REVERSE_DIRECTION_NOT_ENUMERATED",
+      "expectedKillers": [
+        "multiple-competing-paths"
+      ],
+      "actualKillers": [],
+      "collateralDivergence": [],
+      "outcome": "survived",
+      "detail": "\"candidate port pairs are enumerated in BOTH directions — B's outputs into A's inputs are considered too\" can be violated without any corpus case in scope noticing",
+      "knownUnpinned": {
+        "why": "every cascade fixture puts the producing schema on side A, so no fixture ever selects a B→A bridge and the reverse enumeration is never load-bearing",
+        "closedBy": "a fixture whose schemaA only CONSUMES and whose schemaB produces the matching kind"
+      }
+    },
+    {
+      "id": "cascade-probe-miscounts-kills",
+      "subsystem": "cascade",
+      "rule": "the probe log records whether the pairing was killed by typecheck — every decision publishes this",
+      "expectedFailure": "PROBE_LOG_KILL_FLAG_INVERTED",
+      "expectedKillers": [
+        "directly-compatible",
+        "incompatible"
+      ],
+      "actualKillers": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "PROBE_LOG_KILL_FLAG_INVERTED observed; killed by directly-compatible, incompatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, missing-conversion-rule, no-schema, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+    },
+    {
+      "id": "cascade-hollow-check-fails-open",
+      "subsystem": "cascade",
+      "rule": "mechanismGrounded is reported, and an ungrounded mechanism is INCOHERENT regardless of the ladder",
+      "expectedFailure": "UNGROUNDED_MECHANISM_ACCEPTED",
+      "expectedKillers": [
+        "directly-compatible",
+        "lit-unexplored"
+      ],
+      "actualKillers": [
+        "directly-compatible",
+        "incompatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNGROUNDED_MECHANISM_ACCEPTED observed; killed by directly-compatible, incompatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, missing-conversion-rule, no-schema, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+    },
+    {
+      "id": "impossibility-swap-codes",
+      "subsystem": "impossibility",
+      "rule": "NO_KIND_PATH means ports paired but no conversion exists; NO_SHARED_PORTS means nothing paired at all",
+      "expectedFailure": "IMPOSSIBILITY_CODE_MISATTRIBUTED",
+      "expectedKillers": [
+        "incompatible",
+        "missing-conversion-rule"
+      ],
+      "actualKillers": [
+        "incompatible",
+        "missing-conversion-rule"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "IMPOSSIBILITY_CODE_MISATTRIBUTED observed; killed by incompatible, missing-conversion-rule"
+    },
+    {
+      "id": "impossibility-one-schema-suffices",
+      "subsystem": "impossibility",
+      "rule": "a missing schema on EITHER side is NO_SCHEMA — fail-closed, not one-sided planning",
+      "expectedFailure": "ABSENT_SCHEMA_NOT_FAIL_CLOSED",
+      "expectedKillers": [
+        "no-schema"
+      ],
+      "actualKillers": [
+        "no-schema"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "ABSENT_SCHEMA_NOT_FAIL_CLOSED observed; killed by no-schema"
+    },
+    {
+      "id": "impossibility-nulls-the-bridge",
+      "subsystem": "impossibility",
+      "rule": "a structurally impossible pair carries NO bridge key at all — absent and null are different facts",
+      "expectedFailure": "ABSENT_BRIDGE_EMITTED_AS_NULL",
+      "expectedKillers": [
+        "incompatible",
+        "missing-conversion-rule",
+        "no-schema"
+      ],
+      "actualKillers": [
+        "incompatible",
+        "missing-conversion-rule",
+        "no-schema"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "ABSENT_BRIDGE_EMITTED_AS_NULL observed; killed by incompatible, missing-conversion-rule, no-schema"
+    },
+    {
+      "id": "cascade-drop-shape-penalty",
+      "subsystem": "cascade-planning",
+      "rule": "an unproved shape adds 0.5 to selection risk — an unproved match is not a free one",
+      "expectedFailure": "UNPROVED_SHAPE_NOT_PENALIZED",
+      "expectedKillers": [
+        "single-conversion-path"
+      ],
+      "actualKillers": [
+        "directly-compatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNPROVED_SHAPE_NOT_PENALIZED observed; killed by directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+    },
+    {
+      "id": "cascade-unit-contradiction-cheap",
+      "subsystem": "cascade-planning",
+      "rule": "a refuted unit adds 90 to risk, which is what keeps a contradicting pair from being selected",
+      "expectedFailure": "UNIT_CONTRADICTION_NOT_RISK_WEIGHTED",
+      "expectedKillers": [
+        "hard-incompatibility"
+      ],
+      "actualKillers": [
+        "hard-incompatibility"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNIT_CONTRADICTION_NOT_RISK_WEIGHTED observed; killed by hard-incompatibility"
+    },
+    {
+      "id": "cascade-unresolved-precondition-free",
+      "subsystem": "cascade-planning",
+      "rule": "each UNRESOLVED precondition costs 10 in option scoring — unproven is not the same as proven",
+      "expectedFailure": "UNRESOLVED_PRECONDITION_UNPRICED",
+      "expectedKillers": [
+        "multiple-competing-paths"
+      ],
+      "actualKillers": [],
+      "collateralDivergence": [],
+      "outcome": "survived",
+      "detail": "\"each UNRESOLVED precondition costs 10 in option scoring — unproven is not the same as proven\" can be violated without any corpus case in scope noticing",
+      "knownUnpinned": {
+        "why": "no fixture has two viable options that differ in UNRESOLVED-precondition count, so the 10x term never changes which option is selected",
+        "closedBy": "a fixture with a cheaper-by-risk option carrying more unresolved preconditions than a costlier rival"
+      }
+    },
+    {
+      "id": "cascade-selects-refuted-path",
+      "subsystem": "cascade-planning",
+      "rule": "options with a REFUTED precondition are pruned from selection, and chosen only if nothing else survives",
+      "expectedFailure": "REFUTED_PATH_NOT_PRUNED",
+      "expectedKillers": [
+        "soft-precondition-failed"
+      ],
+      "actualKillers": [],
+      "collateralDivergence": [],
+      "outcome": "survived",
+      "detail": "\"options with a REFUTED precondition are pruned from selection, and chosen only if nothing else survives\" can be violated without any corpus case in scope noticing",
+      "knownUnpinned": {
+        "why": "in the one fixture with a refuted precondition the refuted option is also the only option, so pruning it changes nothing",
+        "closedBy": "a fixture with at least two options where the lowest-risk one is REFUTED and another survives"
+      }
+    },
+    {
+      "id": "cascade-options-unranked",
+      "subsystem": "ranking",
+      "rule": "cascade options are ordered by ascending risk — the retained three are the three cheapest",
+      "expectedFailure": "CASCADE_OPTIONS_NOT_RISK_ASCENDING",
+      "expectedKillers": [
+        "multiple-competing-paths"
+      ],
+      "actualKillers": [
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "CASCADE_OPTIONS_NOT_RISK_ASCENDING observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+    },
+    {
+      "id": "cascade-widen-option-retention",
+      "subsystem": "ranking",
+      "rule": "exactly three options are retained — the cap is part of the published decision, not a display limit",
+      "expectedFailure": "OPTION_RETENTION_CAP_WIDENED",
+      "expectedKillers": [
+        "multiple-competing-paths"
+      ],
+      "actualKillers": [],
+      "collateralDivergence": [],
+      "outcome": "survived",
+      "detail": "\"exactly three options are retained — the cap is part of the published decision, not a display limit\" can be violated without any corpus case in scope noticing",
+      "knownUnpinned": {
+        "why": "no fixture produces more than three candidate options, so the retention cap never binds",
+        "closedBy": "a fixture with multiple produces/consumes ports yielding four or more admissible options"
+      }
+    },
+    {
+      "id": "contract-instantiates-axiomatic",
+      "subsystem": "contract-instantiation",
+      "rule": "only CURATED steps become rule instantiations — an axiomatic step carries no semantic precondition to grade",
+      "expectedFailure": "AXIOMATIC_STEP_INSTANTIATED",
+      "expectedKillers": [
+        "single-conversion-path",
+        "soft-precondition-satisfied"
+      ],
+      "actualKillers": [],
+      "collateralDivergence": [],
+      "outcome": "survived",
+      "detail": "\"only CURATED steps become rule instantiations — an axiomatic step carries no semantic precondition to grade\" can be violated without any corpus case in scope noticing",
+      "knownUnpinned": {
+        "why": "in the frozen v0.5.1 registry every rule carrying a precondition is also curated, so the auth test is redundant BY CONSTRUCTION rather than merely unreached — no fixture over this registry can separate the two clauses",
+        "closedBy": "not a fixture: a MAJOR registry version introducing an axiomatic rule with a precondition. Re-probe then"
+      }
+    },
+    {
+      "id": "contract-ignores-per-rule-override",
+      "subsystem": "contract-instantiation",
+      "rule": "a per-ruleId soft judgment overrides the blanket one — grading is per precondition, not per case",
+      "expectedFailure": "PER_RULE_OVERRIDE_DISCARDED",
+      "expectedKillers": [
+        "partially-instantiated-obligations"
+      ],
+      "actualKillers": [
+        "partially-instantiated-obligations"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "PER_RULE_OVERRIDE_DISCARDED observed; killed by partially-instantiated-obligations"
+    },
+    {
+      "id": "contract-mapsoft-fails-open",
+      "subsystem": "contract-instantiation",
+      "rule": "mapSoft fails CLOSED: anything unrecognised, including absent, is UNRESOLVED — never satisfied by default",
+      "expectedFailure": "UNGRADED_PRECONDITION_TREATED_AS_SATISFIED",
+      "expectedKillers": [
+        "soft-precondition-unresolved"
+      ],
+      "actualKillers": [
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "partially-instantiated-obligations"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNGRADED_PRECONDITION_TREATED_AS_SATISFIED observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations"
+    },
+    {
+      "id": "po4-license-fails-open",
+      "subsystem": "obligations",
+      "rule": "PO-4 is UNRESOLVED when license metadata is absent — absent evidence is not evidence of compatibility",
+      "expectedFailure": "ABSENT_LICENSE_METADATA_PROVED",
+      "expectedKillers": [
+        "directly-compatible"
+      ],
+      "actualKillers": [
+        "directly-compatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "ABSENT_LICENSE_METADATA_PROVED observed; killed by directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+    },
+    {
+      "id": "po-vector-reordered",
+      "subsystem": "obligations",
+      "rule": "the proof-obligation vector is ORDERED — PO-1 precedes PO-2, and the order is part of the contract",
+      "expectedFailure": "PROOF_OBLIGATION_ORDER_CHANGED",
+      "expectedKillers": [
+        "directly-compatible"
+      ],
+      "actualKillers": [
+        "directly-compatible",
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "hard-incompatibility",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "PROOF_OBLIGATION_ORDER_CHANGED observed; killed by directly-compatible, single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, hard-incompatibility, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+    },
+    {
+      "id": "po3-drops-dimensionless-note",
+      "subsystem": "obligations",
+      "rule": "an unresolved dimensionless comparison says WHY — the note is observable output, not commentary",
+      "expectedFailure": "DIMENSIONLESS_RATIONALE_DROPPED",
+      "expectedKillers": [
+        "soft-precondition-satisfied"
+      ],
+      "actualKillers": [],
+      "collateralDivergence": [],
+      "outcome": "survived",
+      "detail": "\"an unresolved dimensionless comparison says WHY — the note is observable output, not commentary\" can be violated without any corpus case in scope noticing",
+      "knownUnpinned": {
+        "why": "no fixture selects a bridge whose units are dimensionless on one side and dimensional on the other, so the explanatory clause is never emitted",
+        "closedBy": "a fixture pairing a dimensionless output port with a dimensioned input port"
+      }
+    },
+    {
+      "id": "po8-omitted-on-lossy-path",
+      "subsystem": "obligations",
+      "rule": "a lossy adapter chain adds PO-8 — bounded information loss is an obligation, not a footnote",
+      "expectedFailure": "LOSSY_PATH_CARRIES_NO_PO8",
+      "expectedKillers": [
+        "partially-instantiated-obligations"
+      ],
+      "actualKillers": [
+        "partially-instantiated-obligations"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "LOSSY_PATH_CARRIES_NO_PO8 observed; killed by partially-instantiated-obligations"
+    },
+    {
+      "id": "ladder-unit-contradiction-advances",
+      "subsystem": "stage-advancement",
+      "rule": "a unit contradiction stops the ladder at PATH_FOUND — a path exists but does not typecheck",
+      "expectedFailure": "UNIT_CONTRADICTION_ADVANCED_PAST_PATH_FOUND",
+      "expectedKillers": [
+        "hard-incompatibility"
+      ],
+      "actualKillers": [
+        "hard-incompatibility"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNIT_CONTRADICTION_ADVANCED_PAST_PATH_FOUND observed; killed by hard-incompatibility"
+    },
+    {
+      "id": "ladder-unresolved-precondition-admissible",
+      "subsystem": "stage-advancement",
+      "rule": "CONTRACT_ADMISSIBLE requires every precondition graded satisfied or proved — UNRESOLVED does not advance",
+      "expectedFailure": "UNRESOLVED_PRECONDITION_ADVANCED_LADDER",
+      "expectedKillers": [
+        "soft-precondition-unresolved"
+      ],
+      "actualKillers": [
+        "soft-precondition-unresolved",
+        "partially-instantiated-obligations"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "UNRESOLVED_PRECONDITION_ADVANCED_LADDER observed; killed by soft-precondition-unresolved, partially-instantiated-obligations"
+    },
+    {
+      "id": "ladder-epistemic-ignores-metric",
+      "subsystem": "stage-advancement",
+      "rule": "EPISTEMICALLY_SUPPORTED requires BOTH the invariant (PO-6) and the metric (PO-7) obligations",
+      "expectedFailure": "LADDER_ADVANCED_WITHOUT_METRIC_OBLIGATION",
+      "expectedKillers": [
+        "directly-compatible"
+      ],
+      "actualKillers": [],
+      "collateralDivergence": [],
+      "outcome": "survived",
+      "detail": "\"EPISTEMICALLY_SUPPORTED requires BOTH the invariant (PO-6) and the metric (PO-7) obligations\" can be violated without any corpus case in scope noticing",
+      "knownUnpinned": {
+        "why": "no fixture grades the invariant obligation satisfied while leaving the metric obligation ungraded, so PO-7 never independently decides the top stage",
+        "closedBy": "a fixture with model.invariant satisfied and model.metric unknown"
+      }
+    },
+    {
+      "id": "verdict-conversion-claims-shared-object",
+      "subsystem": "verdict-derivation",
+      "rule": "sharedFormalObject is true only for an EXACT match — a conversion is composable, not shared",
+      "expectedFailure": "CONVERTIBLE_PAIR_CLAIMED_AS_SHARED_OBJECT",
+      "expectedKillers": [
+        "single-conversion-path"
+      ],
+      "actualKillers": [
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "CONVERTIBLE_PAIR_CLAIMED_AS_SHARED_OBJECT observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+    },
+    {
+      "id": "verdict-block-reason-priority",
+      "subsystem": "verdict-derivation",
+      "rule": "a REFUTED precondition outranks an UNRESOLVED one when naming the blocking reason",
+      "expectedFailure": "BLOCK_REASON_PRIORITY_INVERTED",
+      "expectedKillers": [
+        "soft-precondition-failed"
+      ],
+      "actualKillers": [],
+      "collateralDivergence": [],
+      "outcome": "survived",
+      "detail": "\"a REFUTED precondition outranks an UNRESOLVED one when naming the blocking reason\" can be violated without any corpus case in scope noticing",
+      "knownUnpinned": {
+        "why": "no fixture carries a REFUTED and an UNRESOLVED precondition at once, so the two branches are never in contention",
+        "closedBy": "a fixture with preOverrides grading one curated step violated and another unknown"
+      }
+    },
+    {
+      "id": "verdict-supported-still-blocks",
+      "subsystem": "verdict-derivation",
+      "rule": "a decision that reached EPISTEMICALLY_SUPPORTED carries no blockReason — nothing is blocking it",
+      "expectedFailure": "SUPPORTED_DECISION_CARRIES_BLOCK_REASON",
+      "expectedKillers": [
+        "lit-unexplored"
+      ],
+      "actualKillers": [
+        "directly-compatible",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "SUPPORTED_DECISION_CARRIES_BLOCK_REASON observed; killed by directly-compatible, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+    },
+    {
+      "id": "lit-classifies-a-killed-decision",
+      "subsystem": "literature-assessment",
+      "rule": "a type-killed decision SKIPS literature entirely — novelty of an incoherent pairing is not a question",
+      "expectedFailure": "KILLED_DECISION_GIVEN_A_LITERATURE_CLASS",
+      "expectedKillers": [
+        "incompatible",
+        "hard-incompatibility"
+      ],
+      "actualKillers": [
+        "incompatible",
+        "hard-incompatibility",
+        "missing-conversion-rule",
+        "no-schema"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "KILLED_DECISION_GIVEN_A_LITERATURE_CLASS observed; killed by incompatible, hard-incompatibility, missing-conversion-rule, no-schema"
+    },
+    {
+      "id": "lit-invents-a-count-when-ungrounded",
+      "subsystem": "literature-assessment",
+      "rule": "with grounding OFF no count is reported — the kernel never invents evidence it did not gather",
+      "expectedFailure": "LITERATURE_COUNT_INVENTED_WITHOUT_GROUNDING",
+      "expectedKillers": [
+        "directly-compatible"
+      ],
+      "actualKillers": [],
+      "collateralDivergence": [],
+      "outcome": "survived",
+      "detail": "\"with grounding OFF no count is reported — the kernel never invents evidence it did not gather\" can be violated without any corpus case in scope noticing",
+      "knownUnpinned": {
+        "why": "no fixture supplies a literature count while grounding is off, so there is no count available to leak",
+        "closedBy": "a fixture carrying litCount with litGround absent"
+      }
+    },
+    {
+      "id": "prize-ignores-ladder-stage",
+      "subsystem": "literature-assessment",
+      "rule": "prize candidacy requires EPISTEMICALLY_SUPPORTED — novelty alone never nominates a candidate",
+      "expectedFailure": "PRIZE_NOMINATED_BELOW_TOP_STAGE",
+      "expectedKillers": [
+        "lit-unexplored"
+      ],
+      "actualKillers": [],
+      "collateralDivergence": [],
+      "outcome": "survived",
+      "detail": "\"prize candidacy requires EPISTEMICALLY_SUPPORTED — novelty alone never nominates a candidate\" can be violated without any corpus case in scope noticing",
+      "knownUnpinned": {
+        "why": "every UNEXPLORED fixture also reaches EPISTEMICALLY_SUPPORTED, so the stage test never independently withholds candidacy",
+        "closedBy": "a fixture with an UNEXPLORED literature class stopping below the top stage"
+      }
+    },
+    {
+      "id": "lit-unexplored-not-promising",
+      "subsystem": "verdict-derivation",
+      "rule": "UNEXPLORED yields the verdict PROMISING — the novelty class and the verdict are distinct vocabularies",
+      "expectedFailure": "NOVELTY_CLASS_LEAKED_INTO_VERDICT",
+      "expectedKillers": [
+        "lit-unexplored"
+      ],
+      "actualKillers": [
+        "lit-unexplored"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "NOVELTY_CLASS_LEAKED_INTO_VERDICT observed; killed by lit-unexplored"
+    },
+    {
+      "id": "cascade-compat-verdict-always-valid",
+      "subsystem": "cascade-compatibility",
+      "rule": "the mechCompat verdict distinguishes type_valid, conversion_required and type_killed",
+      "expectedFailure": "CONVERSION_REPORTED_AS_TYPE_VALID",
+      "expectedKillers": [
+        "single-conversion-path"
+      ],
+      "actualKillers": [
+        "single-conversion-path",
+        "multiple-competing-paths",
+        "equal-cost-path-tie",
+        "soft-precondition-satisfied",
+        "soft-precondition-unresolved",
+        "soft-precondition-failed",
+        "partially-instantiated-obligations",
+        "advancement-through-type-composable",
+        "lit-unexplored",
+        "lit-emerging",
+        "lit-known",
+        "lit-unverified"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "CONVERSION_REPORTED_AS_TYPE_VALID observed; killed by single-conversion-path, multiple-competing-paths, equal-cost-path-tie, soft-precondition-satisfied, soft-precondition-unresolved, soft-precondition-failed, partially-instantiated-obligations, advancement-through-type-composable, lit-unexplored, lit-emerging, lit-known, lit-unverified"
+    },
+    {
+      "id": "cascade-compat-hides-pruning",
+      "subsystem": "cascade-compatibility",
+      "rule": "prunedPaths counts the options removed for a refuted precondition — the search is reported, not just its result",
+      "expectedFailure": "PRUNED_PATH_COUNT_SUPPRESSED",
+      "expectedKillers": [
+        "soft-precondition-failed"
+      ],
+      "actualKillers": [
+        "soft-precondition-failed"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "PRUNED_PATH_COUNT_SUPPRESSED observed; killed by soft-precondition-failed"
+    },
+    {
+      "id": "cascade-compat-lossy-flag-dropped",
+      "subsystem": "cascade-compatibility",
+      "rule": "each matched port records whether its adapter chain is lossy",
+      "expectedFailure": "LOSSY_ADAPTER_REPORTED_AS_LOSSLESS",
+      "expectedKillers": [
+        "partially-instantiated-obligations"
+      ],
+      "actualKillers": [
+        "partially-instantiated-obligations"
+      ],
+      "collateralDivergence": [],
+      "outcome": "killed_correctly",
+      "detail": "LOSSY_ADAPTER_REPORTED_AS_LOSSLESS observed; killed by partially-instantiated-obligations"
     }
   ]
 }

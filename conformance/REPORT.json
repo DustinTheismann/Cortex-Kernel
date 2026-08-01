@@ -1,13 +1,13 @@
 {
   "artifact": "conformance-report",
-  "generatedAt": "2026-07-31T14:21:41.226Z",
+  "generatedAt": "2026-08-01T00:34:03.196Z",
   "ciRun": null,
   "integrity": {
     "manifestSha256": "4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3",
     "canonicalizationSpecSha256": "5ed64bf745d2e41c8287052859200711f879ba605d8b5c3fa17ee9d91c267d1d",
     "canonicalizerSha256": "9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8",
     "verifierSha256": "8e9e9f9de79c326c5bea15370e554433f832088cbfcb00b675f0cbcff3857c24",
-    "baselineSha256": "5d389393e23d813a46c5e1bcde68e94c8e49c04f27dee195a098c5b983f8fd44",
+    "baselineSha256": "c71bea01ee003d33349468d6a579eed578f3075090a412b928cfb0ffb930a286",
     "referenceSourceSha256": "2447736154910ef7617aef23fd8da77bc58d812045504e023db6e2baa4236427"
   },
   "corpus": {
@@ -540,17 +540,29 @@
         {
           "subsystem": "cascade",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "unqualified",
+          "declaredMutants": 3,
+          "killedMutants": 2,
+          "survivingMutants": 1,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "cascade-compatibility",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 3,
+          "killedMutants": 3,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "cascade-planning",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "unqualified",
+          "declaredMutants": 4,
+          "killedMutants": 2,
+          "survivingMutants": 2,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "compatibility",
@@ -564,7 +576,11 @@
         {
           "subsystem": "contract-instantiation",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "unqualified",
+          "declaredMutants": 3,
+          "killedMutants": 2,
+          "survivingMutants": 1,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "edge-cost",
@@ -587,7 +603,11 @@
         {
           "subsystem": "impossibility",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "qualified",
+          "declaredMutants": 3,
+          "killedMutants": 3,
+          "survivingMutants": 0,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "license-screening",
@@ -601,7 +621,11 @@
         {
           "subsystem": "literature-assessment",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "unqualified",
+          "declaredMutants": 3,
+          "killedMutants": 1,
+          "survivingMutants": 2,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "literature-classification",
@@ -624,7 +648,11 @@
         {
           "subsystem": "obligations",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "unqualified",
+          "declaredMutants": 4,
+          "killedMutants": 3,
+          "survivingMutants": 1,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "property-test-skeleton",
@@ -638,7 +666,11 @@
         {
           "subsystem": "ranking",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "unqualified",
+          "declaredMutants": 2,
+          "killedMutants": 1,
+          "survivingMutants": 1,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "registry",
@@ -661,7 +693,11 @@
         {
           "subsystem": "stage-advancement",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "unqualified",
+          "declaredMutants": 3,
+          "killedMutants": 2,
+          "survivingMutants": 1,
+          "inconclusiveMutants": 0
         },
         {
           "subsystem": "types",
@@ -675,7 +711,11 @@
         {
           "subsystem": "verdict-derivation",
           "fixtureStatus": "pass",
-          "mutationStatus": "not-assessed"
+          "mutationStatus": "unqualified",
+          "declaredMutants": 4,
+          "killedMutants": 3,
+          "survivingMutants": 1,
+          "inconclusiveMutants": 0
         }
       ],
       "binarySha256": "a2c1aca82ba74b0e7b39ad122a902a2c6f3c991345282a3bdd028b6c88c639d3",
