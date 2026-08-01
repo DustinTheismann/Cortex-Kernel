@@ -26,11 +26,11 @@ verification works in a shallow checkout, from a tarball, or with no git at all.
 | Oracle version | `v0.5.1` |
 | Canonicalization version | `1` |
 | schemaVersion | `7` |
-| Fixture count | `43` |
-| Manifest hash (sha256 of `test/golden/manifest.json`) | `4cfadc4b55f8d169261b88b57c54e04ed6ef441a6d73fd526093899f7d2bfab3` |
+| Fixture count | `52` |
+| Manifest hash (sha256 of `test/golden/manifest.json`) | `c9b333c89e82c911ab6ca3575ff148eb9607a8b0fc5b3fe877addfb60028a583` |
 | Invariant-set hash (sha256 of `test/oracle/invariants.mjs`) | `1028978d419a76061111d1207093542d409c7459abf285e2a3594535d88ddde4` |
 | Canonicalizer hash (sha256 of `test/oracle/canonicalize.mjs`) | `9c9dfe83376ad7b8307bcede01f88d329c56e6288b677c97c1e88940bca483a8` |
-| Verifying workflow run | `—` |
+| Verifying workflow run | `c3-rust` |
 | Build environment | see JSON `buildEnvironment` (Node, npm, platform, arch) |
 
 ## Acceptance

@@ -277,6 +277,87 @@
       "oracleSource": "reference/src/cortex-v0.5.1.jsx"
     },
     {
+      "caseId": "reverse-direction-bridge",
+      "category": "planning",
+      "fixture": "fixtures/reverse-direction-bridge.json",
+      "sha256": "248a3fac315024dd9ad2bdd2e65664af8fba6cb2735ce24fc71048ed3a7c3f19",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "option-cap-saturated",
+      "category": "planning",
+      "fixture": "fixtures/option-cap-saturated.json",
+      "sha256": "86067da74a7bd5057b9785806d2ccd2d91bcb74964985f8bf4672d2d571656eb",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "refuted-option-pruned",
+      "category": "preconditions",
+      "fixture": "fixtures/refuted-option-pruned.json",
+      "sha256": "aaa67404d6a22b0e89ce6213c2a87b7b25c01c9911653633fc2072682babdfe3",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "unresolved-option-outranked",
+      "category": "preconditions",
+      "fixture": "fixtures/unresolved-option-outranked.json",
+      "sha256": "fad19638f02ea925ab55b3d5d906b1c72253ebe666136866b85f65adb342c044",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "dimensionless-unit-pairing",
+      "category": "obligations",
+      "fixture": "fixtures/dimensionless-unit-pairing.json",
+      "sha256": "1e80c60e67d6d66acb20f0ca17b56933580241d36abd0e583719ff90a0c238f4",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "type_valid",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "metric-obligation-ungraded",
+      "category": "ladder",
+      "fixture": "fixtures/metric-obligation-ungraded.json",
+      "sha256": "513adcc19adb9a45bb909920e0b968bcef42aea3ccbe9cf22b899399ff7d7f32",
+      "expectedStage": "CONTRACT_ADMISSIBLE",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "refuted-outranks-unresolved",
+      "category": "obligations",
+      "fixture": "fixtures/refuted-outranks-unresolved.json",
+      "sha256": "90adf8ad1b608034b656ec980bc25210eb8d9535b580a7f42ef835afa409ded6",
+      "expectedStage": "TYPE_COMPOSABLE",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "count-without-grounding",
+      "category": "literature",
+      "fixture": "fixtures/count-without-grounding.json",
+      "sha256": "5f312ad3651aeb783ba3fdc6bf076268dcf9e92f9312681986d81e4d3b0df275",
+      "expectedStage": "EPISTEMICALLY_SUPPORTED",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
+      "caseId": "novel-below-top-stage",
+      "category": "literature",
+      "fixture": "fixtures/novel-below-top-stage.json",
+      "sha256": "3e9a59f13d32f49c007901f5e0b17156d442794dcee0552b3e63048873828bde",
+      "expectedStage": "CONTRACT_ADMISSIBLE",
+      "expectedVerdict": "conversion_required",
+      "oracleSource": "reference/src/cortex-v0.5.1.jsx"
+    },
+    {
       "caseId": "import-with-githubUser",
       "category": "serialization",
       "fixture": "fixtures/import-with-githubUser.json",

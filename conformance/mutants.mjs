@@ -49,10 +49,40 @@ const ctx = {
   workDir: makeWorkDir(),
 };
 
+// ---- declared corpus gaps --------------------------------------------------
+// A surviving mutant is a corpus defect, and an UNDECLARED one fails this gate.
+// But there is a third state the binary pass/fail hid: a boundary that has been
+// probed, found unreached, and PUBLISHED as an open obligation. C2 produced
+// eight of them at once — the cascade fixtures agree with the implementation
+// while never exercising reverse-direction pairing, option-cap saturation, or a
+// refuted-and-unresolved precondition together.
+//
+// Suppressing those mutants would be unpinned-by-neglect wearing a green badge;
+// failing on them would push the next author to delete the mutant instead of
+// writing the fixture. So they stay declared, stay counted as survivors, and
+// keep their subsystem `unqualified` — the gate simply does not treat a
+// published obligation as a surprise.
+//
+// Two rules keep this from becoming a permanent excuse:
+//   1. every declaration names WHY it is unreached and WHAT closes it;
+//   2. a declared gap that gets KILLED is itself a failure — the declaration is
+//      stale, and the record must not keep claiming a gap that no longer exists.
 const results = [], problems = [];
 try {
   for (const m of selected) {
     const { record, problem } = runMutant(m, ctx);
+    if (m.knownUnpinned) {
+      record.knownUnpinned = m.knownUnpinned;
+      if (record.outcome === "survived") {
+        results.push(record);
+        continue; // published obligation, not a surprise
+      }
+      if (record.outcome === "killed_correctly") {
+        results.push(record);
+        problems.push(`${m.id}: declared as a known corpus gap, but the corpus now KILLS it — remove the knownUnpinned declaration, which is claiming a gap that no longer exists`);
+        continue;
+      }
+    }
     results.push(record);
     if (problem) problems.push(problem);
   }
@@ -86,6 +116,15 @@ for (const s of report.subsystems) {
 for (const u of report.unpinnable) {
   console.log(`  ${u.subsystem}: "${u.rule}" — ${u.claim}`);
   console.log(`      ${u.evidence.measuredMaxIterations} iterations at worst (${u.evidence.worstPair}) across ${u.evidence.orderedPairsTested} ordered pairs; guard is ${u.evidence.guardLimit} (${u.evidence.headroomFactor}x headroom)`);
+}
+const gaps = results.filter((r) => r.knownUnpinned && r.outcome === "survived");
+if (gaps.length) {
+  console.log(`\n  ${gaps.length} DECLARED CORPUS GAP(S) — probed, unreached, and open:`);
+  for (const g of gaps) {
+    console.log(`    ${g.id} (${g.subsystem}) — ${g.knownUnpinned.why}`);
+    console.log(`      closed by: ${g.knownUnpinned.closedBy}`);
+  }
+  console.log("  These keep their subsystems UNQUALIFIED. They are published obligations, not passes.");
 }
 console.log("\nOnly `killed_correctly` counts. A hash mismatch is not a kill; a surviving mutant is a corpus defect.");
 if (!only) console.log("report written: conformance/MUTATION-REPORT.json");

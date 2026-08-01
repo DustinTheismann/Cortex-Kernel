@@ -35,16 +35,31 @@ const cascadeCases = manifest.cases.filter((c) => CASCADE_CATEGORIES.has(c.categ
 const built = existsSync(BINARY);
 const run = (args) => JSON.parse(execFileSync(BINARY, args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
 
-test("the corpus contains exactly 17 cascade fixtures", () => {
-  assert.equal(cascadeCases.length, 17,
-    "C1 is defined as the 17 cascade fixtures; a different count means the scope moved");
+// C3 added nine boundary cases, each written because a semantic mutation of the
+// cascade survived the original seventeen. The Rust peer now implements all of
+// them, so the pending set is empty — but the list stays, because the assertion
+// below is EXACT: it names what may legitimately be undeclared, and an empty
+// list is the strongest form of that claim.
+const C3_BOUNDARY_CASES = [
+  "count-without-grounding", "dimensionless-unit-pairing", "metric-obligation-ungraded",
+  "novel-below-top-stage", "option-cap-saturated", "refuted-option-pruned",
+  "refuted-outranks-unresolved", "reverse-direction-bridge", "unresolved-option-outranked",
+];
+
+test("the corpus contains 26 cascade fixtures: 17 from C1 plus 9 C3 boundary cases", () => {
+  assert.equal(cascadeCases.length, 26, "a different count means the cascade scope moved");
+  const ids = new Set(cascadeCases.map((c) => c.caseId));
+  assert.deepEqual(C3_BOUNDARY_CASES.filter((id) => !ids.has(id)), []);
 });
 
-test("the Rust peer declares every cascade fixture", { skip: built ? false : "run: npm run conformance:build" }, () => {
-  const declared = new Set(run(["--cases"]));
-  const missing = cascadeCases.filter((c) => !declared.has(c.caseId)).map((c) => c.caseId);
-  assert.deepEqual(missing, [], "every cascade fixture must be declared, not silently omitted");
-});
+test("the Rust peer declares every cascade fixture, including the nine C3 boundary cases",
+  { skip: built ? false : "run: npm run conformance:build" }, () => {
+    const declared = new Set(run(["--cases"]));
+    const missing = cascadeCases.filter((c) => !declared.has(c.caseId)).map((c) => c.caseId).sort();
+    assert.deepEqual(missing, [], "every cascade fixture must be declared, not silently omitted");
+    assert.deepEqual(C3_BOUNDARY_CASES.filter((id) => !declared.has(id)), [],
+      "the C3 boundary cases are the ones that pin the cascade's mutation adequacy");
+  });
 
 test("the Rust peer reproduces every cascade fixture hash", { skip: built ? false : "run: npm run conformance:build" }, () => {
   const failures = [];
